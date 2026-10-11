@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float moveInput;
     private bool isGrounded;
+    private bool wasGrounded;
+    private bool hasCheckedGround;
 
     void Start()
     {
@@ -32,34 +34,39 @@ public class PlayerController : MonoBehaviour
 
         if (groundCheck == null)
         {
-            Debug.LogError("ERRO: GroundCheck não foi colocado no PlayerController!");
+            Debug.LogError(
+                "ERRO: GroundCheck não foi colocado no PlayerController!"
+            );
         }
     }
 
     void Update()
     {
-        // Movimento horizontal
         moveInput = Input.GetAxisRaw("Horizontal");
 
-        // Verifica se está no chão
         CheckGround();
 
-        // Pulo
+        if (hasCheckedGround && !wasGrounded && isGrounded)
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.TocarAterrissagem();
+            }
+        }
+
+        wasGrounded = isGrounded;
+        hasCheckedGround = true;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("ESPAÇO PRESSIONADO | IsGrounded = " + isGrounded);
-
             if (isGrounded)
             {
                 Jump();
             }
-            else
-            {
-                Debug.LogWarning("PULO BLOQUEADO: o Player NÃO está sendo reconhecido no chão.");
-            }
         }
 
-        // Ataque
+        HandleFootsteps();
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
             Attack();
@@ -94,7 +101,30 @@ public class PlayerController : MonoBehaviour
             jumpForce
         );
 
-        Debug.Log("PULO EXECUTADO!");
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarPulo();
+        }
+    }
+
+    void HandleFootsteps()
+    {
+        bool moving = Mathf.Abs(moveInput) > 0.01f;
+
+        if (isGrounded && moving)
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.IniciarPassos();
+            }
+        }
+        else
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PararPassos();
+            }
+        }
     }
 
     void CheckGround()
@@ -111,7 +141,7 @@ public class PlayerController : MonoBehaviour
             groundLayer
         );
 
-        isGrounded = (ground != null);
+        isGrounded = ground != null;
     }
 
     void Flip()
@@ -130,6 +160,11 @@ public class PlayerController : MonoBehaviour
     {
         if (attackPoint == null)
             return;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarAtaque();
+        }
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
             attackPoint.position,
@@ -150,24 +185,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnDisable()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PararPassos();
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
-        // GroundCheck
         if (groundCheck != null)
         {
             Gizmos.color = Color.green;
-
             Gizmos.DrawWireSphere(
                 groundCheck.position,
                 groundCheckRadius
             );
         }
 
-        // AttackPoint
         if (attackPoint != null)
         {
             Gizmos.color = Color.red;
-
             Gizmos.DrawWireSphere(
                 attackPoint.position,
                 attackRange
@@ -175,4 +214,3 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
-

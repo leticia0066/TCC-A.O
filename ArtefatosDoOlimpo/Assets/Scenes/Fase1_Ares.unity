@@ -1006,7 +1006,7 @@ Transform:
   m_GameObject: {fileID: 196844844}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.36, y: -12.26, z: 0}
+  m_LocalPosition: {x: -1.36, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11260,6 +11260,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthBar
   slider: {fileID: 1142968158}
+--- !u!1 &1158197801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1158197803}
+  - component: {fileID: 1158197802}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1158197802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158197801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3f696bdbff8d3a4eb6e19a8cf0f1a60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  sfxSource: {fileID: 0}
+  jumpClip: {fileID: 8300000, guid: 3ffdb9a8076d43640a401549c0339564, type: 3}
+  footstepClip: {fileID: 8300000, guid: a556c34d2b592a240a4632d927f3ce2e, type: 3}
+  attackClip: {fileID: 8300000, guid: b1a8bd88ac1faf74fb1506e74b1e5617, type: 3}
+  landingClip: {fileID: 8300000, guid: 8d19159d10b8dd54fa4dacb23c9a97e1, type: 3}
+--- !u!4 &1158197803
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158197801}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -107.22074, y: 0.54932, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1173425297
 GameObject:
   m_ObjectHideFlags: 0
@@ -13778,6 +13827,7 @@ MonoBehaviour:
   enemyLayers:
     serializedVersion: 2
     m_Bits: 8
+  footstepInterval: 0.35
 --- !u!61 &1451088349
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13812,17 +13862,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -2.0532303, y: 0.11202574}
+  m_Offset: {x: -0.6331636, y: 0.2248416}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 20.802227, y: 25.81}
-    newSize: {x: 0.2, y: 0.2}
+    oldSize: {x: 5.95, y: 6.96}
+    newSize: {x: 5.95, y: 6.96}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 16.776281, y: 25.720642}
+  m_Size: {x: 8.255831, y: 7.982541}
   m_EdgeRadius: 0
 --- !u!50 &1451088350
 Rigidbody2D:
@@ -13900,12 +13950,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4706243925394003665, guid: 428fb12224630b9498bc04a7a94c3fdb, type: 3}
+  m_Sprite: {fileID: 7435164588602573099, guid: a9d158455f2116644b3e8ffad37670dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 5.95, y: 6.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -13920,8 +13970,8 @@ Transform:
   m_GameObject: {fileID: 1451088345}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -140.48, y: -7.37, z: 0}
-  m_LocalScale: {x: 0.10227996, y: 0.1077559, z: 0.016398702}
+  m_LocalPosition: {x: -140.6652, y: -7.6389, z: 0}
+  m_LocalScale: {x: 0.16453992, y: 0.18501392, z: 0.016398702}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1232662423}
@@ -285734,3 +285784,4 @@ SceneRoots:
   - {fileID: 13373790}
   - {fileID: 1481109598}
   - {fileID: 1451088352}
+  - {fileID: 1158197803}

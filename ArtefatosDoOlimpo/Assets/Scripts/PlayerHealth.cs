@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Vida")]
-    public int maxHealth = 6; // 3 corações = 6 meios corações
+    public int maxHealth = 6;
     public int currentHealth;
 
     [Header("Vidas")]
@@ -34,7 +34,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (isDead)
+        if (isDead || damage <= 0)
             return;
 
         currentHealth -= damage;
@@ -42,16 +42,19 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth < 0)
             currentHealth = 0;
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarDano();
+        }
+
         UpdateUI();
 
-        
         if (currentHealth > 0)
         {
             StartCoroutine(RespawnAfterHit());
             return;
         }
 
-       
         lives--;
 
         if (lives > 0)
@@ -72,13 +75,12 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    
-
     IEnumerator RespawnAfterHit()
     {
         isDead = true;
 
-        rb.linearVelocity = Vector2.zero;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
 
         yield return new WaitForSeconds(0.1f);
 
@@ -88,15 +90,12 @@ public class PlayerHealth : MonoBehaviour
                 GameManager.instance.GetSpawnPosition();
         }
 
-      
         RespawnCoins();
 
         yield return new WaitForSeconds(0.1f);
 
         isDead = false;
     }
-
-   
 
     IEnumerator RespawnToCheckpoint()
     {
@@ -105,7 +104,8 @@ public class PlayerHealth : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("Die");
 
-        rb.linearVelocity = Vector2.zero;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
 
         yield return new WaitForSeconds(0.5f);
 
@@ -115,7 +115,6 @@ public class PlayerHealth : MonoBehaviour
                 GameManager.instance.GetSpawnPosition();
         }
 
-        
         RespawnCoins();
 
         currentHealth = maxHealth;
@@ -127,8 +126,6 @@ public class PlayerHealth : MonoBehaviour
         isDead = false;
     }
 
- 
-
     IEnumerator RespawnToStart()
     {
         isDead = true;
@@ -136,7 +133,8 @@ public class PlayerHealth : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("Die");
 
-        rb.linearVelocity = Vector2.zero;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
 
         yield return new WaitForSeconds(0.8f);
 
@@ -151,17 +149,19 @@ public class PlayerHealth : MonoBehaviour
                 GameManager.instance.GetSpawnPosition();
         }
 
-        
         RespawnCoins();
 
         UpdateUI();
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarRetornoInicio();
+        }
 
         yield return new WaitForSeconds(0.2f);
 
         isDead = false;
     }
-
- 
 
     void RespawnCoins()
     {
@@ -180,4 +180,3 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 }
-

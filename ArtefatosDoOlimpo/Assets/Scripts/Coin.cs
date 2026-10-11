@@ -27,6 +27,12 @@ public class Coin : MonoBehaviour
     {
         collected = true;
 
+        // Toca o som da moeda
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarMoeda();
+        }
+
         // Esconde a moeda
         gameObject.SetActive(false);
 
@@ -44,4 +50,3 @@ public class Coin : MonoBehaviour
         gameObject.SetActive(true);
     }
 }
-
