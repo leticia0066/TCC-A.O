@@ -23,6 +23,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip coinClip;
     public AudioClip medusaWarningClip;
     public AudioClip checkpointClip;
+    public AudioClip pressurePlateClip;
+
+    [Header("Sons da Medusa")]
+    public AudioClip medusaCastClip;
+    public AudioClip medusaHitClip;
 
     private void Awake()
     {
@@ -63,9 +68,7 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         if (footstepsSource != null)
-        {
             footstepsSource.clip = footstepClip;
-        }
     }
 
     public void TocarPulo()
@@ -98,6 +101,21 @@ public class AudioManager : MonoBehaviour
         TocarSom(checkpointClip);
     }
 
+    public void TocarPlacaPressao()
+    {
+        TocarSom(pressurePlateClip);
+    }
+
+    public void TocarAtaqueMedusa()
+    {
+        TocarSom(medusaCastClip);
+    }
+
+    public void TocarImpactoMedusa()
+    {
+        TocarSom(medusaHitClip);
+    }
+
     public void TocarDano()
     {
         TocarSom(damageClip);
@@ -122,9 +140,7 @@ public class AudioManager : MonoBehaviour
             return;
 
         if (footstepsSource.clip != footstepClip)
-        {
             footstepsSource.clip = footstepClip;
-        }
 
         if (!footstepsSource.isPlaying)
         {
@@ -136,8 +152,6 @@ public class AudioManager : MonoBehaviour
     public void PararPassos()
     {
         if (footstepsSource != null && footstepsSource.isPlaying)
-        {
             footstepsSource.Stop();
-        }
     }
 }

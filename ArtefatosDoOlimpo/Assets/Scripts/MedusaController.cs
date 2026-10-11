@@ -27,11 +27,7 @@ public class MedusaController : MonoBehaviour
         FindPlayer();
 
         if (projectilePrefab == null)
-        {
-            Debug.LogError(
-                "Medusa: arraste o Prefab do feitico para Projectile Prefab!"
-            );
-        }
+            Debug.LogError("Medusa: arraste o Prefab do feitico para Projectile Prefab!");
     }
 
     private void Update()
@@ -54,21 +50,14 @@ public class MedusaController : MonoBehaviour
             warningPlayed = true;
 
             if (AudioManager.Instance != null)
-            {
                 AudioManager.Instance.TocarAvisoMedusa();
-            }
         }
 
         if (distance > warningDistance + 1f)
-        {
             warningPlayed = false;
-        }
 
-        if (distance <= attackRange &&
-            Time.time >= nextAttackTime)
-        {
+        if (distance <= attackRange && Time.time >= nextAttackTime)
             AttackPlayer();
-        }
     }
 
     private void FindPlayer()
@@ -77,9 +66,7 @@ public class MedusaController : MonoBehaviour
             GameObject.FindGameObjectWithTag("Player");
 
         if (playerObject != null)
-        {
             player = playerObject.transform;
-        }
     }
 
     private void AttackPlayer()
@@ -87,26 +74,19 @@ public class MedusaController : MonoBehaviour
         if (projectilePrefab == null || player == null)
             return;
 
-        // Evita tentativas de ataque em todos os frames.
         nextAttackTime = Time.time + attackCooldown;
 
         Vector2 direction =
             ((Vector2)player.position -
-             (Vector2)transform.position).normalized;
+            (Vector2)transform.position).normalized;
 
         Vector3 spawnPosition;
 
         if (firePoint != null)
-        {
             spawnPosition = firePoint.position;
-        }
         else
-        {
-            // Cria o feitico um pouco afastado da Medusa.
-            spawnPosition =
-                transform.position +
+            spawnPosition = transform.position +
                 (Vector3)(direction * 1.2f);
-        }
 
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -133,6 +113,10 @@ public class MedusaController : MonoBehaviour
             projectileDamage,
             transform
         );
+
+        // Novo: som de lancamento do feitico.
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.TocarAtaqueMedusa();
 
         Debug.Log("Medusa lancou um feitico contra o jogador!");
     }

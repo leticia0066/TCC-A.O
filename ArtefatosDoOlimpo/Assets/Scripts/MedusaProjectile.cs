@@ -22,18 +22,14 @@ public class MedusaProjectile : MonoBehaviour
         projectileCollider = GetComponent<Collider2D>();
 
         if (rb == null)
-        {
             Debug.LogError(
                 "Feitico da Medusa precisa de Rigidbody2D!"
             );
-        }
 
         if (projectileCollider == null)
-        {
             Debug.LogError(
                 "Feitico da Medusa precisa de Collider2D!"
             );
-        }
     }
 
     public void Initialize(
@@ -46,7 +42,6 @@ public class MedusaProjectile : MonoBehaviour
         speed = projectileSpeed;
         damage = projectileDamage;
 
-        // Impede o feitico de colidir com a propria Medusa.
         if (owner != null && projectileCollider != null)
         {
             Collider2D[] ownerColliders =
@@ -71,12 +66,10 @@ public class MedusaProjectile : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.collisionDetectionMode =
                 CollisionDetectionMode2D.Continuous;
-
             rb.linearVelocity = direction * speed;
         }
 
         initialized = true;
-
         Destroy(gameObject, lifetime);
     }
 
@@ -93,33 +86,30 @@ public class MedusaProjectile : MonoBehaviour
         if (hit)
             return;
 
-        // Ignora objetos que nao sejam o jogador.
         PlayerHealth playerHealth =
             other.GetComponent<PlayerHealth>();
 
         if (playerHealth == null)
-        {
-            playerHealth =
-                other.GetComponentInParent<PlayerHealth>();
-        }
+            playerHealth = other.GetComponentInParent<PlayerHealth>();
 
         if (playerHealth != null)
         {
             hit = true;
 
+            // Novo: som do impacto magico.
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.TocarImpactoMedusa();
+
             Debug.Log("Feitico acertou o jogador! Dano: " + damage);
 
             playerHealth.TakeDamage(damage);
-
             Destroy(gameObject);
             return;
         }
 
-        // Nao desaparece ao atravessar outros triggers.
         if (other.isTrigger)
             return;
 
-        // Desaparece ao atingir uma parede ou obstaculo solido.
         hit = true;
         Destroy(gameObject);
     }
