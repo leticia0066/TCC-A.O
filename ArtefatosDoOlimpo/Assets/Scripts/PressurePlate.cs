@@ -11,6 +11,11 @@ public class PressurePlate : MonoBehaviour
     [Header("Movimento do pilar")]
     public float riseHeight = 3f;
     public float riseDuration = 4f;
+    public float pauseAtTop = 0.5f;
+    public float descendDuration = 3f;
+
+    [Header("Ativacao")]
+    public bool returnToStart = true;
 
     private bool activated = false;
     private Vector3 pillarStartPosition;
@@ -20,6 +25,17 @@ public class PressurePlate : MonoBehaviour
         if (pillar != null)
         {
             pillarStartPosition = pillar.position;
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PressurePlate: arraste o pilar para o campo Pillar!"
+            );
+        }
+
+        if (warningText != null)
+        {
+            warningText.SetActive(false);
         }
     }
 
@@ -33,6 +49,12 @@ public class PressurePlate : MonoBehaviour
 
         activated = true;
 
+        // Som exclusivo de quando o jogador pisa na placa.
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarSomPlaca();
+        }
+
         // Mostra o aviso por 3 segundos.
         if (warningText != null)
         {
@@ -40,42 +62,80 @@ public class PressurePlate : MonoBehaviour
             StartCoroutine(HideText());
         }
 
-        // Toca o som da placa de pressão.
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.TocarPlacaPressao();
-        }
-
-        // Faz o pilar subir lentamente.
+        // Inicia a animacao do pilar.
         if (pillar != null)
         {
-            StartCoroutine(RaisePillar());
+            StartCoroutine(MovePillar());
         }
-        else
+    }
+
+    private IEnumerator MovePillar()
+    {
+        Vector3 startPosition = pillarStartPosition;
+
+        Vector3 topPosition = pillarStartPosition
+            + Vector3.up * riseHeight;
+
+        // O pilar sobe suavemente.
+        yield return StartCoroutine(
+            MoveBetweenPositions(
+                startPosition,
+                topPosition,
+                riseDuration
+            )
+        );
+
+        // Mantem o pilar no alto por um instante.
+        if (pauseAtTop > 0f)
         {
-            Debug.LogWarning(
-                "PressurePlate: arraste o pilar para o campo Pillar!"
+            yield return new WaitForSeconds(pauseAtTop);
+        }
+
+        // Toca o som do movimento do pilar.
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.TocarSubidaPilar();
+        }
+
+        // O pilar desce suavemente, se essa opcao estiver ativa.
+        if (returnToStart)
+        {
+            yield return StartCoroutine(
+                MoveBetweenPositions(
+                    topPosition,
+                    startPosition,
+                    descendDuration
+                )
             );
         }
     }
 
-    private IEnumerator RaisePillar()
+    private IEnumerator MoveBetweenPositions(
+        Vector3 startPosition,
+        Vector3 targetPosition,
+        float duration
+    )
     {
-        Vector3 startPosition = pillarStartPosition;
+        if (duration <= 0f)
+        {
+            if (pillar != null)
+            {
+                pillar.position = targetPosition;
+            }
 
-        Vector3 targetPosition = pillarStartPosition
-            + Vector3.up * riseHeight;
+            yield break;
+        }
 
         float elapsed = 0f;
 
-        while (elapsed < riseDuration)
+        while (elapsed < duration)
         {
             if (pillar == null)
                 yield break;
 
             elapsed += Time.deltaTime;
 
-            float progress = Mathf.Clamp01(elapsed / riseDuration);
+            float progress = Mathf.Clamp01(elapsed / duration);
 
             float smoothProgress = Mathf.SmoothStep(
                 0f,

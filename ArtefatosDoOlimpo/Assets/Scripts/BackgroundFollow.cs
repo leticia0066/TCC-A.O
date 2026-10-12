@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class BackgroundFollow : MonoBehaviour
@@ -5,46 +6,64 @@ public class BackgroundFollow : MonoBehaviour
     [Header("Câmera")]
     public Transform cameraTransform;
 
-    [Header("Movimento")]
+    [Header("Intensidade do Parallax")]
     [Range(0f, 1f)]
-    public float seguirX = 1f;
+    public float seguirX = 0.2f;
 
     [Range(0f, 1f)]
-    public float seguirY = 1f;
+    public float seguirY = 0.1f;
 
-    private float distanciaX;
-    private float distanciaY;
+    private Vector3 posicaoInicialCamera;
+    private Vector3 posicaoInicialFundo;
 
-    void Start()
+    private void Start()
     {
         if (cameraTransform == null)
         {
-            Debug.LogError("BackgroundFollow: Main Camera não foi definida!");
+            Camera mainCamera = Camera.main;
+
+            if (mainCamera != null)
+            {
+                cameraTransform = mainCamera.transform;
+            }
+        }
+
+        if (cameraTransform == null)
+        {
+            Debug.LogError(
+                "BackgroundFollow: não foi possível encontrar a câmera."
+            );
+
+            enabled = false;
             return;
         }
 
-        // Guarda a distância inicial entre o fundo e a câmera
-        distanciaX = transform.position.x - cameraTransform.position.x;
-        distanciaY = transform.position.y - cameraTransform.position.y;
+        posicaoInicialCamera = cameraTransform.position;
+        posicaoInicialFundo = transform.position;
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (cameraTransform == null)
+        {
             return;
+        }
+
+        Vector3 deslocamentoCamera =
+            cameraTransform.position - posicaoInicialCamera;
 
         float novoX =
-            cameraTransform.position.x * seguirX
-            + distanciaX;
+            posicaoInicialFundo.x +
+            deslocamentoCamera.x * seguirX;
 
         float novoY =
-            cameraTransform.position.y * seguirY
-            + distanciaY;
+            posicaoInicialFundo.y +
+            deslocamentoCamera.y * seguirY;
 
         transform.position = new Vector3(
             novoX,
             novoY,
-            transform.position.z
+            posicaoInicialFundo.z
         );
     }
 }
