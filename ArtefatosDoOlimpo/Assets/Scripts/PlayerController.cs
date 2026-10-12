@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -18,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public LayerMask enemyLayers;
 
     private Rigidbody2D rb;
+    private Animator anim;
+
     private float moveInput;
     private bool isGrounded;
     private bool wasGrounded;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 
         if (rb == null)
         {
@@ -45,6 +47,19 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxisRaw("Horizontal");
 
         CheckGround();
+
+        if (anim != null)
+        {
+            anim.SetBool(
+                "IsWalking",
+                Mathf.Abs(moveInput) > 0.01f
+            );
+
+            anim.SetBool(
+                "IsJumping",
+                !isGrounded
+            );
+        }
 
         if (hasCheckedGround && !wasGrounded && isGrounded)
         {
@@ -158,6 +173,11 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+        if (anim != null)
+        {
+            anim.SetTrigger("Attack");
+        }
+
         if (attackPoint == null)
             return;
 
