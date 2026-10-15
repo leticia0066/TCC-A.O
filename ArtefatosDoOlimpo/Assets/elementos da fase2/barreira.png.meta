@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b4a5436bcf15e1249b00829be53f789e
+guid: 7c928f8771dc5874aba668547b4c7324
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1788959793170160529
-    second: icone do player_0
+      213: -7292581976814344407
+    second: barreira_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: icone do player_0
+      name: barreira_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 211
-        height: 198
+        x: 12
+        y: 15
+        width: 101
+        height: 218
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 19b1d5d1479a3d810800000000000000
-      internalID: 1788959793170160529
+      spriteID: 927a090745b8bca90800000000000000
+      internalID: -7292581976814344407
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      icone do player_0: 1788959793170160529
+      barreira_0: -7292581976814344407
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

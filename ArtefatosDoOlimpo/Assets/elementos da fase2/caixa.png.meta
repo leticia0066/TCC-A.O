@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1f7dcf151f86e8c49a84d20dc03e124d
+guid: 4cdea497686c2ea4cabdbecabaa86894
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1114157221001248692
-    second: personagem principal do jogo 100% concluu_0
+      213: 755827639047067597
+    second: caixa_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: personagem principal do jogo 100% concluu_0
+      name: caixa_0
       rect:
         serializedVersion: 2
-        x: 86
-        y: 304
-        width: 214
-        height: 371
+        x: 16
+        y: 7
+        width: 167
+        height: 165
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c40c84a19e7b980f0800000000000000
-      internalID: -1114157221001248692
+      spriteID: dc792d0bb3d3d7a00800000000000000
+      internalID: 755827639047067597
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      personagem principal do jogo 100% concluu_0: -1114157221001248692
+      caixa_0: 755827639047067597
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
