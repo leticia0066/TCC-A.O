@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 
@@ -8,52 +9,66 @@ public class PlayerHealth : MonoBehaviour
     public int currentHealth;
 
     [Header("Vidas")]
+    public int maxLives = 3;
     public int lives = 3;
 
     [Header("UI")]
     public HeartUI heartUI;
 
+    [Header("Tempo")]
+    public float respawnDelay = 0.5f;
+    public float gameOverDelay = 0.5f;
+
     private Rigidbody2D rb;
     private Animator anim;
 
     private bool isDead = false;
+    private bool gameOverStarted = false;
 
-    void Start()
+    void Awake()
     {
-        currentHealth = maxHealth;
-
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
         if (heartUI == null)
             heartUI = FindFirstObjectByType<HeartUI>();
+    }
+
+    void Start()
+    {
+        // Garante valores iniciais válidos.
+        maxHealth = Mathf.Max(1, maxHealth);
+        maxLives = Mathf.Max(1, maxLives);
+
+        currentHealth = maxHealth;
+        lives = Mathf.Clamp(lives, 1, maxLives);
 
         UpdateUI();
     }
 
     public void TakeDamage(int damage)
     {
-        if (isDead || damage <= 0)
+        // Impede dano repetido durante morte ou Game Over.
+        if (isDead || gameOverStarted || damage <= 0)
             return;
 
         currentHealth -= damage;
-
-        if (currentHealth < 0)
-            currentHealth = 0;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         if (AudioManager.Instance != null)
-        {
             AudioManager.Instance.TocarDano();
-        }
 
         UpdateUI();
 
+        // Ainda tem corações: continua jogando.
         if (currentHealth > 0)
-        {
             return;
-        }
 
-        lives--;
+        // A vida chegou a zero: começa a morrer.
+        isDead = true;
+
+        // Só perde uma vida quando todos os corações acabam.
+        lives = Mathf.Max(0, lives - 1);
 
         if (lives > 0)
         {
@@ -61,6 +76,7 @@ public class PlayerHealth : MonoBehaviour
         }
         else
         {
+            gameOverStarted = true;
             StartCoroutine(GameOver());
         }
     }
@@ -68,29 +84,36 @@ public class PlayerHealth : MonoBehaviour
     void UpdateUI()
     {
         if (heartUI != null)
-        {
             heartUI.UpdateHearts(currentHealth);
-        }
     }
 
     IEnumerator RespawnToCheckpoint()
     {
-        isDead = true;
+        PararMovimento();
 
-        if (anim != null)
-            anim.SetTrigger("Die");
+        // Não usa SetTrigger("Die"), pois esse parâmetro
+        // não existe no Animator atual do personagem.
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        if (GameManager.instance != null)
+        {
+            transform.position =
+                GameManager.instance.GetSpawnPosition();
+        }
+        else
+        {
+            Debug.LogError(
+                "GameManager não encontrado! Confira se existe na cena."
+            );
+        }
+
+        // Recupera os corações, mas NÃO recupera a vida perdida.
+        currentHealth = maxHealth;
+        UpdateUI();
 
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
-
-        yield return new WaitForSeconds(0.5f);
-
-        transform.position =
-            GameManager.instance.GetSpawnPosition();
-
-        currentHealth = maxHealth;
-
-        UpdateUI();
 
         yield return new WaitForSeconds(0.2f);
 
@@ -99,18 +122,55 @@ public class PlayerHealth : MonoBehaviour
 
     IEnumerator GameOver()
     {
-        isDead = true;
+        PararMovimento();
 
-        if (anim != null)
-            anim.SetTrigger("Die");
+        // Não teleporta o jogador para o checkpoint.
+        yield return new WaitForSeconds(gameOverDelay);
 
+        if (GameOverManager.Instance != null)
+        {
+            // Primeiro mostra o painel.
+            GameOverManager.Instance.ShowGameOver();
+
+            // Depois pausa o jogo.
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Debug.LogError(
+                "GameOverManager.Instance está vazio! " +
+                "Confira o GameOverManager e o painel na cena."
+            );
+
+            // Evita deixar o jogo travado sem painel.
+            isDead = false;
+            gameOverStarted = false;
+        }
+    }
+
+    void PararMovimento()
+    {
         if (rb != null)
+        {
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+    }
 
-        yield return new WaitForSeconds(1f);
+    // Permite recuperar o jogador caso você precise reiniciar
+    // os atributos por um botão ou outro sistema.
+    public void ResetarVidas()
+    {
+        StopAllCoroutines();
 
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
 
-        GameOverManager.Instance.ShowGameOver();
+        currentHealth = maxHealth;
+        lives = maxLives;
+
+        isDead = false;
+        gameOverStarted = false;
+
+        UpdateUI();
     }
 }
