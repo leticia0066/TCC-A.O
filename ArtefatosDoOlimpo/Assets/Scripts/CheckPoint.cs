@@ -1,9 +1,8 @@
-
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    private bool activated = false;
+    private bool activated;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -13,15 +12,9 @@ public class Checkpoint : MonoBehaviour
         if (activated)
             return;
 
-        if (CheckpointManager.Instance == null)
-        {
-            Debug.LogWarning(
-                "CheckpointManager não encontrado na cena!"
-            );
-            return;
-        }
-
-        CheckpointManager.Instance.SetCheckpoint(transform.position);
+        GameManager.instance.SetCheckpoint(
+            transform.position
+        );
 
         activated = true;
 

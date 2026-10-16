@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 
@@ -51,7 +50,6 @@ public class PlayerHealth : MonoBehaviour
 
         if (currentHealth > 0)
         {
-            StartCoroutine(RespawnAfterHit());
             return;
         }
 
@@ -63,7 +61,7 @@ public class PlayerHealth : MonoBehaviour
         }
         else
         {
-            StartCoroutine(RespawnToStart());
+            StartCoroutine(GameOver());
         }
     }
 
@@ -73,28 +71,6 @@ public class PlayerHealth : MonoBehaviour
         {
             heartUI.UpdateHearts(currentHealth);
         }
-    }
-
-    IEnumerator RespawnAfterHit()
-    {
-        isDead = true;
-
-        if (rb != null)
-            rb.linearVelocity = Vector2.zero;
-
-        yield return new WaitForSeconds(0.1f);
-
-        if (GameManager.instance != null)
-        {
-            transform.position =
-                GameManager.instance.GetSpawnPosition();
-        }
-
-        RespawnCoins();
-
-        yield return new WaitForSeconds(0.1f);
-
-        isDead = false;
     }
 
     IEnumerator RespawnToCheckpoint()
@@ -109,13 +85,8 @@ public class PlayerHealth : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        if (GameManager.instance != null)
-        {
-            transform.position =
-                GameManager.instance.GetSpawnPosition();
-        }
-
-        RespawnCoins();
+        transform.position =
+            GameManager.instance.GetSpawnPosition();
 
         currentHealth = maxHealth;
 
@@ -126,7 +97,7 @@ public class PlayerHealth : MonoBehaviour
         isDead = false;
     }
 
-    IEnumerator RespawnToStart()
+    IEnumerator GameOver()
     {
         isDead = true;
 
@@ -136,47 +107,10 @@ public class PlayerHealth : MonoBehaviour
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1f);
 
-        lives = 3;
-        currentHealth = maxHealth;
+        Time.timeScale = 0f;
 
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.ResetToStart();
-
-            transform.position =
-                GameManager.instance.GetSpawnPosition();
-        }
-
-        RespawnCoins();
-
-        UpdateUI();
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.TocarRetornoInicio();
-        }
-
-        yield return new WaitForSeconds(0.2f);
-
-        isDead = false;
-    }
-
-    void RespawnCoins()
-    {
-        CoinRespawner respawner =
-            FindFirstObjectByType<CoinRespawner>();
-
-        if (respawner != null)
-        {
-            respawner.RespawnAllCoins();
-        }
-        else
-        {
-            Debug.LogWarning(
-                "CoinRespawner não encontrado na cena!"
-            );
-        }
+        GameOverManager.Instance.ShowGameOver();
     }
 }
