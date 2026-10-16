@@ -1,119 +1,122 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class Esqueleto : MonoBehaviour
 {
-    [Header("Patrulha")]
+    [Header("Pontos da patrulha")]
     public Transform pontoA;
     public Transform pontoB;
+
+    [Header("Movimento")]
     public float velocidade = 2f;
-    public float distanciaParaVirar = 0.08f;
 
-    [Header("Visual")]
-    public SpriteRenderer spriteRenderer;
-
-    // Marque se a imagem original olha para a direita.
-    public bool spriteOlhaParaDireita = true;
+    [Header("Teletransporte")]
+    public float tempoDesaparecido = 0.4f;
 
     [Header("Vida")]
     public int vida = 3;
 
-    [Header("Dano")]
+    [Header("Dano ao jogador")]
     public int dano = 1;
     public float tempoEntreDanos = 1f;
 
-    private Transform destino;
+    private SpriteRenderer[] sprites;
+    private Collider2D[] colisores;
+    private Rigidbody2D rb;
+
     private float ultimoDano = -999f;
     private bool morto = false;
+    private bool teleportando = false;
 
     void Awake()
     {
-        if (spriteRenderer == null)
-            spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (spriteRenderer == null)
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        sprites = GetComponentsInChildren<SpriteRenderer>(true);
+        colisores = GetComponentsInChildren<Collider2D>(true);
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Start()
     {
         if (pontoA == null || pontoB == null)
         {
-            Debug.LogError(
-                "Esqueleto: arraste os pontos A e B no Inspector."
-            );
+            Debug.LogError("Esqueleto: arraste os pontos A e B no Inspector.");
             enabled = false;
             return;
         }
 
-        // Começa indo para B.
-        destino = pontoB;
-        AtualizarDirecao();
+        // Começa no ponto A.
+        transform.position = pontoA.position;
     }
 
     void Update()
     {
-        if (morto || destino == null)
+        if (morto || teleportando)
             return;
 
-        Vector3 posicaoAnterior = transform.position;
-
+        // Anda sempre na mesma direção visual: de A para B.
         transform.position = Vector2.MoveTowards(
             transform.position,
-            destino.position,
+            pontoB.position,
             velocidade * Time.deltaTime
         );
 
-        // Usa o movimento real para orientar a imagem.
-        float movimentoX = transform.position.x - posicaoAnterior.x;
-
-        if (Mathf.Abs(movimentoX) > 0.0001f)
+        // Ao chegar em B, desaparece e volta para A.
+        if (Vector2.Distance(transform.position, pontoB.position) < 0.05f)
         {
-            VirarPara(movimentoX);
-        }
-
-        // Ao chegar, troca o destino.
-        if (Vector2.Distance(
-            transform.position,
-            destino.position
-        ) <= distanciaParaVirar)
-        {
-            destino = destino == pontoB ? pontoA : pontoB;
-
-            // Vira imediatamente para o próximo trajeto.
-            float direcaoX = destino.position.x - transform.position.x;
-
-            if (Mathf.Abs(direcaoX) > 0.0001f)
-                VirarPara(direcaoX);
+            StartCoroutine(VoltarParaA());
         }
     }
 
-    void AtualizarDirecao()
+    IEnumerator VoltarParaA()
     {
-        if (destino == null)
-            return;
+        teleportando = true;
 
-        float direcaoX = destino.position.x - transform.position.x;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.position = pontoB.position;
+        }
 
-        if (Mathf.Abs(direcaoX) > 0.0001f)
-            VirarPara(direcaoX);
+        // Desaparece e deixa de causar dano durante a troca.
+        foreach (SpriteRenderer sr in sprites)
+        {
+            if (sr != null)
+                sr.enabled = false;
+        }
+
+        foreach (Collider2D col in colisores)
+        {
+            if (col != null)
+                col.enabled = false;
+        }
+
+        yield return new WaitForSeconds(tempoDesaparecido);
+
+        // Reaparece no ponto A e começa a andar para B novamente.
+        transform.position = pontoA.position;
+
+        if (rb != null)
+            rb.position = pontoA.position;
+
+        foreach (SpriteRenderer sr in sprites)
+        {
+            if (sr != null)
+                sr.enabled = true;
+        }
+
+        foreach (Collider2D col in colisores)
+        {
+            if (col != null)
+                col.enabled = true;
+        }
+
+        teleportando = false;
     }
 
-    void VirarPara(float direcaoX)
+    void OnCollisionStay2D(Collision2D collision)
     {
-        if (spriteRenderer == null)
-            return;
-
-        bool movimentoParaEsquerda = direcaoX < 0f;
-
-        spriteRenderer.flipX = spriteOlhaParaDireita
-            ? movimentoParaEsquerda
-            : !movimentoParaEsquerda;
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (morto)
+        if (morto || teleportando)
             return;
 
         if (!collision.gameObject.CompareTag("Player"))
@@ -126,10 +129,7 @@ public class Esqueleto : MonoBehaviour
             collision.gameObject.GetComponent<PlayerHealth>();
 
         if (player == null)
-        {
-            player =
-                collision.gameObject.GetComponentInParent<PlayerHealth>();
-        }
+            player = collision.gameObject.GetComponentInParent<PlayerHealth>();
 
         if (player != null)
         {
@@ -148,11 +148,12 @@ public class Esqueleto : MonoBehaviour
         if (vida <= 0)
         {
             morto = true;
+            StopAllCoroutines();
             Destroy(gameObject);
         }
     }
 
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         if (pontoA != null)
         {

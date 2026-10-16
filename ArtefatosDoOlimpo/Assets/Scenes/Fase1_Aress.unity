@@ -2462,7 +2462,7 @@ Transform:
   m_GameObject: {fileID: 551523083}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -154.55, y: -7.14, z: 0}
+  m_LocalPosition: {x: -84.82, y: -1.29, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -197812,9 +197812,7 @@ MonoBehaviour:
   pontoA: {fileID: 1598150705}
   pontoB: {fileID: 506699473}
   velocidade: 2
-  distanciaParaVirar: 0.1
-  spriteRenderer: {fileID: 0}
-  spriteOlhaParaDireita: 1
+  tempoDesaparecido: 0.35
   vida: 3
   dano: 1
   tempoEntreDanos: 1
@@ -199419,7 +199417,7 @@ Transform:
   m_GameObject: {fileID: 1141772183}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.329994, y: -4.46, z: 0}
+  m_LocalPosition: {x: -118.399994, y: -8.450001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -200021,7 +200019,7 @@ Transform:
   m_GameObject: {fileID: 1251931826}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 79.63999, y: -4.38, z: 0}
+  m_LocalPosition: {x: -137.09, y: -8.370001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -202946,8 +202944,8 @@ Transform:
   m_GameObject: {fileID: 1744877489}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 90.6, y: -4.06, z: 0}
-  m_LocalScale: {x: 0.4695708, y: 0.4695708, z: 0.4695708}
+  m_LocalPosition: {x: -125.3436, y: -7.0807, z: 0}
+  m_LocalScale: {x: 0.9607887, y: 0.9607887, z: 0.9607887}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1546410280}
