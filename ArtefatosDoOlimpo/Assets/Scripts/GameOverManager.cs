@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,12 +12,23 @@ public class GameOverManager : MonoBehaviour
     {
         Instance = this;
 
-        gameOverPanel.SetActive(false);
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
     }
 
     public void GameOver()
     {
-        gameOverPanel.SetActive(true);
+        ShowGameOver();
+    }
+
+    public void ShowGameOver()
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
 
         Time.timeScale = 0f;
     }
@@ -30,6 +42,8 @@ public class GameOverManager : MonoBehaviour
 
     public void Sair()
     {
+        Time.timeScale = 1f;
+
         Application.Quit();
     }
 }
