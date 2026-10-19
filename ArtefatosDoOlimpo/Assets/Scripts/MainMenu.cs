@@ -2,13 +2,24 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    public FadeTransition fade;
+
+    public AudioSource audioSource;
+    public AudioClip cliqueSom;
+
     public void Jogar()
     {
-        Debug.Log("CLIQUE DETECTADO");
+        audioSource.PlayOneShot(cliqueSom);
+
+        fade.TrocarCena("SelecaoFases");
     }
 
     public void Sair()
     {
-        Debug.Log("SAIR DETECTADO");
+        audioSource.PlayOneShot(cliqueSom);
+
+        Application.Quit();
+
+        Debug.Log("Saiu do jogo");
     }
 }

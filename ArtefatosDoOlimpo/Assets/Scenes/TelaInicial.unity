@@ -584,8 +584,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.9024, y: -66.79602}
-  m_SizeDelta: {x: 228.5709, y: 52.7026}
+  m_AnchoredPosition: {x: 1.7052, y: -52.779575}
+  m_SizeDelta: {x: 265.4077, y: 43.8617}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &517406646
 MonoBehaviour:
@@ -1013,6 +1013,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cbd6e8a5162b84ab08a32efaa338e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
+  fade: {fileID: 1397893601}
+  audioSource: {fileID: 0}
+  cliqueSom: {fileID: 0}
 --- !u!4 &1747185448
 Transform:
   m_ObjectHideFlags: 0
@@ -1064,8 +1067,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.417469, y: -127.6163}
-  m_SizeDelta: {x: 228.62, y: 56.521}
+  m_AnchoredPosition: {x: 1.7057, y: -102.247955}
+  m_SizeDelta: {x: 265.41, y: 41.0495}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1791263006
 MonoBehaviour:

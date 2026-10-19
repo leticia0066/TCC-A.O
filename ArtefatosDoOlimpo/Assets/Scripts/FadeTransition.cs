@@ -1,28 +1,34 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class FadeTransition : MonoBehaviour
 {
     public Image fadeImage;
 
-    public void TrocarCena(string nomeCena)
+    private void Start()
     {
-        StartCoroutine(Fade(nomeCena));
+        Color cor = fadeImage.color;
+        cor.a = 0f;
+        fadeImage.color = cor;
     }
 
-    IEnumerator Fade(string nomeCena)
+    public void TrocarCena(string nomeCena)
     {
-        float alpha = 0;
+        StartCoroutine(FazerFade(nomeCena));
+    }
 
-        while(alpha < 1)
+    IEnumerator FazerFade(string nomeCena)
+    {
+        float alpha = 0f;
+
+        while (alpha < 1f)
         {
-            alpha += Time.deltaTime;
+            alpha += Time.deltaTime * 2f;
 
             Color cor = fadeImage.color;
             cor.a = alpha;
-
             fadeImage.color = cor;
 
             yield return null;
