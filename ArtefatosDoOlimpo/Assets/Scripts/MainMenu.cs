@@ -1,16 +1,14 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
     public void Jogar()
     {
-        SceneManager.LoadScene(1); // vai pra fase do jogo
+        Debug.Log("CLIQUE DETECTADO");
     }
 
     public void Sair()
     {
-        Application.Quit();
-        Debug.Log("Saiu do jogo");
+        Debug.Log("SAIR DETECTADO");
     }
 }
