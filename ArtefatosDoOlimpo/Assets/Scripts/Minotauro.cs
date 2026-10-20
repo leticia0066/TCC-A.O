@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Minotauro : MonoBehaviour
 {
@@ -15,7 +17,10 @@ public class Minotauro : MonoBehaviour
     public GameObject machadoPrefab;
 
     [Header("Vida")]
-    public int vida = 3;
+    public int vidaMaxima = 15;
+    private int vidaAtual;
+
+    public Slider barraVida;
 
     private Transform player;
     private Animator anim;
@@ -28,6 +33,14 @@ public class Minotauro : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        vidaAtual = vidaMaxima;
+
+        if (barraVida != null)
+        {
+            barraVida.maxValue = vidaMaxima;
+            barraVida.value = vidaMaxima;
+        }
 
         GameObject p =
             GameObject.FindGameObjectWithTag("Player");
@@ -115,10 +128,9 @@ public class Minotauro : MonoBehaviour
             );
 
         Vector2 direcao =
-            (
-                player.position -
-                attackPoint.position
-            ).normalized;
+            transform.localScale.x > 0
+            ? Vector2.right
+            : Vector2.left;
 
         novoMachado
             .GetComponent<Machado>()
@@ -134,8 +146,7 @@ public class Minotauro : MonoBehaviour
             Mathf.Abs(escala.x)
             *
             Mathf.Sign(
-                alvoX
-                -
+                alvoX -
                 transform.position.x
             );
 
@@ -147,12 +158,37 @@ public class Minotauro : MonoBehaviour
         if (morto)
             return;
 
-        vida -= dano;
+        vidaAtual -= dano;
 
-        if (vida <= 0)
+        if (barraVida != null)
+        {
+            barraVida.value = vidaAtual;
+        }
+
+        StartCoroutine(Recuo());
+
+        if (vidaAtual <= 0)
         {
             Morrer();
         }
+    }
+
+    IEnumerator Recuo()
+    {
+        Vector3 posOriginal =
+            transform.position;
+
+        Vector3 direcao =
+            player.position.x > transform.position.x
+            ? Vector3.left
+            : Vector3.right;
+
+        transform.position += direcao * 0.15f;
+
+        yield return new WaitForSeconds(0.05f);
+
+        transform.position =
+            posOriginal;
     }
 
     void Morrer()
@@ -161,6 +197,6 @@ public class Minotauro : MonoBehaviour
 
         anim.SetTrigger("Die");
 
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 2f);
     }
 }
