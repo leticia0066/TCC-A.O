@@ -4,29 +4,28 @@ using UnityEngine.UI;
 
 public class Minotauro : MonoBehaviour
 {
-    [Header("Patrulha")]
-    public Transform pontoA;
-    public Transform pontoB;
+    [Header("Movimento")]
     public float velocidade = 2f;
 
     [Header("Ataque")]
-    public float distanciaDeteccao = 6f;
+    public float distanciaAtaque = 5f;
     public float tempoEntreAtaques = 2f;
 
     public Transform attackPoint;
     public GameObject machadoPrefab;
 
     [Header("Vida")]
-    public int vidaMaxima = 15;
-    private int vidaAtual;
+    public int vidaMaxima = 20;
 
     public Slider barraVida;
+
+    private int vidaAtual;
 
     private Transform player;
     private Animator anim;
 
-    private bool indoParaB = true;
-    private bool morto;
+    private bool bossAtivado = false;
+    private bool morto = false;
 
     private float proximoAtaque;
 
@@ -56,55 +55,44 @@ public class Minotauro : MonoBehaviour
         if (morto)
             return;
 
+        if (!bossAtivado)
+            return;
+
         if (player == null)
             return;
 
+        SeguirPlayer();
+    }
+
+    public void AtivarBoss()
+    {
+        bossAtivado = true;
+    }
+
+    void SeguirPlayer()
+    {
         float distancia =
             Vector2.Distance(
                 transform.position,
                 player.position
             );
 
-        if (distancia <= distanciaDeteccao)
-        {
-            Atacar();
-        }
-        else
-        {
-            Patrulhar();
-        }
-    }
-
-    void Patrulhar()
-    {
-        Transform destino =
-            indoParaB ? pontoB : pontoA;
-
-        transform.position =
-            Vector2.MoveTowards(
-                transform.position,
-                destino.position,
-                velocidade * Time.deltaTime
-            );
-
-        if (
-            Vector2.Distance(
-                transform.position,
-                destino.position
-            ) < 0.1f
-        )
-        {
-            indoParaB = !indoParaB;
-        }
-
-        Virar(destino.position.x);
-    }
-
-    void Atacar()
-    {
         Virar(player.position.x);
 
-        if (Time.time >= proximoAtaque)
+        if (distancia > 2f)
+        {
+            transform.position =
+                Vector2.MoveTowards(
+                    transform.position,
+                    player.position,
+                    velocidade * Time.deltaTime
+                );
+        }
+
+        if (
+            distancia <= distanciaAtaque
+            && Time.time >= proximoAtaque
+        )
         {
             proximoAtaque =
                 Time.time + tempoEntreAtaques;
@@ -113,14 +101,17 @@ public class Minotauro : MonoBehaviour
 
             Invoke(
                 nameof(LancarMachado),
-                0.4f
+                0.35f
             );
         }
     }
 
     void LancarMachado()
     {
-        GameObject novoMachado =
+        if (machadoPrefab == null)
+            return;
+
+        GameObject machado =
             Instantiate(
                 machadoPrefab,
                 attackPoint.position,
@@ -132,7 +123,7 @@ public class Minotauro : MonoBehaviour
             ? Vector2.right
             : Vector2.left;
 
-        novoMachado
+        machado
             .GetComponent<Machado>()
             .SetDirection(direcao);
     }
@@ -187,8 +178,7 @@ public class Minotauro : MonoBehaviour
 
         yield return new WaitForSeconds(0.05f);
 
-        transform.position =
-            posOriginal;
+        transform.position = posOriginal;
     }
 
     void Morrer()
@@ -197,6 +187,9 @@ public class Minotauro : MonoBehaviour
 
         anim.SetTrigger("Die");
 
-        Destroy(gameObject, 2f);
+        Destroy(
+            gameObject,
+            2f
+        );
     }
 }
