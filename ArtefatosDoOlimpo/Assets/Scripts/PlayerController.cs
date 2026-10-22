@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -40,6 +41,13 @@ public class PlayerController : MonoBehaviour
                 "ERRO: GroundCheck não foi colocado no PlayerController!"
             );
         }
+
+        if (attackPoint == null)
+        {
+            Debug.LogError(
+                "ERRO: AttackPoint não foi colocado no PlayerController!"
+            );
+        }
     }
 
     void Update()
@@ -50,15 +58,8 @@ public class PlayerController : MonoBehaviour
 
         if (anim != null)
         {
-            anim.SetBool(
-                "IsWalking",
-                Mathf.Abs(moveInput) > 0.01f
-            );
-
-            anim.SetBool(
-                "IsJumping",
-                !isGrounded
-            );
+            anim.SetBool("IsWalking", Mathf.Abs(moveInput) > 0.01f);
+            anim.SetBool("IsJumping", !isGrounded);
         }
 
         if (hasCheckedGround && !wasGrounded && isGrounded)
@@ -72,12 +73,9 @@ public class PlayerController : MonoBehaviour
         wasGrounded = isGrounded;
         hasCheckedGround = true;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            if (isGrounded)
-            {
-                Jump();
-            }
+            Jump();
         }
 
         HandleFootsteps();
@@ -178,12 +176,15 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("Attack");
         }
 
-        if (attackPoint == null)
-            return;
-
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.TocarAtaque();
+        }
+
+        if (attackPoint == null)
+        {
+            Debug.LogError("Ataque cancelado: AttackPoint está vazio!");
+            return;
         }
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
@@ -192,16 +193,38 @@ public class PlayerController : MonoBehaviour
             enemyLayers
         );
 
+        Debug.Log("Ataque executado! Objetos encontrados: "
+            + hitEnemies.Length);
+
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (enemy.gameObject == gameObject)
+            if (enemy.transform.root == transform.root)
                 continue;
 
-            enemy.SendMessage(
+            // Procura o miniboss no collider atingido
+            // ou em algum objeto pai.
+            EsqueletoMiniboss esqueleto =
+                enemy.GetComponentInParent<EsqueletoMiniboss>();
+
+            if (esqueleto != null)
+            {
+                esqueleto.TakeDamage(1);
+
+                Debug.Log("Esqueleto atingido! Vida restante: "
+                    + esqueleto.vidaAtual);
+
+                continue;
+            }
+
+            // Mantém compatibilidade com outros inimigos
+            // que já utilizam um método chamado TakeDamage.
+            enemy.SendMessageUpwards(
                 "TakeDamage",
                 1,
                 SendMessageOptions.DontRequireReceiver
             );
+
+            Debug.Log("Objeto atingido: " + enemy.name);
         }
     }
 
