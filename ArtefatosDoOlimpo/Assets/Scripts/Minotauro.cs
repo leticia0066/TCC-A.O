@@ -19,13 +19,16 @@ public class Minotauro : MonoBehaviour
 
     public Slider barraVida;
 
+    public Image fillImage;
+
     private int vidaAtual;
 
     private Transform player;
+
     private Animator anim;
 
-    private bool bossAtivado = false;
-    private bool morto = false;
+    private bool bossAtivado;
+    private bool morto;
 
     private float proximoAtaque;
 
@@ -40,6 +43,8 @@ public class Minotauro : MonoBehaviour
             barraVida.maxValue = vidaMaxima;
             barraVida.value = vidaMaxima;
         }
+
+        AtualizarCorBarra();
 
         GameObject p =
             GameObject.FindGameObjectWithTag("Player");
@@ -91,7 +96,8 @@ public class Minotauro : MonoBehaviour
 
         if (
             distancia <= distanciaAtaque
-            && Time.time >= proximoAtaque
+            &&
+            Time.time >= proximoAtaque
         )
         {
             proximoAtaque =
@@ -156,11 +162,39 @@ public class Minotauro : MonoBehaviour
             barraVida.value = vidaAtual;
         }
 
+        AtualizarCorBarra();
+
         StartCoroutine(Recuo());
 
         if (vidaAtual <= 0)
         {
             Morrer();
+        }
+    }
+
+    void AtualizarCorBarra()
+    {
+        if (fillImage == null)
+            return;
+
+        float porcentagem =
+            (float)vidaAtual /
+            vidaMaxima;
+
+        if (porcentagem > 0.5f)
+        {
+            fillImage.color =
+                Color.green;
+        }
+        else if (porcentagem > 0.25f)
+        {
+            fillImage.color =
+                Color.yellow;
+        }
+        else
+        {
+            fillImage.color =
+                Color.red;
         }
     }
 
@@ -170,15 +204,20 @@ public class Minotauro : MonoBehaviour
             transform.position;
 
         Vector3 direcao =
-            player.position.x > transform.position.x
+            player.position.x >
+            transform.position.x
             ? Vector3.left
             : Vector3.right;
 
-        transform.position += direcao * 0.15f;
+        transform.position +=
+            direcao * 0.15f;
 
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(
+            0.05f
+        );
 
-        transform.position = posOriginal;
+        transform.position =
+            posOriginal;
     }
 
     void Morrer()

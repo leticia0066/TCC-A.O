@@ -498,7 +498,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 59727034}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CanvasVida
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -555,7 +555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -409, y: 189}
+  m_AnchoredPosition: {x: -240, y: 131}
   m_SizeDelta: {x: 22.0983, y: 22.0989}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &102731286
@@ -1683,7 +1683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -386.8169, y: 189.0849}
+  m_AnchoredPosition: {x: -217.8169, y: 131.0849}
   m_SizeDelta: {x: 22.2689, y: 22.2689}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &426531462
@@ -196685,7 +196685,7 @@ GameObject:
   - component: {fileID: 661490604}
   - component: {fileID: 661490603}
   - component: {fileID: 661490602}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197065,7 +197065,7 @@ GameObject:
   - component: {fileID: 758882947}
   - component: {fileID: 758882949}
   - component: {fileID: 758882948}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197570,7 +197570,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 399, y: 178}
+  m_AnchoredPosition: {x: 235, y: 130}
   m_SizeDelta: {x: 36.4839, y: 35.5045}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &884509216
@@ -197681,9 +197681,9 @@ GameObject:
   - component: {fileID: 905848230}
   - component: {fileID: 905848232}
   - component: {fileID: 905848231}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Esqueleto(Boss)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -197797,11 +197797,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a4d949444faf847a7a282a6d1d6348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Esqueleto
-  pontoA: {fileID: 1598150705}
-  pontoB: {fileID: 506699473}
-  velocidade: 2
-  tempoDesaparecido: 0.35
-  vida: 3
+  velocidadePerseguicao: 4
+  distanciaDeteccao: 7
+  vida: 1
   dano: 1
   tempoEntreDanos: 1
 --- !u!50 &905848231
@@ -200194,7 +200192,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1420314171}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200736,7 +200734,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1546410280}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -201555,7 +201553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -363.5641, y: 188.0385}
+  m_AnchoredPosition: {x: -194.56409, y: 130.0385}
   m_SizeDelta: {x: 21.0538, y: 21.054}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1630444685
@@ -202096,7 +202094,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1715493960}
   - component: {fileID: 1715493959}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: BossHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202331,9 +202329,9 @@ GameObject:
   - component: {fileID: 1744877492}
   - component: {fileID: 1744877491}
   - component: {fileID: 1744877490}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Minotauro
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202357,6 +202355,7 @@ MonoBehaviour:
   machadoPrefab: {fileID: 3721211077219079989, guid: b6ca57f84a78daf428ef3a1b15d6e50e, type: 3}
   vidaMaxima: 15
   barraVida: {fileID: 1715493959}
+  fillImage: {fileID: 0}
 --- !u!61 &1744877491
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -202816,7 +202815,7 @@ GameObject:
   - component: {fileID: 1851896958}
   - component: {fileID: 1851896960}
   - component: {fileID: 1851896959}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
