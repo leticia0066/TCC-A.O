@@ -1,34 +1,44 @@
+
+using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerHazard : MonoBehaviour
 {
-    [Header("Configurações de Checkpoint")]
-    [Tooltip("Posição para onde o player irá ao tocar no perigo")]
+    [Header("Checkpoint")]
+    [Tooltip("Posição inicial ou posição do último checkpoint")]
     public Vector3 respawnPoint;
 
+    [Header("Configuração do Perigo")]
+    [Tooltip("Tempo mínimo para impedir respawns repetidos")]
+    public float respawnCooldown = 0.2f;
+
     private Rigidbody2D rb;
+    private bool respawning;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     private void Start()
     {
-        // Salva o Rigidbody2D do Player
-        rb = GetComponent<Rigidbody2D>();
-
-        // Salva a posição inicial como o primeiro checkpoint
+        // A posição inicial funciona como checkpoint padrão.
         respawnPoint = transform.position;
     }
 
-    // Este método é executado QUANDO O PLAYER entra em um colisor do tipo Trigger
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Verifica se o objeto onde o player entrou tem a Tag "Hazard" (sua água)
-        if (collision.CompareTag("Hazard"))
-        {
-            Respawn();
-        }
+        VerificarPerigo(collision);
     }
 
-    // Também adicionamos o OnTriggerStay2D caso o player comece o jogo já dentro da água
     private void OnTriggerStay2D(Collider2D collision)
+    {
+        // Também verifica se o Player continuar dentro do perigo.
+        VerificarPerigo(collision);
+    }
+
+    private void VerificarPerigo(Collider2D collision)
     {
         if (collision.CompareTag("Hazard"))
         {
@@ -38,23 +48,41 @@ public class PlayerHazard : MonoBehaviour
 
     public void Respawn()
     {
-        // Move o player para a posição do checkpoint salvador
+        // Impede que o mesmo contato provoque vários respawns.
+        if (respawning)
+            return;
+
+        respawning = true;
+
+        // Retorna o Player ao checkpoint salvo.
         transform.position = respawnPoint;
 
-        // Zera as forças e aceleração do Rigidbody para o player não continuar se movendo após o respawn
+        // Interrompe o movimento físico.
         if (rb != null)
         {
-            rb.linearVelocity = Vector2.zero; // Unity 6 / 2023+
+            rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
         }
 
-        Debug.Log("O Player tocou na água e retornou ao Checkpoint!");
+        Debug.Log("Player tocou em um perigo e voltou ao checkpoint.");
+
+        StartCoroutine(LiberarRespawn());
     }
 
-    // Função pública para atualizar o checkpoint futuramente (ex: ao tocar numa bandeira)
+    private IEnumerator LiberarRespawn()
+    {
+        // Usa tempo real para funcionar mesmo com o jogo pausado.
+        yield return new WaitForSecondsRealtime(
+            Mathf.Max(0.05f, respawnCooldown)
+        );
+
+        respawning = false;
+    }
+
     public void SetNewCheckpoint(Vector3 newPosition)
     {
         respawnPoint = newPosition;
-        Debug.Log("Novo Checkpoint salvo em: " + newPosition);
+
+        Debug.Log("Novo checkpoint salvo: " + newPosition);
     }
 }

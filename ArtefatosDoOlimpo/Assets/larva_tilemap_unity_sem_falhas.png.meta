@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: fa51d8db144a0fe49b243fcd309e134d
+guid: 9ebec49fe03d92c46991a5da8e8afd2d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3246874916240974566
-    second: larva da fase1_0
-  - first:
-      213: 8872492888435731728
-    second: larva da fase1_1
+      213: -748882004602316193
+    second: larva_tilemap_unity_sem_falhas_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -54,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 80
+  spritePixelsToUnits: 160
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: larva da fase1_0
+      name: larva_tilemap_unity_sem_falhas_0
       rect:
         serializedVersion: 2
-        x: 34
-        y: 195
-        width: 159
-        height: 145
+        x: 0
+        y: 160
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e26bac98873f0d20800000000000000
-      internalID: 3246874916240974566
+      spriteID: f5a1ff8d8cf6b95f0800000000000000
+      internalID: -748882004602316193
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: larva da fase1_1
+      name: larva_tilemap_unity_sem_falhas_1
       rect:
         serializedVersion: 2
-        x: 33
-        y: 46
-        width: 159
-        height: 144
+        x: 0
+        y: 0
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 01d2467064d612b70800000000000000
-      internalID: 8872492888435731728
+      spriteID: b6bf15632afd7f3488c2818f6b91d175
+      internalID: -1754630309
       vertices: []
       indices: 
       edges: []
@@ -150,7 +147,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 756c2bb30abc29a459f510c1f11cf99e
+    spriteID: 511bc5185b440dc408764b282fc5f2c7
     internalID: 0
     vertices: []
     indices: 
@@ -160,10 +157,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":80.0,"y":80.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":160.0,"y":160.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      larva da fase1_0: 3246874916240974566
-      larva da fase1_1: 8872492888435731728
+      larva_tilemap_unity_sem_falhas_0: -748882004602316193
+      larva_tilemap_unity_sem_falhas_1: -1754630309
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
