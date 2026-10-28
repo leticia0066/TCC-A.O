@@ -1,16 +1,112 @@
+
+using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class PauseMenu : MonoBehaviour
 {
+    [Header("Painéis")]
     public GameObject pausePanel;
     public GameObject settingsPanel;
 
-    bool paused;
+    [Header("Transição")]
+    public UITransition settingsTransition;
 
-    void Update()
+    [Header("Botões")]
+    public Button continuarButton;
+    public Button reiniciarButton;
+    public Button sairButton;
+    public Button botaoConfiguracao;
+
+    [Header("Volume")]
+    public Slider volumeSlider;
+    public TMP_Text textoVolume;
+
+    [Header("Menu principal")]
+    public string nomeMenuPrincipal = "_Boot";
+
+    private bool pausado = false;
+    private bool fechandoPainel = false;
+
+    private const string CHAVE_VOLUME = "VolumeJogo";
+
+    private Coroutine fecharCoroutine;
+
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        Time.timeScale = 1f;
+        pausado = false;
+        fechandoPainel = false;
+
+        // Recupera o volume salvo.
+        float volumeSalvo = PlayerPrefs.GetFloat(
+            CHAVE_VOLUME,
+            1f
+        );
+
+        AudioListener.volume = volumeSalvo;
+
+        // Configura o Slider.
+        if (volumeSlider != null)
+        {
+            volumeSlider.minValue = 0f;
+            volumeSlider.maxValue = 1f;
+            volumeSlider.wholeNumbers = false;
+
+            volumeSlider.SetValueWithoutNotify(volumeSalvo);
+
+            volumeSlider.onValueChanged.RemoveListener(
+                AlterarVolume
+            );
+
+            volumeSlider.onValueChanged.AddListener(
+                AlterarVolume
+            );
+        }
+
+        // Conecta os botões.
+        if (continuarButton != null)
+        {
+            continuarButton.onClick.RemoveListener(Continuar);
+            continuarButton.onClick.AddListener(Continuar);
+        }
+
+        if (reiniciarButton != null)
+        {
+            reiniciarButton.onClick.RemoveListener(ReiniciarJogo);
+            reiniciarButton.onClick.AddListener(ReiniciarJogo);
+        }
+
+        if (sairButton != null)
+        {
+            sairButton.onClick.RemoveListener(VoltarAoMenu);
+            sairButton.onClick.AddListener(VoltarAoMenu);
+        }
+
+        if (botaoConfiguracao != null)
+        {
+            botaoConfiguracao.onClick.RemoveListener(TogglePause);
+            botaoConfiguracao.onClick.AddListener(TogglePause);
+        }
+
+        // O painel externo começa fechado.
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        // O painel interno começa fechado.
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        AtualizarTextoVolume(volumeSalvo);
+    }
+
+    private void Update()
+    {
+        // Abre e fecha usando a tecla P.
+        if (Input.GetKeyDown(KeyCode.P))
         {
             TogglePause();
         }
@@ -18,35 +114,187 @@ public class PauseMenu : MonoBehaviour
 
     public void TogglePause()
     {
-        paused = !paused;
-
-        pausePanel.SetActive(paused);
-
-        Time.timeScale =
-            paused ? 0 : 1;
+        if (pausado)
+            Continuar();
+        else
+            Pausar();
     }
 
-    public void OpenSettings()
+    public void Pausar()
     {
-        settingsPanel.SetActive(true);
+        if (pausePanel == null)
+        {
+            Debug.LogError(
+                "PauseMenu: arraste PausePanel para o campo Pause Panel!"
+            );
+            return;
+        }
+
+        // Cancela um fechamento que ainda esteja acontecendo.
+        if (fecharCoroutine != null)
+        {
+            StopCoroutine(fecharCoroutine);
+            fecharCoroutine = null;
+        }
+
+        pausado = true;
+        fechandoPainel = false;
+
+        // O painel externo precisa ficar ativo durante a animação.
+        pausePanel.SetActive(true);
+
+        if (settingsTransition != null)
+        {
+            settingsTransition.Show();
+        }
+        else if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
+
+        Time.timeScale = 0f;
     }
 
-    public void CloseSettings()
+    public void Continuar()
     {
-        settingsPanel.SetActive(false);
+        if (!pausado || fechandoPainel)
+            return;
+
+        pausado = false;
+        fechandoPainel = true;
+
+        // Retoma o jogo para que os outros sistemas funcionem.
+        Time.timeScale = 1f;
+
+        if (settingsTransition != null)
+        {
+            settingsTransition.Hide();
+
+            fecharCoroutine = StartCoroutine(
+                FecharPainelDepoisDaAnimacao()
+            );
+        }
+        else
+        {
+            if (settingsPanel != null)
+                settingsPanel.SetActive(false);
+
+            if (pausePanel != null)
+                pausePanel.SetActive(false);
+
+            fechandoPainel = false;
+        }
     }
 
-    public void Restart()
+    private IEnumerator FecharPainelDepoisDaAnimacao()
     {
-        Time.timeScale = 1;
+        // Espera a duração configurada na transição.
+        float espera = 0.3f;
+
+        if (settingsTransition != null)
+            espera = settingsTransition.duration + 0.05f;
+
+        yield return new WaitForSecondsRealtime(espera);
+
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        fechandoPainel = false;
+        fecharCoroutine = null;
+    }
+
+    public void AlterarVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+
+        AudioListener.volume = volume;
+
+        PlayerPrefs.SetFloat(CHAVE_VOLUME, volume);
+        PlayerPrefs.Save();
+
+        AtualizarTextoVolume(volume);
+    }
+
+    private void AtualizarTextoVolume(float volume)
+    {
+        if (textoVolume != null)
+        {
+            textoVolume.text =
+                "VOLUME: " +
+                Mathf.RoundToInt(volume * 100f) +
+                "%";
+        }
+    }
+
+    public void ReiniciarJogo()
+    {
+        Time.timeScale = 1f;
+        pausado = false;
+        fechandoPainel = false;
 
         SceneManager.LoadScene(
             SceneManager.GetActiveScene().buildIndex
         );
     }
 
-    public void ExitGame()
+    public void VoltarAoMenu()
     {
-        Application.Quit();
+        if (string.IsNullOrWhiteSpace(nomeMenuPrincipal))
+        {
+            Debug.LogError(
+                "PauseMenu: informe o nome da cena do menu principal!"
+            );
+            return;
+        }
+
+        int indiceCena = -1;
+
+        // Procura a cena pelo nome.
+        for (
+            int i = 0;
+            i < SceneManager.sceneCountInBuildSettings;
+            i++)
+        {
+            string caminho =
+                SceneUtility.GetScenePathByBuildIndex(i);
+
+            string nomeCena =
+                Path.GetFileNameWithoutExtension(caminho);
+
+            if (nomeCena == nomeMenuPrincipal)
+            {
+                indiceCena = i;
+                break;
+            }
+        }
+
+        if (indiceCena < 0)
+        {
+            Debug.LogError(
+                "PauseMenu: a cena '" +
+                nomeMenuPrincipal +
+                "' não foi encontrada nas cenas incluídas no jogo."
+            );
+            return;
+        }
+
+        Time.timeScale = 1f;
+        pausado = false;
+        fechandoPainel = false;
+
+        SceneManager.LoadScene(indiceCena);
+    }
+
+    private void OnDestroy()
+    {
+        if (volumeSlider != null)
+        {
+            volumeSlider.onValueChanged.RemoveListener(
+                AlterarVolume
+            );
+        }
     }
 }

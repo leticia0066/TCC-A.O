@@ -1,173 +1,90 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HeartUI : MonoBehaviour
 {
-    [Header("Barra de Vida")]
-    public Slider healthSlider;
+    [Header("Imagens dos 3 corações")]
+    public Image[] hearts = new Image[3];
 
-    [Header("Coração")]
-    public Image heartIcon;
+    [Header("Sprites dos corações")]
+    public Sprite fullHeart;
+    public Sprite halfHeart;
+    public Sprite emptyHeart;
 
-    [Header("Vida")]
+    [Header("Configuração")]
     public int maxHealth = 6;
-
-    [Header("Cores")]
-    public Color highHealthColor = new Color(0.2f, 0.85f, 0.2f);
-    public Color mediumHealthColor = Color.yellow;
-    public Color lowHealthColor = Color.red;
-
-    [Header("Transição")]
-    public bool smoothTransition = true;
-    public float transitionSpeed = 5f;
-
-    private float vidaDesejada;
-    private Color corDesejada;
-
-    private Image imagemPreenchimento;
 
     private void Awake()
     {
-        LocalizarPreenchimento();
+        maxHealth = Mathf.Max(1, maxHealth);
     }
 
     private void Start()
     {
-        maxHealth = Mathf.Max(1, maxHealth);
-
-        if (healthSlider == null)
+        if (hearts == null || hearts.Length != 3)
         {
             Debug.LogError(
-                "HeartUI: arraste BarraVidaSlider para Health Slider!"
+                "HeartUI: configure exatamente 3 imagens de coração!"
             );
             return;
         }
 
-        healthSlider.minValue = 0;
-        healthSlider.maxValue = maxHealth;
-        healthSlider.wholeNumbers = true;
-        healthSlider.interactable = false;
-
-        LocalizarPreenchimento();
-
-        if (imagemPreenchimento == null)
+        for (int i = 0; i < hearts.Length; i++)
         {
-            Debug.LogError(
-                "HeartUI: o Fill Rect precisa ter um componente Image!"
-            );
-            return;
-        }
-
-        // Começa com a barra cheia.
-        AtualizarHearts(maxHealth);
-
-        healthSlider.SetValueWithoutNotify(maxHealth);
-
-        imagemPreenchimento.color = corDesejada;
-
-        if (heartIcon != null)
-            heartIcon.color = corDesejada;
-    }
-
-    private void Update()
-    {
-        if (healthSlider == null)
-            return;
-
-        // Atualiza o preenchimento da barra.
-        if (smoothTransition)
-        {
-            healthSlider.value = Mathf.MoveTowards(
-                healthSlider.value,
-                vidaDesejada,
-                transitionSpeed * Time.deltaTime
-            );
-
-            // Atualiza a cor suavemente.
-            if (imagemPreenchimento != null)
+            if (hearts[i] == null)
             {
-                imagemPreenchimento.color = Color.Lerp(
-                    imagemPreenchimento.color,
-                    corDesejada,
-                    transitionSpeed * Time.deltaTime
+                Debug.LogError(
+                    "HeartUI: falta configurar a imagem do coração " +
+                    (i + 1) + " no Inspector!"
                 );
+
+                return;
             }
         }
-        else
-        {
-            healthSlider.value = vidaDesejada;
 
-            if (imagemPreenchimento != null)
-                imagemPreenchimento.color = corDesejada;
+        if (fullHeart == null ||
+            halfHeart == null ||
+            emptyHeart == null)
+        {
+            Debug.LogError(
+                "HeartUI: configure os sprites cheio, meio e vazio!"
+            );
+            return;
         }
 
-        if (heartIcon != null)
-            heartIcon.color = corDesejada;
+        UpdateHearts(maxHealth);
     }
 
-    // Método chamado pelo PlayerHealth.
     public void UpdateHearts(int health)
     {
-        AtualizarHearts(health);
-    }
-
-    private void AtualizarHearts(int health)
-    {
-        if (healthSlider == null)
+        if (hearts == null || hearts.Length != 3)
             return;
 
         health = Mathf.Clamp(health, 0, maxHealth);
 
-        // Define quanto a barra deve ficar preenchida.
-        vidaDesejada = health;
-
-        float porcentagemVida = (float)health / maxHealth;
-
-        // Mais de 50%: verde.
-        // Mais de 20% até 50%: amarelo.
-        // De 1% até 20%: vermelho.
-        // 0%: vermelho e barra vazia.
-        if (health == 0)
+        for (int i = 0; i < hearts.Length; i++)
         {
-            corDesejada = lowHealthColor;
-        }
-        else if (porcentagemVida > 0.5f)
-        {
-            corDesejada = highHealthColor;
-        }
-        else if (porcentagemVida > 0.2f)
-        {
-            corDesejada = mediumHealthColor;
-        }
-        else
-        {
-            corDesejada = lowHealthColor;
-        }
-    }
+            if (hearts[i] == null)
+                continue;
 
-    private void LocalizarPreenchimento()
-    {
-        if (healthSlider == null)
-            return;
+            // Cada coração representa 2 pontos de vida.
+            int vidaDoCoracao = health - (i * 2);
 
-        if (healthSlider.fillRect == null)
-            return;
+            if (vidaDoCoracao >= 2)
+            {
+                hearts[i].sprite = fullHeart;
+            }
+            else if (vidaDoCoracao == 1)
+            {
+                hearts[i].sprite = halfHeart;
+            }
+            else
+            {
+                hearts[i].sprite = emptyHeart;
+            }
 
-        imagemPreenchimento =
-            healthSlider.fillRect.GetComponent<Image>();
-    }
-
-    public void SetMaxHealth(int newMaxHealth)
-    {
-        if (newMaxHealth <= 0)
-            return;
-
-        maxHealth = newMaxHealth;
-
-        if (healthSlider != null)
-        {
-            healthSlider.maxValue = maxHealth;
+            hearts[i].enabled = true;
+            hearts[i].preserveAspect = true;
         }
     }
 }

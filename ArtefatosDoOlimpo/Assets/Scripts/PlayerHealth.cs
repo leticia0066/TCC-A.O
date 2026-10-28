@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
     public int maxLives = 3;
     public int lives = 3;
 
-    [Header("UI")]
+    [Header("Interface")]
     public HeartUI heartUI;
 
     [Header("Tempo")]
@@ -20,54 +20,63 @@ public class PlayerHealth : MonoBehaviour
     public float gameOverDelay = 0.5f;
 
     private Rigidbody2D rb;
-    private Animator anim;
 
     private bool isDead = false;
     private bool gameOverStarted = false;
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
 
         if (heartUI == null)
+        {
             heartUI = FindFirstObjectByType<HeartUI>();
+        }
     }
 
-    void Start()
+    private void Start()
     {
-        // Garante valores iniciais válidos.
         maxHealth = Mathf.Max(1, maxHealth);
         maxLives = Mathf.Max(1, maxLives);
 
         currentHealth = maxHealth;
         lives = Mathf.Clamp(lives, 1, maxLives);
 
-        UpdateUI();
+        AtualizarInterface();
     }
 
     public void TakeDamage(int damage)
     {
-        // Impede dano repetido durante morte ou Game Over.
+        // Não recebe dano durante a morte ou o Game Over.
         if (isDead || gameOverStarted || damage <= 0)
+        {
             return;
+        }
 
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        // Reduz a vida sem permitir valores negativos.
+        currentHealth = Mathf.Clamp(
+            currentHealth - damage,
+            0,
+            maxHealth
+        );
 
         if (AudioManager.Instance != null)
+        {
             AudioManager.Instance.TocarDano();
+        }
 
-        UpdateUI();
+        AtualizarInterface();
 
-        // Ainda tem corações: continua jogando.
+        // Se ainda tem vida, continua jogando.
         if (currentHealth > 0)
+        {
             return;
+        }
 
-        // A vida chegou a zero: começa a morrer.
+        // A vida chegou a zero.
         isDead = true;
 
-        // Só perde uma vida quando todos os corações acabam.
+        // Perde uma tentativa.
         lives = Mathf.Max(0, lives - 1);
 
         if (lives > 0)
@@ -81,19 +90,26 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    void UpdateUI()
+    private void AtualizarInterface()
     {
         if (heartUI != null)
+        {
             heartUI.UpdateHearts(currentHealth);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerHealth: HeartUI não foi encontrado. " +
+                "Confira o campo Heart UI no Inspector."
+            );
+        }
     }
 
-    IEnumerator RespawnToCheckpoint()
+    private IEnumerator RespawnToCheckpoint()
     {
         PararMovimento();
 
-        // Não usa SetTrigger("Die"), pois esse parâmetro
-        // não existe no Animator atual do personagem.
-
+        // Aguarda antes de retornar ao checkpoint.
         yield return new WaitForSeconds(respawnDelay);
 
         if (GameManager.instance != null)
@@ -104,51 +120,50 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             Debug.LogError(
-                "GameManager não encontrado! Confira se existe na cena."
+                "PlayerHealth: GameManager.instance não foi encontrado!"
             );
         }
 
-        // Recupera os corações, mas NÃO recupera a vida perdida.
+        // Restaura toda a vida.
         currentHealth = maxHealth;
-        UpdateUI();
 
-        if (rb != null)
-            rb.linearVelocity = Vector2.zero;
+        // Atualiza os três corações.
+        AtualizarInterface();
 
+        PararMovimento();
+
+        // Pequena espera antes de permitir receber dano novamente.
         yield return new WaitForSeconds(0.2f);
 
         isDead = false;
     }
 
-    IEnumerator GameOver()
+    private IEnumerator GameOver()
     {
         PararMovimento();
 
-        // Não teleporta o jogador para o checkpoint.
         yield return new WaitForSeconds(gameOverDelay);
 
         if (GameOverManager.Instance != null)
         {
-            // Primeiro mostra o painel.
             GameOverManager.Instance.ShowGameOver();
 
-            // Depois pausa o jogo.
             Time.timeScale = 0f;
         }
         else
         {
             Debug.LogError(
-                "GameOverManager.Instance está vazio! " +
-                "Confira o GameOverManager e o painel na cena."
+                "PlayerHealth: GameOverManager.Instance não foi encontrado! " +
+                "Confira o GameOverManager e a referência do painel."
             );
 
-            // Evita deixar o jogo travado sem painel.
-            isDead = false;
+            // Evita manter o jogo pausado sem um painel.
             gameOverStarted = false;
+            isDead = false;
         }
     }
 
-    void PararMovimento()
+    private void PararMovimento()
     {
         if (rb != null)
         {
@@ -157,13 +172,14 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // Permite recuperar o jogador caso você precise reiniciar
-    // os atributos por um botão ou outro sistema.
     public void ResetarVidas()
     {
         StopAllCoroutines();
 
         Time.timeScale = 1f;
+
+        maxHealth = Mathf.Max(1, maxHealth);
+        maxLives = Mathf.Max(1, maxLives);
 
         currentHealth = maxHealth;
         lives = maxLives;
@@ -171,6 +187,7 @@ public class PlayerHealth : MonoBehaviour
         isDead = false;
         gameOverStarted = false;
 
-        UpdateUI();
+        PararMovimento();
+        AtualizarInterface();
     }
 }
