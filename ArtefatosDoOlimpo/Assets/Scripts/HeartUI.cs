@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,17 +29,12 @@ public class HeartUI : MonoBehaviour
 
     private void Awake()
     {
-        if (healthSlider != null && healthSlider.fillRect != null)
-        {
-            imagemPreenchimento =
-                healthSlider.fillRect.GetComponent<Image>();
-        }
+        LocalizarPreenchimento();
     }
 
     private void Start()
     {
-        if (maxHealth <= 0)
-            maxHealth = 6;
+        maxHealth = Mathf.Max(1, maxHealth);
 
         if (healthSlider == null)
         {
@@ -53,30 +49,21 @@ public class HeartUI : MonoBehaviour
         healthSlider.wholeNumbers = true;
         healthSlider.interactable = false;
 
-        if (healthSlider.fillRect == null)
-        {
-            Debug.LogError(
-                "HeartUI: o campo Fill Rect do Slider está vazio!"
-            );
-            return;
-        }
-
-        imagemPreenchimento =
-            healthSlider.fillRect.GetComponent<Image>();
+        LocalizarPreenchimento();
 
         if (imagemPreenchimento == null)
         {
             Debug.LogError(
-                "HeartUI: o objeto Fill precisa ter um componente Image!"
+                "HeartUI: o Fill Rect precisa ter um componente Image!"
             );
             return;
         }
 
         // Começa com a barra cheia.
-        AtualizarBarra(maxHealth);
+        AtualizarHearts(maxHealth);
 
-        // Inicializa a aparência imediatamente.
         healthSlider.SetValueWithoutNotify(maxHealth);
+
         imagemPreenchimento.color = corDesejada;
 
         if (heartIcon != null)
@@ -88,16 +75,16 @@ public class HeartUI : MonoBehaviour
         if (healthSlider == null)
             return;
 
+        // Atualiza o preenchimento da barra.
         if (smoothTransition)
         {
-            // Diminui o preenchimento suavemente.
             healthSlider.value = Mathf.MoveTowards(
                 healthSlider.value,
                 vidaDesejada,
                 transitionSpeed * Time.deltaTime
             );
 
-            // Faz a transição de cor.
+            // Atualiza a cor suavemente.
             if (imagemPreenchimento != null)
             {
                 imagemPreenchimento.color = Color.Lerp(
@@ -119,30 +106,37 @@ public class HeartUI : MonoBehaviour
             heartIcon.color = corDesejada;
     }
 
-    // Mantém o nome usado pelo sistema de vida atual.
+    // Método chamado pelo PlayerHealth.
     public void UpdateHearts(int health)
     {
-        AtualizarBarra(health);
+        AtualizarHearts(health);
     }
 
-    private void AtualizarBarra(int health)
+    private void AtualizarHearts(int health)
     {
         if (healthSlider == null)
             return;
 
         health = Mathf.Clamp(health, 0, maxHealth);
 
-        // Guarda a vida desejada sem redefini-la a cada frame.
+        // Define quanto a barra deve ficar preenchida.
         vidaDesejada = health;
 
         float porcentagemVida = (float)health / maxHealth;
 
-        // Escolhe a cor conforme a vida restante.
-        if (porcentagemVida > 0.6f)
+        // Mais de 50%: verde.
+        // Mais de 20% até 50%: amarelo.
+        // De 1% até 20%: vermelho.
+        // 0%: vermelho e barra vazia.
+        if (health == 0)
+        {
+            corDesejada = lowHealthColor;
+        }
+        else if (porcentagemVida > 0.5f)
         {
             corDesejada = highHealthColor;
         }
-        else if (porcentagemVida > 0.3f)
+        else if (porcentagemVida > 0.2f)
         {
             corDesejada = mediumHealthColor;
         }
@@ -152,7 +146,18 @@ public class HeartUI : MonoBehaviour
         }
     }
 
-    // Permite atualizar a vida máxima caso o sistema precise.
+    private void LocalizarPreenchimento()
+    {
+        if (healthSlider == null)
+            return;
+
+        if (healthSlider.fillRect == null)
+            return;
+
+        imagemPreenchimento =
+            healthSlider.fillRect.GetComponent<Image>();
+    }
+
     public void SetMaxHealth(int newMaxHealth)
     {
         if (newMaxHealth <= 0)
