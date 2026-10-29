@@ -537,7 +537,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -229.57, y: 175}
+  m_AnchoredPosition: {x: -224.3, y: 152.7}
   m_SizeDelta: {x: 121.2661, y: 38.8139}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &627622865
@@ -789,7 +789,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!225 &883949681
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -798,9 +798,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 883949680}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &883949682
 MonoBehaviour:
@@ -816,7 +816,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -895,7 +895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 201.1, y: -118.81}
+  m_AnchoredPosition: {x: 194.2, y: -107}
   m_SizeDelta: {x: 128.0286, y: 50.446}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033838110
@@ -952,18 +952,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2055241001}
-        m_TargetAssemblyTypeName: SceneTransition, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Fase3_Zeus
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1033838111
@@ -1115,7 +1103,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -188.4, y: -118.8053}
+  m_AnchoredPosition: {x: -188.4, y: -109.3}
   m_SizeDelta: {x: 121.8713, y: 54.615}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1194706881
@@ -1172,18 +1160,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2055241001}
-        m_TargetAssemblyTypeName: SceneTransition, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Fase1_Aress
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1194706882
@@ -1550,6 +1526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f1b2e0b08f10504cbaf5a821829bbc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelecaoFases
+  sceneTransition: {fileID: 2055241001}
 --- !u!4 &1848398083
 Transform:
   m_ObjectHideFlags: 0
@@ -1601,7 +1578,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.5, y: -115.07}
+  m_AnchoredPosition: {x: 9, y: -105.1}
   m_SizeDelta: {x: 124.6564, y: 47.1426}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1983842324
@@ -1658,18 +1635,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2055241001}
-        m_TargetAssemblyTypeName: SceneTransition, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Fase2_Atena
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1983842325
