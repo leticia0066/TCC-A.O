@@ -1,20 +1,24 @@
+
 using UnityEngine;
 
 public class SpikeTrap : MonoBehaviour
 {
     [Header("Dano")]
-    public int damage = 1; // 1 = meio coração
+    [Min(1)]
+    public int damage = 1;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Player"))
+        // Procura o PlayerHealth no objeto atingido
+        // ou em um dos objetos pais.
+        PlayerHealth player =
+            collision.GetComponentInParent<PlayerHealth>();
+
+        if (player == null)
             return;
 
-        PlayerHealth player = collision.GetComponent<PlayerHealth>();
+        Debug.Log("Espinhos atingiram o jogador!");
 
-        if (player != null)
-        {
-            player.TakeDamage(damage);
-        }
+        player.TakeDamage(damage);
     }
 }
