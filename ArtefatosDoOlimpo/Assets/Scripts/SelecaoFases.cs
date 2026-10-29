@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class SelecaoFases : MonoBehaviour
@@ -6,40 +5,56 @@ public class SelecaoFases : MonoBehaviour
     [Header("Transição de cena")]
     public SceneTransition sceneTransition;
 
+    // Guarda a fase escolhida enquanto a cutscene acontece.
+    public static string NomeFaseSelecionada = "Fase1_Aress";
+
     public void JogarFase1()
     {
-        CarregarCena("Fase1_Aress");
+        NomeFaseSelecionada = "Fase1_Aress";
+        AbrirCutscene();
     }
 
     public void JogarFase2()
     {
-        CarregarCena("Fase2_Atena");
+        NomeFaseSelecionada = "Fase2_Atena";
+        AbrirCutscene();
     }
 
     public void JogarFase3()
     {
-        CarregarCena("Fase3_Zeus");
+        NomeFaseSelecionada = "Fase3_Zeus";
+        AbrirCutscene();
     }
 
     public void Voltar()
     {
-        CarregarCena("TelaInicial");
+        if (sceneTransition == null)
+        {
+            Debug.LogError(
+                "SelecaoFases: o campo Scene Transition está vazio!"
+            );
+            return;
+        }
+
+        sceneTransition.ChangeScene("TelaInicial");
     }
 
-    private void CarregarCena(string nomeCena)
+    private void AbrirCutscene()
     {
         if (sceneTransition == null)
         {
             Debug.LogError(
-                "SelecaoFases: o campo Scene Transition está vazio! " +
-                "Arraste o SceneTransitionManager para esse campo."
+                "SelecaoFases: arraste o objeto com SceneTransition " +
+                "para o campo Scene Transition no Inspector."
             );
-
             return;
         }
 
-        Debug.Log("Solicitando transição para: " + nomeCena);
+        Debug.Log(
+            "Fase selecionada: " + NomeFaseSelecionada +
+            ". Abrindo CutsceneIntro."
+        );
 
-        sceneTransition.ChangeScene(nomeCena);
+        sceneTransition.ChangeScene("CutsceneIntro");
     }
 }

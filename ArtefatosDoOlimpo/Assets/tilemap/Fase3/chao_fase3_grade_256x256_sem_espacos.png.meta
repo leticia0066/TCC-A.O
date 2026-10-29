@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f1f7dc6cbeafe144f8c986e04f4c7571
+guid: b42fec2bed6ab4d44b599fd442db83e7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2499898377470638279
-    second: chao_fase3_tilesheet_sem_emendas_0
+      213: 6353523396001612903
+    second: chao_fase3_grade_256x256_sem_espacos_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,10 +48,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 252
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: chao_fase3_tilesheet_sem_emendas_0
+      name: chao_fase3_grade_256x256_sem_espacos_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 224
-        width: 252
-        height: 224
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,20 +115,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9378944bba39e4dd0800000000000000
-      internalID: -2499898377470638279
+      spriteID: 7644fc2cddf3c2850800000000000000
+      internalID: 6353523396001612903
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chao_fase3_tilesheet_sem_emendas_1
+      name: chao_fase3_grade_256x256_sem_espacos_1
       rect:
         serializedVersion: 2
-        x: 252
-        y: 224
-        width: 252
-        height: 224
+        x: 256
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e5b9e2946034081479af63e03d9c258c
-      internalID: -636047048
+      spriteID: 7a614597671a8c240a30747325edfcd7
+      internalID: 185761703
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chao_fase3_tilesheet_sem_emendas_2
+      name: chao_fase3_grade_256x256_sem_espacos_2
       rect:
         serializedVersion: 2
-        x: 504
-        y: 224
-        width: 252
-        height: 224
+        x: 512
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,20 +159,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fc543b9aaf2bff849b64be6184788ac7
-      internalID: -1296706908
+      spriteID: 8ccb9ad15be280d4ea51460d5bc7f384
+      internalID: 251167710
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chao_fase3_tilesheet_sem_emendas_3
+      name: chao_fase3_grade_256x256_sem_espacos_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 252
-        height: 224
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,20 +181,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 880fb82f47067cb42a327a24fea02001
-      internalID: 1034725913
+      spriteID: 8e8d4aef5a9b17e4abe599019edd7184
+      internalID: -488253570
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chao_fase3_tilesheet_sem_emendas_4
+      name: chao_fase3_grade_256x256_sem_espacos_4
       rect:
         serializedVersion: 2
-        x: 252
+        x: 256
         y: 0
-        width: 252
-        height: 224
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,20 +203,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6717593ef7d2a8a42b9a0da4c7989a01
-      internalID: -981816753
+      spriteID: 4bec2f8cba3cf7d439432c6f5c89ea31
+      internalID: -817877035
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chao_fase3_tilesheet_sem_emendas_5
+      name: chao_fase3_grade_256x256_sem_espacos_5
       rect:
         serializedVersion: 2
-        x: 504
+        x: 512
         y: 0
-        width: 252
-        height: 224
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -225,8 +225,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 21acb26ced913524e94d877818fbcfb5
-      internalID: -988440973
+      spriteID: be3a008141952004385e8621879f35d5
+      internalID: -1918556300
       vertices: []
       indices: 
       edges: []
@@ -235,7 +235,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: feadc362d78b9f548b0857b5255d4873
+    spriteID: 3d3ff0ceb51371b47b61c977073ee973
     internalID: 0
     vertices: []
     indices: 
@@ -245,14 +245,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":252.0,"y":224.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      chao_fase3_tilesheet_sem_emendas_0: -2499898377470638279
-      chao_fase3_tilesheet_sem_emendas_1: -636047048
-      chao_fase3_tilesheet_sem_emendas_2: -1296706908
-      chao_fase3_tilesheet_sem_emendas_3: 1034725913
-      chao_fase3_tilesheet_sem_emendas_4: -981816753
-      chao_fase3_tilesheet_sem_emendas_5: -988440973
+      chao_fase3_grade_256x256_sem_espacos_0: 6353523396001612903
+      chao_fase3_grade_256x256_sem_espacos_1: 185761703
+      chao_fase3_grade_256x256_sem_espacos_2: 251167710
+      chao_fase3_grade_256x256_sem_espacos_3: -488253570
+      chao_fase3_grade_256x256_sem_espacos_4: -817877035
+      chao_fase3_grade_256x256_sem_espacos_5: -1918556300
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

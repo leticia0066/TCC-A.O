@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SelecaoFases.unity
     guid: b293a85dab00774429adfbcc1e84a7c5
   - enabled: 1
+    path: Assets/Scenes/CutsceneIntro.unity
+    guid: 334f5307f2e9450488458a593803d60f
+  - enabled: 1
     path: Assets/Scenes/Fase1_Aress.unity
     guid: 5176d578e1a1459488a82f96a42dd6f0
   - enabled: 1
