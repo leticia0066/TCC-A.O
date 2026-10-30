@@ -5,8 +5,16 @@ public class SelecaoFases : MonoBehaviour
     [Header("Transição de cena")]
     public SceneTransition sceneTransition;
 
-    // Guarda a fase escolhida enquanto a cutscene acontece.
+    [Header("Som dos botões")]
+    public MainMenu mainMenu;
+
     public static string NomeFaseSelecionada = "Fase1_Aress";
+
+    private void Awake()
+    {
+        if (mainMenu == null)
+            mainMenu = FindFirstObjectByType<MainMenu>();
+    }
 
     public void JogarFase1()
     {
@@ -28,11 +36,14 @@ public class SelecaoFases : MonoBehaviour
 
     public void Voltar()
     {
+        TocarSomBotao();
+
         if (sceneTransition == null)
         {
             Debug.LogError(
                 "SelecaoFases: o campo Scene Transition está vazio!"
             );
+
             return;
         }
 
@@ -41,12 +52,14 @@ public class SelecaoFases : MonoBehaviour
 
     private void AbrirCutscene()
     {
+        TocarSomBotao();
+
         if (sceneTransition == null)
         {
             Debug.LogError(
-                "SelecaoFases: arraste o objeto com SceneTransition " +
-                "para o campo Scene Transition no Inspector."
+                "SelecaoFases: o campo Scene Transition está vazio!"
             );
+
             return;
         }
 
@@ -56,5 +69,20 @@ public class SelecaoFases : MonoBehaviour
         );
 
         sceneTransition.ChangeScene("CutsceneIntro");
+    }
+
+    private void TocarSomBotao()
+    {
+        if (mainMenu != null)
+        {
+            mainMenu.TocarSomBotao();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "SelecaoFases: não foi encontrado um MainMenu " +
+                "para reproduzir o som dos botões."
+            );
+        }
     }
 }

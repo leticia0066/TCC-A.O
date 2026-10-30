@@ -4799,8 +4799,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -961, y: 459}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: -786, y: 393}
+  m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &132676657
 MonoBehaviour:
@@ -6069,15 +6069,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -6108,7 +6108,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 14.294708, y: 0, z: 11.2323, w: 3.4912338}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6136,10 +6136,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 960644090}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 2.0632935, y: 0}
+  m_SizeDelta: {x: -18.5895, y: -6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &476890080
 GameObject:
@@ -201493,7 +201493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.13943242, g: 0.5924529, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -202753,7 +202753,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.7776031, y: -138.4592}
+  m_AnchoredPosition: {x: 1.7775879, y: -138.4592}
   m_SizeDelta: {x: -63.3372, y: -351.2786}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &960644091
@@ -204771,6 +204771,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoracaoColetavel
   quantidadeDeCura: 2
+  somColeta: {fileID: 8300000, guid: 8540f169ac1466e478f858e89e02ca1d, type: 3}
+  volumeSom: 1
 --- !u!58 &1346015122
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -206468,8 +206470,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -916, y: 459.00015}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: -689.74164, y: 393.00043}
+  m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1636640537
 MonoBehaviour:
@@ -207127,8 +207129,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -871, y: 458.9999}
-  m_SizeDelta: {x: 40, y: 40}
+  m_AnchoredPosition: {x: -593.4836, y: 392.99945}
+  m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1722482704
 MonoBehaviour:
@@ -207820,7 +207822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -207929,6 +207931,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoracaoColetavel
   quantidadeDeCura: 2
+  somColeta: {fileID: 8300000, guid: 8540f169ac1466e478f858e89e02ca1d, type: 3}
+  volumeSom: 1
 --- !u!58 &1869200792
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -212908,6 +212912,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoracaoColetavel
   quantidadeDeCura: 2
+  somColeta: {fileID: 8300000, guid: 8540f169ac1466e478f858e89e02ca1d, type: 3}
+  volumeSom: 1
 --- !u!58 &1880244535
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -213188,6 +213194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoracaoColetavel
   quantidadeDeCura: 2
+  somColeta: {fileID: 8300000, guid: 8540f169ac1466e478f858e89e02ca1d, type: 3}
+  volumeSom: 1
 --- !u!58 &1907718343
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -213293,7 +213301,7 @@ Transform:
   m_GameObject: {fileID: 1907718341}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -31.69, y: -4.39, z: 1}
+  m_LocalPosition: {x: -31.62, y: -3.85, z: 1}
   m_LocalScale: {x: 0.2664641, y: 0.2664641, z: 0.2664641}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -213681,6 +213689,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoracaoColetavel
   quantidadeDeCura: 2
+  somColeta: {fileID: 8300000, guid: 8540f169ac1466e478f858e89e02ca1d, type: 3}
+  volumeSom: 1
 --- !u!58 &1979137902
 CircleCollider2D:
   m_ObjectHideFlags: 0
