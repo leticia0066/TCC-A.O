@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a5d15cdaf3ed67f45b0a31c9071c47d1
+guid: 6729555ffb294a24a87fd7e212b12ba2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1871982960015497079
-    second: escuoatena_0
+      213: 540989333673730532
+    second: raio de zeus_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: escuoatena_0
+      name: raio de zeus_0
       rect:
         serializedVersion: 2
-        x: 126
-        y: 278
-        width: 543
-        height: 559
+        x: 47
+        y: 0
+        width: 168
+        height: 549
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 777de4d759e9af910800000000000000
-      internalID: 1871982960015497079
+      spriteID: 4e1e5e4ceeaf18700800000000000000
+      internalID: 540989333673730532
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      escuoatena_0: 1871982960015497079
+      raio de zeus_0: 540989333673730532
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
