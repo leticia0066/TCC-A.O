@@ -895,8 +895,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 189, y: -118.7}
-  m_SizeDelta: {x: 128.0286, y: 50.446}
+  m_AnchoredPosition: {x: 171, y: -136.37}
+  m_SizeDelta: {x: 128.0286, y: 59.673}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033838110
 MonoBehaviour:
@@ -1103,8 +1103,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -167.8, y: -120.6}
-  m_SizeDelta: {x: 121.8713, y: 54.615}
+  m_AnchoredPosition: {x: -170.82289, y: -136.36992}
+  m_SizeDelta: {x: 120.4255, y: 59.6751}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1194706881
 MonoBehaviour:
@@ -1657,6 +1657,8 @@ MonoBehaviour:
   fade: {fileID: 0}
   audioSource: {fileID: 1848398084}
   cliqueSom: {fileID: 8300000, guid: 9c8f9c5e5a0014c49bf96058cd852c09, type: 3}
+  efeitosSource: {fileID: 0}
+  volumeClique: 1
 --- !u!1 &1983842322
 GameObject:
   m_ObjectHideFlags: 0
@@ -1693,8 +1695,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.9, y: -112.9}
-  m_SizeDelta: {x: 124.6564, y: 47.1426}
+  m_AnchoredPosition: {x: 11.6, y: -136.37}
+  m_SizeDelta: {x: 124.6564, y: 59.679}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1983842324
 MonoBehaviour:

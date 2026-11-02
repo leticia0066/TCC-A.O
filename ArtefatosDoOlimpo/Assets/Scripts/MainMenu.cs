@@ -8,13 +8,18 @@ public class MainMenu : MonoBehaviour
     [Header("Transição")]
     public FadeTransition fade;
 
-    [Header("Áudio")]
+    [Header("Música de fundo")]
     public AudioSource audioSource;
+
+    [Header("Som dos botões")]
     public AudioClip cliqueSom;
+    public AudioSource efeitosSource;
+
+    [Range(0f, 1f)]
+    public float volumeClique = 1f;
 
     private void Awake()
     {
-        // Evita criar cópias do gerenciador de áudio.
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -23,7 +28,6 @@ public class MainMenu : MonoBehaviour
 
         Instance = this;
 
-        // Mantém a música disponível durante a troca de cenas.
         DontDestroyOnLoad(gameObject);
 
         if (audioSource == null)
@@ -32,14 +36,20 @@ public class MainMenu : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.playOnAwake = false;
-            audioSource.spatialBlend = 0f;
             audioSource.loop = true;
+            audioSource.spatialBlend = 0f;
         }
-    }
 
-    private void Start()
-    {
-        AtualizarMusica(SceneManager.GetActiveScene().name);
+        // Cria uma fonte de áudio separada para os cliques.
+        if (efeitosSource == null)
+        {
+            efeitosSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        efeitosSource.playOnAwake = false;
+        efeitosSource.loop = false;
+        efeitosSource.spatialBlend = 0f;
+        efeitosSource.volume = 1f;
     }
 
     private void OnEnable()
@@ -52,6 +62,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.sceneLoaded -= AoCarregarCena;
     }
 
+    private void Start()
+    {
+        AtualizarMusica(SceneManager.GetActiveScene().name);
+    }
+
     private void AoCarregarCena(Scene cena, LoadSceneMode modo)
     {
         AtualizarMusica(cena.name);
@@ -61,15 +76,10 @@ public class MainMenu : MonoBehaviour
     {
         if (audioSource == null)
         {
-            Debug.LogWarning(
-                "MainMenu: configure o Audio Source no Inspector."
-            );
-
+            Debug.LogWarning("MainMenu: Audio Source da música não configurado.");
             return;
         }
 
-        // A música de fundo toca somente no menu
-        // e na seleção de fases.
         bool deveTocarMusica =
             nomeCena == "TelaInicial" ||
             nomeCena == "SelecaoFases";
@@ -95,10 +105,7 @@ public class MainMenu : MonoBehaviour
 
         if (fade == null)
         {
-            Debug.LogError(
-                "MainMenu: o campo Fade não está configurado."
-            );
-
+            Debug.LogError("MainMenu: o campo Fade não está configurado.");
             return;
         }
 
@@ -108,7 +115,6 @@ public class MainMenu : MonoBehaviour
     public void Sair()
     {
         TocarSomBotao();
-
         Debug.Log("Saindo do jogo.");
 
         Application.Quit();
@@ -116,15 +122,20 @@ public class MainMenu : MonoBehaviour
 
     public void TocarSomBotao()
     {
-        if (audioSource == null || cliqueSom == null)
+        if (cliqueSom == null)
         {
-            Debug.LogWarning(
-                "MainMenu: configure o Audio Source e o Clique Som."
-            );
-
+            Debug.LogWarning("MainMenu: o campo Clique Som está vazio.");
             return;
         }
 
-        audioSource.PlayOneShot(cliqueSom);
+        if (efeitosSource == null)
+        {
+            Debug.LogWarning("MainMenu: a fonte de áudio dos efeitos está vazia.");
+            return;
+        }
+
+        efeitosSource.PlayOneShot(cliqueSom, volumeClique);
+
+        Debug.Log("Som do botão reproduzido.");
     }
 }

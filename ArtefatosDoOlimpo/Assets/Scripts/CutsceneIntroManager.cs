@@ -1,3 +1,4 @@
+
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -15,17 +16,17 @@ public class CutsceneIntroManager : MonoBehaviour
 
     [Header("Configuração da digitação")]
     [Min(0.001f)]
-    public float velocidadeDigitacao = 0.04f;
+    public float velocidadeDigitacao = 0.09f;
 
     [Header("Som da digitação")]
     public AudioSource audioSource;
     public AudioClip somDigitacao;
 
     [Range(0f, 1f)]
-    public float volumeDigitacao = 0.5f;
+    public float volumeDigitacao = 0.35f;
 
     [Min(1)]
-    public int letrasEntreSons = 2;
+    public int letrasEntreSons = 4;
 
     [Header("Transição")]
     public SceneTransition sceneTransition;
@@ -188,6 +189,10 @@ public class CutsceneIntroManager : MonoBehaviour
     private void TocarSomDigitacao()
     {
         if (audioSource == null || somDigitacao == null)
+            return;
+
+        // Não deixa os sons de teclado se sobreporem.
+        if (audioSource.isPlaying)
             return;
 
         audioSource.PlayOneShot(somDigitacao, volumeDigitacao);
