@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Portal : MonoBehaviour
@@ -15,17 +16,22 @@ public class Portal : MonoBehaviour
         if (!collision.CompareTag("Player"))
             return;
 
+        if (string.IsNullOrEmpty(nextSceneName))
+        {
+            Debug.LogError("Portal: o nome da próxima cena não foi configurado!");
+            return;
+        }
+
+        if (TransicaoCenas.Instance == null)
+        {
+            Debug.LogError("Portal: Controlador TransicaoCenas não encontrado!");
+            return;
+        }
+
         playerEntered = true;
 
-        SceneTransition transition = GetComponent<SceneTransition>();
+        Debug.Log("Portal ativado! Indo para: " + nextSceneName);
 
-        if (transition != null)
-        {
-            transition.ChangeScene(nextSceneName);
-        }
-        else
-        {
-            Debug.LogError("ERRO: O Portal não possui o componente SceneTransition!");
-        }
+        TransicaoCenas.Instance.TrocarCena(nextSceneName);
     }
 }

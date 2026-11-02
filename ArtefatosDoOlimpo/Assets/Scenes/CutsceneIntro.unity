@@ -564,52 +564,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &607314673
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 607314675}
-  - component: {fileID: 607314674}
-  m_Layer: 0
-  m_Name: SceneTransitionManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &607314674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 607314673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 605f73e95d7009346a4a5b45a233f38c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
-  fadePanel: {fileID: 1658309620}
-  fadeSpeed: 2
---- !u!4 &607314675
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 607314673}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.15634, y: 195.66554, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &618070284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1056,7 +1010,6 @@ MonoBehaviour:
   somDigitacao: {fileID: 8300000, guid: c570cf2faf9643d4492f4376ba218121, type: 3}
   volumeDigitacao: 0.35
   letrasEntreSons: 4
-  sceneTransition: {fileID: 607314674}
 --- !u!4 &1714323692
 Transform:
   m_ObjectHideFlags: 0
@@ -1245,5 +1198,4 @@ SceneRoots:
   - {fileID: 761557010}
   - {fileID: 2098695428}
   - {fileID: 1714323692}
-  - {fileID: 607314675}
   - {fileID: 1658309623}

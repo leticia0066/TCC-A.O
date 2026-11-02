@@ -28,15 +28,13 @@ public class CutsceneIntroManager : MonoBehaviour
     [Min(1)]
     public int letrasEntreSons = 4;
 
-    [Header("Transição")]
-    public SceneTransition sceneTransition;
-
     private string historiaCompleta;
     private Coroutine digitacaoCoroutine;
 
     private bool digitando;
     private bool historiaTerminada;
     private bool tutorialAtivo;
+    private bool iniciandoFase;
 
     private int contadorLetras;
 
@@ -112,16 +110,6 @@ public class CutsceneIntroManager : MonoBehaviour
             return false;
         }
 
-        if (sceneTransition == null)
-        {
-            Debug.LogError(
-                "CutsceneIntroManager: arraste o objeto com SceneTransition " +
-                "para o campo Scene Transition no Inspector."
-            );
-
-            return false;
-        }
-
         string faseEscolhida = SelecaoFases.NomeFaseSelecionada;
 
         if (string.IsNullOrEmpty(faseEscolhida) ||
@@ -174,7 +162,9 @@ public class CutsceneIntroManager : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSecondsRealtime(velocidadeDigitacao);
+            yield return new WaitForSecondsRealtime(
+                velocidadeDigitacao
+            );
         }
 
         PararSomDigitacao();
@@ -191,11 +181,13 @@ public class CutsceneIntroManager : MonoBehaviour
         if (audioSource == null || somDigitacao == null)
             return;
 
-        // Não deixa os sons de teclado se sobreporem.
         if (audioSource.isPlaying)
             return;
 
-        audioSource.PlayOneShot(somDigitacao, volumeDigitacao);
+        audioSource.PlayOneShot(
+            somDigitacao,
+            volumeDigitacao
+        );
     }
 
     private void PararSomDigitacao()
@@ -238,15 +230,33 @@ public class CutsceneIntroManager : MonoBehaviour
 
     private void ComecarFase()
     {
+        if (iniciandoFase)
+            return;
+
+        iniciandoFase = true;
+
         PararSomDigitacao();
 
         Time.timeScale = 1f;
 
         string faseEscolhida = SelecaoFases.NomeFaseSelecionada;
 
-        Debug.Log("Cutscene concluída. Indo para: " + faseEscolhida);
+        Debug.Log(
+            "Cutscene concluída. Indo para: " + faseEscolhida
+        );
 
-        sceneTransition.ChangeScene(faseEscolhida);
+        if (TransicaoCenas.Instance != null)
+        {
+            TransicaoCenas.Instance.TrocarCena(faseEscolhida);
+        }
+        else
+        {
+            Debug.LogError(
+                "CutsceneIntroManager: Controlador TransicaoCenas não encontrado!"
+            );
+
+            iniciandoFase = false;
+        }
     }
 
     private void OnDisable()

@@ -537,7 +537,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -192, y: 175}
+  m_AnchoredPosition: {x: -165, y: 148}
   m_SizeDelta: {x: 121.2661, y: 38.8139}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &627622865
@@ -856,8 +856,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -4.6165, y: -3.5}
+  m_SizeDelta: {x: 37.233, y: 7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1033838108
 GameObject:
@@ -895,7 +895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 171, y: -136.37}
+  m_AnchoredPosition: {x: 166, y: -108}
   m_SizeDelta: {x: 128.0286, y: 59.673}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033838110
@@ -1103,7 +1103,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -170.82289, y: -136.36992}
+  m_AnchoredPosition: {x: -147, y: -111}
   m_SizeDelta: {x: 120.4255, y: 59.6751}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1194706881
@@ -1528,8 +1528,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f1b2e0b08f10504cbaf5a821829bbc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelecaoFases
-  sceneTransition: {fileID: 2055241001}
-  mainMenu: {fileID: 1848398085}
 --- !u!4 &1848398083
 Transform:
   m_ObjectHideFlags: 0
@@ -1654,7 +1652,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cbd6e8a5162b84ab08a32efaa338e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  fade: {fileID: 0}
   audioSource: {fileID: 1848398084}
   cliqueSom: {fileID: 8300000, guid: 9c8f9c5e5a0014c49bf96058cd852c09, type: 3}
   efeitosSource: {fileID: 0}
@@ -1695,7 +1692,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.6, y: -136.37}
+  m_AnchoredPosition: {x: 14, y: -108}
   m_SizeDelta: {x: 124.6564, y: 59.679}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1983842324
@@ -1792,52 +1789,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1983842322}
   m_CullTransparentMesh: 1
---- !u!1 &2055241000
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2055241002}
-  - component: {fileID: 2055241001}
-  m_Layer: 0
-  m_Name: SceneTransitionManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2055241001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055241000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 605f73e95d7009346a4a5b45a233f38c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
-  fadePanel: {fileID: 883949681}
-  fadeSpeed: 2
---- !u!4 &2055241002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055241000}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.15634, y: 195.66554, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1846,4 +1797,3 @@ SceneRoots:
   - {fileID: 2050448}
   - {fileID: 1275451197}
   - {fileID: 1848398083}
-  - {fileID: 2055241002}

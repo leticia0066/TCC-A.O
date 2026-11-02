@@ -1,12 +1,10 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
     public static MainMenu Instance { get; private set; }
-
-    [Header("Transição")]
-    public FadeTransition fade;
 
     [Header("Música de fundo")]
     public AudioSource audioSource;
@@ -33,6 +31,9 @@ public class MainMenu : MonoBehaviour
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
+        if (efeitosSource == null)
+            efeitosSource = gameObject.AddComponent<AudioSource>();
+
         if (audioSource != null)
         {
             audioSource.playOnAwake = false;
@@ -40,16 +41,9 @@ public class MainMenu : MonoBehaviour
             audioSource.spatialBlend = 0f;
         }
 
-        // Cria uma fonte de áudio separada para os cliques.
-        if (efeitosSource == null)
-        {
-            efeitosSource = gameObject.AddComponent<AudioSource>();
-        }
-
         efeitosSource.playOnAwake = false;
         efeitosSource.loop = false;
         efeitosSource.spatialBlend = 0f;
-        efeitosSource.volume = 1f;
     }
 
     private void OnEnable()
@@ -75,16 +69,13 @@ public class MainMenu : MonoBehaviour
     private void AtualizarMusica(string nomeCena)
     {
         if (audioSource == null)
-        {
-            Debug.LogWarning("MainMenu: Audio Source da música não configurado.");
             return;
-        }
 
-        bool deveTocarMusica =
+        bool tocarMusica =
             nomeCena == "TelaInicial" ||
             nomeCena == "SelecaoFases";
 
-        if (deveTocarMusica)
+        if (tocarMusica)
         {
             if (audioSource.clip != null && !audioSource.isPlaying)
             {
@@ -103,18 +94,25 @@ public class MainMenu : MonoBehaviour
     {
         TocarSomBotao();
 
-        if (fade == null)
+        if (TransicaoCenas.Instance != null)
         {
-            Debug.LogError("MainMenu: o campo Fade não está configurado.");
-            return;
+            TransicaoCenas.Instance.TrocarCena("SelecaoFases");
         }
+        else
+        {
+            Debug.LogWarning(
+                "Controlador de transições não encontrado. " +
+                "Carregando a seleção diretamente."
+            );
 
-        fade.TrocarCena("SelecaoFases");
+            SceneManager.LoadScene("SelecaoFases");
+        }
     }
 
     public void Sair()
     {
         TocarSomBotao();
+
         Debug.Log("Saindo do jogo.");
 
         Application.Quit();
@@ -122,17 +120,8 @@ public class MainMenu : MonoBehaviour
 
     public void TocarSomBotao()
     {
-        if (cliqueSom == null)
-        {
-            Debug.LogWarning("MainMenu: o campo Clique Som está vazio.");
+        if (cliqueSom == null || efeitosSource == null)
             return;
-        }
-
-        if (efeitosSource == null)
-        {
-            Debug.LogWarning("MainMenu: a fonte de áudio dos efeitos está vazia.");
-            return;
-        }
 
         efeitosSource.PlayOneShot(cliqueSom, volumeClique);
 

@@ -1,27 +1,18 @@
+
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SelecaoFases : MonoBehaviour
 {
-    [Header("Transição de cena")]
-    public SceneTransition sceneTransition;
-
-    [Header("Som dos botões")]
-    public MainMenu mainMenu;
-
     public static string NomeFaseSelecionada = "Fase1_Aress";
 
-    private void Awake()
-    {
-        if (mainMenu == null)
-            mainMenu = FindFirstObjectByType<MainMenu>();
-    }
-
     public void JogarFase1()
-    {
-        NomeFaseSelecionada = "Fase1_Aress";
-        AbrirCutscene();
-    }
+{
+    Debug.Log("TESTE: O BOTÃO DA FASE 1 FOI ACIONADO!");
 
+    NomeFaseSelecionada = "Fase1_Aress";
+    AbrirCutscene();
+}
     public void JogarFase2()
     {
         NomeFaseSelecionada = "Fase2_Atena";
@@ -37,52 +28,41 @@ public class SelecaoFases : MonoBehaviour
     public void Voltar()
     {
         TocarSomBotao();
-
-        if (sceneTransition == null)
-        {
-            Debug.LogError(
-                "SelecaoFases: o campo Scene Transition está vazio!"
-            );
-
-            return;
-        }
-
-        sceneTransition.ChangeScene("TelaInicial");
+        TrocarCena("TelaInicial");
     }
 
     private void AbrirCutscene()
     {
-        TocarSomBotao();
-
-        if (sceneTransition == null)
-        {
-            Debug.LogError(
-                "SelecaoFases: o campo Scene Transition está vazio!"
-            );
-
-            return;
-        }
-
         Debug.Log(
-            "Fase selecionada: " + NomeFaseSelecionada +
-            ". Abrindo CutsceneIntro."
+            "Fase selecionada: " + NomeFaseSelecionada
         );
 
-        sceneTransition.ChangeScene("CutsceneIntro");
+        TocarSomBotao();
+        TrocarCena("CutsceneIntro");
     }
 
-    private void TocarSomBotao()
+    private void TrocarCena(string nomeCena)
     {
-        if (mainMenu != null)
+        if (TransicaoCenas.Instance != null)
         {
-            mainMenu.TocarSomBotao();
+            TransicaoCenas.Instance.TrocarCena(nomeCena);
         }
         else
         {
             Debug.LogWarning(
-                "SelecaoFases: não foi encontrado um MainMenu " +
-                "para reproduzir o som dos botões."
+                "Controlador de transições não encontrado. " +
+                "Carregando a cena diretamente."
             );
+
+            SceneManager.LoadScene(nomeCena);
+        }
+    }
+
+    private void TocarSomBotao()
+    {
+        if (MainMenu.Instance != null)
+        {
+            MainMenu.Instance.TocarSomBotao();
         }
     }
 }

@@ -119,6 +119,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &36214640
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 36214642}
+  - component: {fileID: 36214641}
+  m_Layer: 0
+  m_Name: ControladorTransicoes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &36214641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36214640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2e3a3603c6c65e4fbe78931e2e0a40b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransicaoCenas
+  velocidadeFade: 2
+--- !u!4 &36214642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36214640}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 220.80441, y: 193.77016, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &97668198
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,27 +812,14 @@ GameObject:
   - component: {fileID: 1397893604}
   - component: {fileID: 1397893603}
   - component: {fileID: 1397893602}
-  - component: {fileID: 1397893601}
+  - component: {fileID: 1397893605}
   m_Layer: 5
   m_Name: Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1397893601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1397893600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ca7b73f1ec1aa42b5da7ef2341b87c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FadeTransition
-  fadeImage: {fileID: 1397893602}
+  m_IsActive: 0
 --- !u!114 &1397893602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,9 +874,21 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.010803, y: 0.00086975}
-  m_SizeDelta: {x: 1485.9, y: 1395.5}
+  m_AnchoredPosition: {x: -13.465, y: 0.00086975}
+  m_SizeDelta: {x: 1864.019, y: 1395.5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1397893605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397893600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ca7b73f1ec1aa42b5da7ef2341b87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FadeTransition
 --- !u!1 &1404372812
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,10 +1058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cbd6e8a5162b84ab08a32efaa338e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  fade: {fileID: 1397893601}
   audioSource: {fileID: 1747185449}
   cliqueSom: {fileID: 8300000, guid: 9c8f9c5e5a0014c49bf96058cd852c09, type: 3}
-  efeitosSource: {fileID: 0}
+  efeitosSource: {fileID: 1747185449}
   volumeClique: 1
 --- !u!4 &1747185448
 Transform:
@@ -1272,3 +1315,4 @@ SceneRoots:
   - {fileID: 256400582}
   - {fileID: 152439774}
   - {fileID: 1747185448}
+  - {fileID: 36214642}
