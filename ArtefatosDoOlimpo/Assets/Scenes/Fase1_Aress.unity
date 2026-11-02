@@ -4877,7 +4877,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -750.5164, y: 558.0007}
+  m_AnchoredPosition: {x: -924.25836, y: 392.99963}
   m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &132676657
@@ -7276,8 +7276,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605f73e95d7009346a4a5b45a233f38c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
-  fadePanel: {fileID: 1551868866}
-  fadeSpeed: 2
 --- !u!61 &610328103
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -205005,7 +205003,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 257.77582, y: -100}
+  m_AnchoredPosition: {x: 252, y: -156}
   m_SizeDelta: {x: 405.552, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1339631718
@@ -206794,7 +206792,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -654.25806, y: 558.0011}
+  m_AnchoredPosition: {x: -828, y: 393}
   m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1636640537
@@ -207453,7 +207451,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -558, y: 558}
+  m_AnchoredPosition: {x: -731.74194, y: 392.99896}
   m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1722482704
@@ -214429,7 +214427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArtefatoColetavel
   tipoArtefato: 0
-  somColeta: {fileID: 0}
+  somColeta: {fileID: 8300000, guid: c04ff61ba62b47546aae20f924072ebd, type: 3}
   volumeSom: 0.8
 --- !u!61 &2093486798
 BoxCollider2D:

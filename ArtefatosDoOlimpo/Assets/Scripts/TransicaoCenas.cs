@@ -8,6 +8,7 @@ public class TransicaoCenas : MonoBehaviour
     public static TransicaoCenas Instance;
 
     [Header("Configuração da transição")]
+    [Min(0.1f)]
     public float velocidadeFade = 2f;
 
     private Texture2D texturaPreta;
@@ -18,6 +19,7 @@ public class TransicaoCenas : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning("TransicaoCenas duplicado. Destruindo cópia.");
             Destroy(gameObject);
             return;
         }
@@ -28,6 +30,8 @@ public class TransicaoCenas : MonoBehaviour
         texturaPreta = new Texture2D(1, 1);
         texturaPreta.SetPixel(0, 0, Color.black);
         texturaPreta.Apply();
+
+        Debug.Log("TransicaoCenas inicializado corretamente.");
     }
 
     private void OnGUI()
@@ -47,8 +51,13 @@ public class TransicaoCenas : MonoBehaviour
 
     public void TrocarCena(string nomeCena)
     {
+        Debug.Log("Pedido de transição recebido: " + nomeCena);
+
         if (transicionando)
+        {
+            Debug.LogWarning("Já existe uma transição em andamento.");
             return;
+        }
 
         if (string.IsNullOrEmpty(nomeCena))
         {
@@ -59,8 +68,8 @@ public class TransicaoCenas : MonoBehaviour
         if (!Application.CanStreamedLevelBeLoaded(nomeCena))
         {
             Debug.LogError(
-                "TransicaoCenas: a cena '" + nomeCena +
-                "' não está no Build Profile."
+                "TransicaoCenas: cena não encontrada no Build Profile: " +
+                nomeCena
             );
             return;
         }
@@ -72,7 +81,8 @@ public class TransicaoCenas : MonoBehaviour
     {
         transicionando = true;
 
-        // Escurece a tela.
+        Debug.Log("Escurecendo a tela...");
+
         while (alpha < 1f)
         {
             alpha = Mathf.MoveTowards(
@@ -84,13 +94,14 @@ public class TransicaoCenas : MonoBehaviour
             yield return null;
         }
 
-        // Carrega a próxima cena.
+        Debug.Log("Carregando cena: " + nomeCena);
+
         SceneManager.LoadScene(nomeCena);
 
-        // Aguarda a cena ser carregada.
         yield return null;
 
-        // Clareia a tela.
+        Debug.Log("Cena carregada: " + SceneManager.GetActiveScene().name);
+
         while (alpha > 0f)
         {
             alpha = Mathf.MoveTowards(
@@ -103,6 +114,8 @@ public class TransicaoCenas : MonoBehaviour
         }
 
         transicionando = false;
+
+        Debug.Log("Transição finalizada.");
     }
 
     private void OnDestroy()

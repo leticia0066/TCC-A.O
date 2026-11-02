@@ -31,23 +31,13 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
 
         if (rb == null)
-        {
             Debug.LogError("ERRO: O Player não possui Rigidbody2D!");
-        }
 
         if (groundCheck == null)
-        {
-            Debug.LogError(
-                "ERRO: GroundCheck não foi colocado no PlayerController!"
-            );
-        }
+            Debug.LogError("ERRO: GroundCheck não foi colocado!");
 
         if (attackPoint == null)
-        {
-            Debug.LogError(
-                "ERRO: AttackPoint não foi colocado no PlayerController!"
-            );
-        }
+            Debug.LogError("ERRO: AttackPoint não foi colocado!");
     }
 
     void Update()
@@ -65,25 +55,19 @@ public class PlayerController : MonoBehaviour
         if (hasCheckedGround && !wasGrounded && isGrounded)
         {
             if (AudioManager.Instance != null)
-            {
                 AudioManager.Instance.TocarAterrissagem();
-            }
         }
 
         wasGrounded = isGrounded;
         hasCheckedGround = true;
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
             Jump();
-        }
 
         HandleFootsteps();
 
         if (Input.GetKeyDown(KeyCode.Z))
-        {
             Attack();
-        }
 
         Flip();
     }
@@ -115,9 +99,7 @@ public class PlayerController : MonoBehaviour
         );
 
         if (AudioManager.Instance != null)
-        {
             AudioManager.Instance.TocarPulo();
-        }
     }
 
     void HandleFootsteps()
@@ -127,16 +109,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && moving)
         {
             if (AudioManager.Instance != null)
-            {
                 AudioManager.Instance.IniciarPassos();
-            }
         }
         else
         {
             if (AudioManager.Instance != null)
-            {
                 AudioManager.Instance.PararPassos();
-            }
         }
     }
 
@@ -163,23 +141,17 @@ public class PlayerController : MonoBehaviour
             return;
 
         Vector3 scale = transform.localScale;
-
         scale.x = Mathf.Abs(scale.x) * Mathf.Sign(moveInput);
-
         transform.localScale = scale;
     }
 
     void Attack()
     {
         if (anim != null)
-        {
             anim.SetTrigger("Attack");
-        }
 
         if (AudioManager.Instance != null)
-        {
             AudioManager.Instance.TocarAtaque();
-        }
 
         if (attackPoint == null)
         {
@@ -201,8 +173,16 @@ public class PlayerController : MonoBehaviour
             if (enemy.transform.root == transform.root)
                 continue;
 
-            // Procura o miniboss no collider atingido
-            // ou em algum objeto pai.
+            CiclopeBoss ciclope =
+                enemy.GetComponentInParent<CiclopeBoss>();
+
+            if (ciclope != null)
+            {
+                ciclope.TakeDamage(1);
+                Debug.Log("CICLOPE ATINGIDO!");
+                continue;
+            }
+
             EsqueletoMiniboss esqueleto =
                 enemy.GetComponentInParent<EsqueletoMiniboss>();
 
@@ -216,8 +196,6 @@ public class PlayerController : MonoBehaviour
                 continue;
             }
 
-            // Mantém compatibilidade com outros inimigos
-            // que já utilizam um método chamado TakeDamage.
             enemy.SendMessageUpwards(
                 "TakeDamage",
                 1,
@@ -231,9 +209,7 @@ public class PlayerController : MonoBehaviour
     void OnDisable()
     {
         if (AudioManager.Instance != null)
-        {
             AudioManager.Instance.PararPassos();
-        }
     }
 
     void OnDrawGizmosSelected()

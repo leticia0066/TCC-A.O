@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        // Evita criar dois GameManagers.
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -29,6 +30,9 @@ public class GameManager : MonoBehaviour
         }
 
         instance = this;
+
+        // Mantém o GameManager entre as cenas.
+        DontDestroyOnLoad(gameObject);
 
         if (startPoint != null)
         {
@@ -46,6 +50,8 @@ public class GameManager : MonoBehaviour
         }
 
         CarregarArtefatos();
+
+        Debug.Log("GameManager iniciado corretamente!");
     }
 
     // CHECKPOINTS
@@ -83,6 +89,7 @@ public class GameManager : MonoBehaviour
     public void ColetarEspada()
     {
         espadaColetada = true;
+
         PlayerPrefs.SetInt(CHAVE_ESPADA, 1);
         PlayerPrefs.Save();
 
@@ -92,6 +99,7 @@ public class GameManager : MonoBehaviour
     public void ColetarEscudo()
     {
         escudoColetado = true;
+
         PlayerPrefs.SetInt(CHAVE_ESCUDO, 1);
         PlayerPrefs.Save();
 
@@ -101,6 +109,7 @@ public class GameManager : MonoBehaviour
     public void ColetarRaio()
     {
         raioColetado = true;
+
         PlayerPrefs.SetInt(CHAVE_RAIO, 1);
         PlayerPrefs.Save();
 
@@ -109,14 +118,21 @@ public class GameManager : MonoBehaviour
 
     public void CarregarArtefatos()
     {
-        espadaColetada = PlayerPrefs.GetInt(CHAVE_ESPADA, 0) == 1;
-        escudoColetado = PlayerPrefs.GetInt(CHAVE_ESCUDO, 0) == 1;
-        raioColetado = PlayerPrefs.GetInt(CHAVE_RAIO, 0) == 1;
+        espadaColetada =
+            PlayerPrefs.GetInt(CHAVE_ESPADA, 0) == 1;
+
+        escudoColetado =
+            PlayerPrefs.GetInt(CHAVE_ESCUDO, 0) == 1;
+
+        raioColetado =
+            PlayerPrefs.GetInt(CHAVE_RAIO, 0) == 1;
     }
 
     public bool TodosArtefatosColetados()
     {
-        return espadaColetada && escudoColetado && raioColetado;
+        return espadaColetada &&
+               escudoColetado &&
+               raioColetado;
     }
 
     public void ResetarArtefatos()
