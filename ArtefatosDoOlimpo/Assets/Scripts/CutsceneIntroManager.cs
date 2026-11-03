@@ -48,10 +48,8 @@ public class CutsceneIntroManager : MonoBehaviour
             return;
         }
 
-        historiaCompleta =
-            "Há muito tempo, os deuses do Olimpo esconderam seus artefatos pelo mundo antigo.\n\n" +
-            "Criaturas mitológicas protegem esses poderes e impedem que sejam encontrados.\n\n" +
-            "Agora, você deverá enfrentar perigos, superar desafios e recuperar os artefatos perdidos.";
+        // Escolhe a história conforme a fase selecionada.
+        historiaCompleta = EscolherHistoria();
 
         painelHistoria.SetActive(true);
         painelTutorial.SetActive(false);
@@ -70,6 +68,80 @@ public class CutsceneIntroManager : MonoBehaviour
         contadorLetras = 0;
 
         digitacaoCoroutine = StartCoroutine(DigitarHistoria());
+    }
+
+    private string EscolherHistoria()
+    {
+        string fase = SelecaoFases.NomeFaseSelecionada;
+
+        switch (fase)
+        {
+            case "Fase1_Aress":
+
+                return
+                    "CAPÍTULO I — A PROVAÇÃO DE ARES\n\n" +
+
+                    "O Olimpo está ameaçado. Os antigos artefatos, " +
+                    "que mantinham o equilíbrio entre os deuses, " +
+                    "foram perdidos pelo mundo antigo.\n\n" +
+
+                    "Sua primeira jornada o leva ao domínio de Ares, " +
+                    "o deus da guerra. Em seu templo, a lendária " +
+                    "Espada do Olimpo permanece protegida por " +
+                    "criaturas e perigos.\n\n" +
+
+                    "Ares não entregará seu poder facilmente. " +
+                    "Somente aqueles que demonstrarem coragem " +
+                    "e determinação poderão conquistar a espada.\n\n" +
+
+                    "Sua jornada começa agora.";
+
+            case "Fase2_Atena":
+
+                return
+                    "CAPÍTULO II — O JULGAMENTO DE ATENA\n\n" +
+
+                    "A Espada do Olimpo foi recuperada, mas a " +
+                    "jornada está longe de terminar.\n\n" +
+
+                    "O próximo destino é o templo de Atena, " +
+                    "deusa da sabedoria e da estratégia. " +
+                    "Ali está escondido o Escudo do Olimpo.\n\n" +
+
+                    "Diferente da provação de Ares, este desafio " +
+                    "exigirá atenção, inteligência e equilíbrio. " +
+                    "Os perigos do templo testarão cada decisão " +
+                    "tomada pelo viajante.\n\n" +
+
+                    "Atena observa cada passo. " +
+                    "Será que você está preparado para seu julgamento?";
+
+            case "Fase3_Zeus":
+
+                return
+                    "CAPÍTULO III — A IRA DE ZEUS\n\n" +
+
+                    "A Espada e o Escudo já foram recuperados. " +
+                    "Agora resta encontrar o último artefato.\n\n" +
+
+                    "No alto do Olimpo, entre tempestades e trovões, " +
+                    "está o domínio de Zeus, senhor dos deuses.\n\n" +
+
+                    "O Raio do Olimpo guarda uma força extraordinária. " +
+                    "Seu poder não pode cair em mãos erradas.\n\n" +
+
+                    "Zeus será o último grande desafio desta jornada. " +
+                    "Prepare-se para enfrentar a provação final " +
+                    "e restaurar o equilíbrio do Olimpo.";
+
+            default:
+
+                Debug.LogError("História não encontrada para a fase: " + fase);
+
+                return
+                    "Uma nova jornada começa no mundo dos deuses.\n\n" +
+                    "Prepare-se para enfrentar os desafios do Olimpo.";
+        }
     }
 
     private void Update()
