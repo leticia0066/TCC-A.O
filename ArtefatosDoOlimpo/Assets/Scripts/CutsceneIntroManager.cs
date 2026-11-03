@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CutsceneIntroManager : MonoBehaviour
 {
@@ -11,22 +12,37 @@ public class CutsceneIntroManager : MonoBehaviour
 
     [Header("Textos")]
     public TMP_Text textoHistoria;
-    public TMP_Text textoPular;
     public TMP_Text textoTutorial;
+
+    [Header("Imagem dos deuses")]
+    public Image imagemDeus;
+
+    public Sprite imagemAres;
+    public Sprite imagemAtena;
+    public Sprite imagemZeus;
 
     [Header("Configuração da digitação")]
     [Min(0.001f)]
     public float velocidadeDigitacao = 0.09f;
 
-    [Header("Som da digitação")]
+    [Header("Sons")]
     public AudioSource audioSource;
     public AudioClip somDigitacao;
+    public AudioClip somCliqueEspaco;
 
     [Range(0f, 1f)]
-    public float volumeDigitacao = 0.35f;
+    public float volumeDigitacao = 0.15f;
 
-    [Min(1)]
-    public int letrasEntreSons = 4;
+    [Range(0f, 1f)]
+    public float volumeClique = 0.8f;
+
+    [Range(1, 10)]
+    public int letrasEntreSons = 5;
+
+    [Header("Mensagens automáticas")]
+    public string mensagemPular = "PRESSIONE ESPAÇO PARA PULAR";
+    public string mensagemContinuar = "PRESSIONE ESPAÇO PARA CONTINUAR";
+    public string mensagemComecar = "PRESSIONE ESPAÇO PARA COMEÇAR";
 
     private string historiaCompleta;
     private Coroutine digitacaoCoroutine;
@@ -48,14 +64,15 @@ public class CutsceneIntroManager : MonoBehaviour
             return;
         }
 
-        // Escolhe a história conforme a fase selecionada.
-        historiaCompleta = EscolherHistoria();
+        string fase = SelecaoFases.NomeFaseSelecionada;
+
+        historiaCompleta = EscolherHistoria(fase);
+        EscolherImagem(fase);
 
         painelHistoria.SetActive(true);
         painelTutorial.SetActive(false);
 
         textoHistoria.text = "";
-        textoPular.text = "PRESSIONE ESPAÇO PARA PULAR";
 
         textoTutorial.text =
             "COMO JOGAR\n\n" +
@@ -63,84 +80,84 @@ public class CutsceneIntroManager : MonoBehaviour
             "ESPAÇO — Pular\n" +
             "Z — Atirar\n" +
             "P — Abrir configurações\n\n" +
-            "PRESSIONE ESPAÇO PARA COMEÇAR";
+            mensagemComecar;
 
         contadorLetras = 0;
 
         digitacaoCoroutine = StartCoroutine(DigitarHistoria());
     }
 
-    private string EscolherHistoria()
+    private string EscolherHistoria(string fase)
     {
-        string fase = SelecaoFases.NomeFaseSelecionada;
-
         switch (fase)
         {
             case "Fase1_Aress":
 
                 return
                     "CAPÍTULO I — A PROVAÇÃO DE ARES\n\n" +
-
-                    "O Olimpo está ameaçado. Os antigos artefatos, " +
-                    "que mantinham o equilíbrio entre os deuses, " +
-                    "foram perdidos pelo mundo antigo.\n\n" +
-
-                    "Sua primeira jornada o leva ao domínio de Ares, " +
-                    "o deus da guerra. Em seu templo, a lendária " +
-                    "Espada do Olimpo permanece protegida por " +
-                    "criaturas e perigos.\n\n" +
-
-                    "Ares não entregará seu poder facilmente. " +
-                    "Somente aqueles que demonstrarem coragem " +
-                    "e determinação poderão conquistar a espada.\n\n" +
-
-                    "Sua jornada começa agora.";
+                    "O equilíbrio do Olimpo foi ameaçado, e os antigos " +
+                    "artefatos foram espalhados pelo mundo.\n\n" +
+                    "Sua primeira missão é encontrar a Espada do Olimpo, " +
+                    "protegida no templo de Ares, o deus da guerra.\n\n" +
+                    "Enfrente os perigos e prove sua coragem para conquistar " +
+                    "o primeiro artefato.";
 
             case "Fase2_Atena":
 
                 return
                     "CAPÍTULO II — O JULGAMENTO DE ATENA\n\n" +
-
-                    "A Espada do Olimpo foi recuperada, mas a " +
-                    "jornada está longe de terminar.\n\n" +
-
-                    "O próximo destino é o templo de Atena, " +
-                    "deusa da sabedoria e da estratégia. " +
-                    "Ali está escondido o Escudo do Olimpo.\n\n" +
-
-                    "Diferente da provação de Ares, este desafio " +
-                    "exigirá atenção, inteligência e equilíbrio. " +
-                    "Os perigos do templo testarão cada decisão " +
-                    "tomada pelo viajante.\n\n" +
-
-                    "Atena observa cada passo. " +
-                    "Será que você está preparado para seu julgamento?";
+                    "Com a Espada recuperada, sua jornada continua.\n\n" +
+                    "Agora você precisa encontrar o Escudo do Olimpo, " +
+                    "protegido por Atena, deusa da sabedoria.\n\n" +
+                    "Supere os desafios de seu templo e prove que possui " +
+                    "inteligência para conquistar o segundo artefato.";
 
             case "Fase3_Zeus":
 
                 return
                     "CAPÍTULO III — A IRA DE ZEUS\n\n" +
-
-                    "A Espada e o Escudo já foram recuperados. " +
-                    "Agora resta encontrar o último artefato.\n\n" +
-
-                    "No alto do Olimpo, entre tempestades e trovões, " +
-                    "está o domínio de Zeus, senhor dos deuses.\n\n" +
-
-                    "O Raio do Olimpo guarda uma força extraordinária. " +
-                    "Seu poder não pode cair em mãos erradas.\n\n" +
-
-                    "Zeus será o último grande desafio desta jornada. " +
-                    "Prepare-se para enfrentar a provação final " +
-                    "e restaurar o equilíbrio do Olimpo.";
+                    "A Espada e o Escudo foram recuperados. " +
+                    "Resta apenas um artefato.\n\n" +
+                    "No alto do Olimpo, Zeus protege o poderoso Raio.\n\n" +
+                    "Enfrente a última provação e conquiste o artefato " +
+                    "capaz de restaurar o equilíbrio entre os deuses.";
 
             default:
 
-                Debug.LogError("História não encontrada para a fase: " + fase);
+                Debug.LogError("História não encontrada para: " + fase);
 
-                return
-                    "Uma nova jornada começa no mundo dos deuses.\n\n" +
-                    "Prepare-se para enfrentar os desafios do Olimpo.";
+                return "Uma nova jornada começa no mundo dos deuses.";
+        }
+    }
+
+    private void EscolherImagem(string fase)
+    {
+        switch (fase)
+        {
+            case "Fase1_Aress":
+                imagemDeus.sprite = imagemAres;
+                break;
+
+            case "Fase2_Atena":
+                imagemDeus.sprite = imagemAtena;
+                break;
+
+            case "Fase3_Zeus":
+                imagemDeus.sprite = imagemZeus;
+                break;
+
+            default:
+                Debug.LogError("Imagem não encontrada para: " + fase);
+                break;
+        }
+
+        imagemDeus.preserveAspect = true;
+
+        if (imagemDeus.sprite == null)
+        {
+            Debug.LogError(
+                "A imagem do deus não foi configurada para: " + fase
+            );
         }
     }
 
@@ -148,6 +165,8 @@ public class CutsceneIntroManager : MonoBehaviour
     {
         if (!Input.GetKeyDown(KeyCode.Space))
             return;
+
+        TocarSomClique();
 
         if (tutorialAtivo)
         {
@@ -172,40 +191,26 @@ public class CutsceneIntroManager : MonoBehaviour
         if (painelHistoria == null ||
             painelTutorial == null ||
             textoHistoria == null ||
-            textoPular == null ||
-            textoTutorial == null)
+            textoTutorial == null ||
+            imagemDeus == null)
         {
             Debug.LogError(
-                "CutsceneIntroManager: preencha os campos da interface no Inspector."
+                "CutsceneIntroManager: confira os campos da interface no Inspector."
             );
 
             return false;
         }
 
-        string faseEscolhida = SelecaoFases.NomeFaseSelecionada;
+        string fase = SelecaoFases.NomeFaseSelecionada;
 
-        if (string.IsNullOrEmpty(faseEscolhida) ||
-            !Application.CanStreamedLevelBeLoaded(faseEscolhida))
+        if (string.IsNullOrEmpty(fase) ||
+            !Application.CanStreamedLevelBeLoaded(fase))
         {
             Debug.LogError(
-                "CutsceneIntroManager: a fase selecionada '" +
-                faseEscolhida +
-                "' não foi encontrada no Build Profile."
+                "A fase selecionada não foi encontrada no Build Profile!"
             );
 
             return false;
-        }
-
-        if (audioSource == null)
-        {
-            Debug.LogWarning(
-                "Audio Source não configurado. A cutscene continuará sem som."
-            );
-        }
-
-        if (somDigitacao == null)
-        {
-            Debug.LogWarning("O som de digitação não foi atribuído.");
         }
 
         return true;
@@ -217,11 +222,14 @@ public class CutsceneIntroManager : MonoBehaviour
         historiaTerminada = false;
         contadorLetras = 0;
 
-        textoHistoria.text = "";
+        string textoAtual = "";
 
         foreach (char letra in historiaCompleta)
         {
-            textoHistoria.text += letra;
+            textoAtual += letra;
+
+            textoHistoria.text =
+                textoAtual + "\n\n" + mensagemPular;
 
             if (!char.IsWhiteSpace(letra))
             {
@@ -239,21 +247,17 @@ public class CutsceneIntroManager : MonoBehaviour
             );
         }
 
-        PararSomDigitacao();
-
         digitando = false;
         historiaTerminada = true;
         digitacaoCoroutine = null;
 
-        textoPular.text = "PRESSIONE ESPAÇO PARA CONTINUAR";
+        textoHistoria.text =
+            historiaCompleta + "\n\n" + mensagemContinuar;
     }
 
     private void TocarSomDigitacao()
     {
         if (audioSource == null || somDigitacao == null)
-            return;
-
-        if (audioSource.isPlaying)
             return;
 
         audioSource.PlayOneShot(
@@ -262,12 +266,15 @@ public class CutsceneIntroManager : MonoBehaviour
         );
     }
 
-    private void PararSomDigitacao()
+    private void TocarSomClique()
     {
-        if (audioSource != null)
-        {
-            audioSource.Stop();
-        }
+        if (audioSource == null || somCliqueEspaco == null)
+            return;
+
+        audioSource.PlayOneShot(
+            somCliqueEspaco,
+            volumeClique
+        );
     }
 
     private void MostrarHistoriaCompleta()
@@ -278,26 +285,29 @@ public class CutsceneIntroManager : MonoBehaviour
             digitacaoCoroutine = null;
         }
 
-        PararSomDigitacao();
-
-        textoHistoria.text = historiaCompleta;
+        textoHistoria.text =
+            historiaCompleta + "\n\n" + mensagemContinuar;
 
         digitando = false;
         historiaTerminada = true;
-
-        textoPular.text = "PRESSIONE ESPAÇO PARA CONTINUAR";
     }
 
     private void MostrarTutorial()
     {
-        PararSomDigitacao();
-
         painelHistoria.SetActive(false);
         painelTutorial.SetActive(true);
 
+        textoTutorial.text =
+            "COMO JOGAR\n\n" +
+            "A / D — Mover para os lados\n" +
+            "ESPAÇO — Pular\n" +
+            "Z — Atirar\n" +
+            "P — Abrir configurações\n\n" +
+            mensagemComecar;
+
         tutorialAtivo = true;
 
-        Debug.Log("Cutscene: tutorial dos controles exibido.");
+        Debug.Log("Tutorial exibido.");
     }
 
     private void ComecarFase()
@@ -307,11 +317,10 @@ public class CutsceneIntroManager : MonoBehaviour
 
         iniciandoFase = true;
 
-        PararSomDigitacao();
-
         Time.timeScale = 1f;
 
-        string faseEscolhida = SelecaoFases.NomeFaseSelecionada;
+        string faseEscolhida =
+            SelecaoFases.NomeFaseSelecionada;
 
         Debug.Log(
             "Cutscene concluída. Indo para: " + faseEscolhida
@@ -323,16 +332,17 @@ public class CutsceneIntroManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError(
-                "CutsceneIntroManager: Controlador TransicaoCenas não encontrado!"
-            );
-
+            Debug.LogError("TransicaoCenas não encontrada!");
             iniciandoFase = false;
         }
     }
 
     private void OnDisable()
     {
-        PararSomDigitacao();
+        if (digitacaoCoroutine != null)
+        {
+            StopCoroutine(digitacaoCoroutine);
+            digitacaoCoroutine = null;
+        }
     }
 }
