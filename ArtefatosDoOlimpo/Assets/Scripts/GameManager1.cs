@@ -22,18 +22,25 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Evita criar dois GameManagers.
+        Debug.Log("AWAKE DO GAMEMANAGER EXECUTOU!");
+
+        // Impede a existência de dois GameManagers.
         if (instance != null && instance != this)
         {
+            Debug.LogWarning("GameManager duplicado encontrado!");
             Destroy(gameObject);
             return;
         }
 
+        // Registra esta instância.
         instance = this;
 
-        // Mantém o GameManager entre as cenas.
+        // Mantém o objeto durante as trocas de cena.
         DontDestroyOnLoad(gameObject);
 
+        Debug.Log("INSTANCIA DO GAMEMANAGER CRIADA!");
+
+        // Define a posição inicial.
         if (startPoint != null)
         {
             currentSpawnPosition = startPoint.position;
@@ -44,14 +51,15 @@ public class GameManager : MonoBehaviour
             currentSpawnPosition = transform.position;
 
             Debug.LogWarning(
-                "GameManager: Start Point não foi atribuído. " +
+                "GameManager: Start Point não configurado. " +
                 "Usando a posição do próprio GameManager."
             );
         }
 
+        // Recupera os artefatos salvos.
         CarregarArtefatos();
 
-        Debug.Log("GameManager iniciado corretamente!");
+        Debug.Log("GAMEMANAGER INICIADO CORRETAMENTE!");
     }
 
     // CHECKPOINTS
@@ -61,7 +69,7 @@ public class GameManager : MonoBehaviour
         currentSpawnPosition = pos;
         checkpointDefinido = true;
 
-        Debug.Log("Checkpoint ativado: " + pos);
+        Debug.Log("CHECKPOINT SALVO: " + pos);
     }
 
     public Vector3 GetSpawnPosition()
@@ -81,6 +89,8 @@ public class GameManager : MonoBehaviour
         {
             currentSpawnPosition = startPoint.position;
             checkpointDefinido = true;
+
+            Debug.Log("POSIÇÃO INICIAL RESTAURADA!");
         }
     }
 
@@ -116,6 +126,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("RAIO DO OLIMPO COLETADO!");
     }
 
+    // CARREGAR ARTEFATOS SALVOS
+
     public void CarregarArtefatos()
     {
         espadaColetada =
@@ -126,7 +138,16 @@ public class GameManager : MonoBehaviour
 
         raioColetado =
             PlayerPrefs.GetInt(CHAVE_RAIO, 0) == 1;
+
+        Debug.Log(
+            "ARTEFATOS CARREGADOS: " +
+            "Espada: " + espadaColetada +
+            " | Escudo: " + escudoColetado +
+            " | Raio: " + raioColetado
+        );
     }
+
+    // VERIFICAR FINAL DO JOGO
 
     public bool TodosArtefatosColetados()
     {
@@ -134,6 +155,8 @@ public class GameManager : MonoBehaviour
                escudoColetado &&
                raioColetado;
     }
+
+    // REINICIAR PROGRESSO DOS ARTEFATOS
 
     public void ResetarArtefatos()
     {
@@ -147,6 +170,15 @@ public class GameManager : MonoBehaviour
 
         PlayerPrefs.Save();
 
-        Debug.Log("Progresso dos artefatos reiniciado.");
+        Debug.Log("PROGRESSO DOS ARTEFATOS REINICIADO!");
+    }
+
+    private void OnDestroy()
+    {
+        // Evita limpar uma instância que não seja a atual.
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 }
