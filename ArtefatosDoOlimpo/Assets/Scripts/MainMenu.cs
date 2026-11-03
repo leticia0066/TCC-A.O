@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
@@ -25,7 +26,6 @@ public class MainMenu : MonoBehaviour
         }
 
         Instance = this;
-
         DontDestroyOnLoad(gameObject);
 
         if (audioSource == null)
@@ -59,11 +59,41 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         AtualizarMusica(SceneManager.GetActiveScene().name);
+        ConectarBotaoJogar();
     }
 
     private void AoCarregarCena(Scene cena, LoadSceneMode modo)
     {
         AtualizarMusica(cena.name);
+
+        if (cena.name == "TelaInicial")
+        {
+            ConectarBotaoJogar();
+        }
+    }
+
+    private void ConectarBotaoJogar()
+    {
+        GameObject objetoBotao = GameObject.Find("Jogar");
+
+        if (objetoBotao == null)
+        {
+            Debug.LogWarning("PlayButton não encontrado na TelaInicial!");
+            return;
+        }
+
+        Button botao = objetoBotao.GetComponent<Button>();
+
+        if (botao == null)
+        {
+            Debug.LogWarning("O objeto PlayButton não possui componente Button!");
+            return;
+        }
+
+        botao.onClick.RemoveListener(Jogar);
+        botao.onClick.AddListener(Jogar);
+
+        Debug.Log("Botão JOGAR conectado ao MainMenu!");
     }
 
     private void AtualizarMusica(string nomeCena)
@@ -92,7 +122,29 @@ public class MainMenu : MonoBehaviour
 
     public void Jogar()
     {
+        Debug.Log("INICIANDO NOVA PARTIDA!");
+
+        Time.timeScale = 1f;
+
         TocarSomBotao();
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.ResetarArtefatos();
+            GameManager.instance.ResetToStart();
+        }
+        else
+        {
+            PlayerPrefs.DeleteKey("Artefato_Espada");
+            PlayerPrefs.DeleteKey("Artefato_Escudo");
+            PlayerPrefs.DeleteKey("Artefato_Raio");
+        }
+
+        PlayerPrefs.DeleteKey("Fase1Concluida");
+        PlayerPrefs.DeleteKey("Fase2Concluida");
+        PlayerPrefs.DeleteKey("Fase3Concluida");
+
+        PlayerPrefs.Save();
 
         if (TransicaoCenas.Instance != null)
         {
@@ -100,11 +152,7 @@ public class MainMenu : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning(
-                "Controlador de transições não encontrado. " +
-                "Carregando a seleção diretamente."
-            );
-
+            Debug.LogWarning("TransicaoCenas não encontrada!");
             SceneManager.LoadScene("SelecaoFases");
         }
     }
@@ -126,5 +174,11 @@ public class MainMenu : MonoBehaviour
         efeitosSource.PlayOneShot(cliqueSom, volumeClique);
 
         Debug.Log("Som do botão reproduzido.");
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }

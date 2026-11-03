@@ -31,6 +31,9 @@ public class TransicaoCenas : MonoBehaviour
         texturaPreta.SetPixel(0, 0, Color.black);
         texturaPreta.Apply();
 
+        alpha = 0f;
+        transicionando = false;
+
         Debug.Log("TransicaoCenas inicializado corretamente.");
     }
 
@@ -80,42 +83,56 @@ public class TransicaoCenas : MonoBehaviour
     private IEnumerator FazerTransicao(string nomeCena)
     {
         transicionando = true;
+        alpha = 0f;
 
-        Debug.Log("Escurecendo a tela...");
-
-        while (alpha < 1f)
+        try
         {
-            alpha = Mathf.MoveTowards(
-                alpha,
-                1f,
-                velocidadeFade * Time.unscaledDeltaTime
-            );
+            // ESCURECER
+            while (alpha < 1f)
+            {
+                alpha = Mathf.MoveTowards(
+                    alpha,
+                    1f,
+                    velocidadeFade * Time.unscaledDeltaTime
+                );
+
+                yield return null;
+            }
+
+            Debug.Log("Carregando cena: " + nomeCena);
+
+            // CARREGAR CENA
+            SceneManager.LoadScene(nomeCena);
 
             yield return null;
-        }
 
-        Debug.Log("Carregando cena: " + nomeCena);
-
-        SceneManager.LoadScene(nomeCena);
-
-        yield return null;
-
-        Debug.Log("Cena carregada: " + SceneManager.GetActiveScene().name);
-
-        while (alpha > 0f)
-        {
-            alpha = Mathf.MoveTowards(
-                alpha,
-                0f,
-                velocidadeFade * Time.unscaledDeltaTime
+            Debug.Log(
+                "Cena carregada: " +
+                SceneManager.GetActiveScene().name
             );
 
-            yield return null;
+            // CLAREAR
+            while (alpha > 0f)
+            {
+                alpha = Mathf.MoveTowards(
+                    alpha,
+                    0f,
+                    velocidadeFade * Time.unscaledDeltaTime
+                );
+
+                yield return null;
+            }
+
+            alpha = 0f;
+
+            Debug.Log("Transição finalizada.");
         }
-
-        transicionando = false;
-
-        Debug.Log("Transição finalizada.");
+        finally
+        {
+            // Libera novas transições mesmo se a rotina for interrompida.
+            alpha = 0f;
+            transicionando = false;
+        }
     }
 
     private void OnDestroy()
