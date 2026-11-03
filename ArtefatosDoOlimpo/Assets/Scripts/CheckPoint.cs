@@ -12,9 +12,18 @@ public class Checkpoint : MonoBehaviour
         if (activated)
             return;
 
-        GameManager.instance.SetCheckpoint(
-            transform.position
-        );
+        // Verifica se o GameManager existe.
+        if (GameManager.instance == null)
+        {
+            Debug.LogError(
+                "Checkpoint: GameManager.instance está vazio! " +
+                "Verifique se o GameManager foi criado na cena inicial."
+            );
+
+            return;
+        }
+
+        GameManager.instance.SetCheckpoint(transform.position);
 
         activated = true;
 
@@ -22,5 +31,7 @@ public class Checkpoint : MonoBehaviour
         {
             AudioManager.Instance.TocarCheckpoint();
         }
+
+        Debug.Log("CHECKPOINT ATIVADO!");
     }
 }
