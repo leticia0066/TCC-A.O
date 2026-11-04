@@ -34,36 +34,44 @@ public class Portal : MonoBehaviour
             return;
         }
 
-        playerEntered = true;
-
-        // Registra a conclusão da fase.
-        ProgressoJogo.ConcluirFase(numeroDaFase);
-
-        Debug.Log("FASE " + numeroDaFase + " CONCLUÍDA!");
-
-        // Fase 3: vitória final.
+        // Fase 3: verificar se todos os artefatos foram coletados.
         if (numeroDaFase == 3)
         {
-            if (GameManager.instance.TodosArtefatosColetados())
+            if (!GameManager.instance.TodosArtefatosColetados())
             {
-                if (painelVitoria != null)
-                {
-                    painelVitoria.SetActive(true);
-                    Time.timeScale = 0f;
-                    Debug.Log("VITÓRIA! TODOS OS ARTEFATOS FORAM COLETADOS!");
-                }
-                else
-                {
-                    Debug.LogWarning(
-                        "Configure o Painel de Vitória no Inspector!"
-                    );
-                }
+                Debug.LogWarning(
+                    "Você ainda precisa recuperar todos os artefatos do Olimpo!"
+                );
+                return;
             }
+
+            if (painelVitoria == null)
+            {
+                Debug.LogError(
+                    "Portal: arraste o PainelVitoria para o campo no Inspector!"
+                );
+                return;
+            }
+
+            playerEntered = true;
+
+            ProgressoJogo.ConcluirFase(numeroDaFase);
+
+            painelVitoria.SetActive(true);
+            Time.timeScale = 0f;
+
+            Debug.Log("VITÓRIA! TODOS OS ARTEFATOS FORAM COLETADOS!");
 
             return;
         }
 
-        // Fases 1 e 2: volta para a seleção.
+        // Fases 1 e 2.
+        playerEntered = true;
+
+        ProgressoJogo.ConcluirFase(numeroDaFase);
+
+        Debug.Log("FASE " + numeroDaFase + " CONCLUÍDA!");
+
         if (TransicaoCenas.Instance != null)
         {
             TransicaoCenas.Instance.TrocarCena("SelecaoFases");

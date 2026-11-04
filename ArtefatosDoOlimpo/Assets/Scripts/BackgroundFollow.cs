@@ -1,20 +1,29 @@
-
 using UnityEngine;
+
+
 
 public class BackgroundFollow : MonoBehaviour
 {
     [Header("Câmera")]
     public Transform cameraTransform;
 
+
+
     [Header("Intensidade do Parallax")]
     [Range(0f, 1f)]
     public float seguirX = 0.2f;
 
+
+
     [Range(0f, 1f)]
     public float seguirY = 0.1f;
 
+
+
     private Vector3 posicaoInicialCamera;
     private Vector3 posicaoInicialFundo;
+
+
 
     private void Start()
     {
@@ -22,11 +31,15 @@ public class BackgroundFollow : MonoBehaviour
         {
             Camera mainCamera = Camera.main;
 
+
+
             if (mainCamera != null)
             {
                 cameraTransform = mainCamera.transform;
             }
         }
+
+
 
         if (cameraTransform == null)
         {
@@ -34,13 +47,19 @@ public class BackgroundFollow : MonoBehaviour
                 "BackgroundFollow: não foi possível encontrar a câmera."
             );
 
+
+
             enabled = false;
             return;
         }
 
+
+
         posicaoInicialCamera = cameraTransform.position;
         posicaoInicialFundo = transform.position;
     }
+
+
 
     private void LateUpdate()
     {
@@ -49,16 +68,24 @@ public class BackgroundFollow : MonoBehaviour
             return;
         }
 
+
+
         Vector3 deslocamentoCamera =
             cameraTransform.position - posicaoInicialCamera;
+
+
 
         float novoX =
             posicaoInicialFundo.x +
             deslocamentoCamera.x * seguirX;
 
+
+
         float novoY =
             posicaoInicialFundo.y +
             deslocamentoCamera.y * seguirY;
+
+
 
         transform.position = new Vector3(
             novoX,
