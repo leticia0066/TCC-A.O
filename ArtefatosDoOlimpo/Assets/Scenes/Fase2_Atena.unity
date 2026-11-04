@@ -181,6 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda19
 --- !u!58 &47819411
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -326,7 +327,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -252.2, y: 108.5}
+  m_AnchoredPosition: {x: -313.7, y: 173.3}
   m_SizeDelta: {x: 22.0983, y: 22.0989}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &102731286
@@ -398,6 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda20
 --- !u!58 &121433582
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -540,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda10
 --- !u!58 &123602588
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -682,6 +685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda13
 --- !u!58 &157747135
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -818,7 +822,7 @@ Transform:
   m_GameObject: {fileID: 180696716}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -27.6, y: -5, z: 0}
+  m_LocalPosition: {x: -28.23, y: -4.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -988,7 +992,7 @@ Transform:
   m_GameObject: {fileID: 231078134}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -36.21, y: -4.85, z: 0}
+  m_LocalPosition: {x: -35.36, y: -4.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1170,6 +1174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda04
 --- !u!58 &239358302
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1400,6 +1405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda27
 --- !u!58 &276320488
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1679,6 +1685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda022
 --- !u!58 &336092442
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1945,7 +1952,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -230.01686, y: 108.58487}
+  m_AnchoredPosition: {x: -291.51688, y: 173.38489}
   m_SizeDelta: {x: 22.2689, y: 22.2689}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &426531462
@@ -2130,6 +2137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda24
 --- !u!58 &498389775
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -174958,6 +174966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda07
 --- !u!58 &698241732
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -175510,6 +175519,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 275647751}
+  - {fileID: 2005134661}
+  - {fileID: 1180142787}
+  - {fileID: 1093849559}
   - {fileID: 692644620}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -175618,7 +175630,7 @@ Transform:
   m_GameObject: {fileID: 763469075}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 52.15, y: -5.08, z: 0}
+  m_LocalPosition: {x: 53.22, y: -4.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -175655,6 +175667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda18
 --- !u!58 &810678733
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -175828,6 +175841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda09
 --- !u!58 &917877541
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -175970,6 +175984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda16
 --- !u!58 &935390102
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -176265,6 +176280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda12
 --- !u!58 &961266000
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -176501,6 +176517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda22
 --- !u!58 &997271914
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -176827,6 +176844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda21
 --- !u!58 &1017867729
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -177137,6 +177155,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1093849558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1093849559}
+  - component: {fileID: 1093849560}
+  m_Layer: 0
+  m_Name: HUDMoedas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1093849559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093849558}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -279.13507, y: 170.04744, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 757280551}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1093849560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093849558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6b92339d7f9f494188d707f3bfde6ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoedasHUD
+  iconeMoeda: {fileID: 2005134659}
+  textoQuantidade: {fileID: 1180142785}
 --- !u!1 &1131438380
 GameObject:
   m_ObjectHideFlags: 0
@@ -177243,6 +177307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda05
 --- !u!58 &1161066487
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -177354,6 +177419,143 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1180142784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1180142787}
+  - component: {fileID: 1180142786}
+  - component: {fileID: 1180142785}
+  m_Layer: 5
+  m_Name: TextoQuantidadeMoedas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1180142785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180142784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 0
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 50
+  m_fontSizeBase: 50
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1180142786
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180142784}
+  m_CullTransparentMesh: 1
+--- !u!224 &1180142787
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180142784}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.34619, y: 0.34619, z: 0.34619}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 757280551}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -248.9, y: 144.4}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1185027404
 GameObject:
   m_ObjectHideFlags: 0
@@ -177706,6 +177908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda14
 --- !u!58 &1193436071
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -177923,6 +178126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda23
 --- !u!58 &1335447359
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -178140,6 +178344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda08
 --- !u!58 &1368610060
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -178561,6 +178766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda11
 --- !u!58 &1396013076
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -178879,6 +179085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda03
 --- !u!58 &1435961878
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -179065,6 +179272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda17
 --- !u!58 &1467170589
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -179201,7 +179409,7 @@ Transform:
   m_GameObject: {fileID: 1493732827}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 64.98, y: -5.03, z: 0}
+  m_LocalPosition: {x: 64.33, y: -5.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179238,6 +179446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda25
 --- !u!58 &1517004505
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -179563,6 +179772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda06
 --- !u!58 &1577315263
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -179784,7 +179994,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -206.7641, y: 107.53847}
+  m_AnchoredPosition: {x: -268.2641, y: 172.33849}
   m_SizeDelta: {x: 21.0538, y: 21.054}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1630444685
@@ -180132,6 +180342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda26
 --- !u!58 &1715620807
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -185899,6 +186110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda01
 --- !u!58 &1927617461
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -186105,6 +186317,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1966855754}
   m_CullTransparentMesh: 1
+--- !u!1 &2005134658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2005134661}
+  - component: {fileID: 2005134660}
+  - component: {fileID: 2005134659}
+  m_Layer: 5
+  m_Name: IconeMoeda
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2005134659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005134658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -5052974010714884809, guid: bc33bda83a5a8e145a305c744cee1587, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2005134660
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005134658}
+  m_CullTransparentMesh: 1
+--- !u!224 &2005134661
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005134658}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.34619, y: 0.34619, z: 0.34619}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 757280551}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -305.29062, y: 149.45789}
+  m_SizeDelta: {x: 79.22, y: 79.22}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2021806815
 GameObject:
   m_ObjectHideFlags: 0
@@ -186136,6 +186423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
+  idMoeda: F2_Moeda15
 --- !u!58 &2021806817
 CircleCollider2D:
   m_ObjectHideFlags: 0

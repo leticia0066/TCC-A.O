@@ -3,13 +3,30 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    [Header("Identificação")]
+    public string idMoeda;
+
     private Vector3 initialPosition;
     private bool collected = false;
 
     private void Start()
     {
-        // Guarda a posição original da moeda
         initialPosition = transform.position;
+
+        if (ContadorMoedas.Instance == null)
+        {
+            Debug.LogError(
+                "Coin: ContadorMoedas não encontrado na cena!"
+            );
+            return;
+        }
+
+        // Não mostra novamente uma moeda já coletada.
+        if (ContadorMoedas.Instance.MoedaFoiColetada(idMoeda))
+        {
+            collected = true;
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -25,28 +42,41 @@ public class Coin : MonoBehaviour
 
     private void Collect()
     {
+        if (ContadorMoedas.Instance == null)
+            return;
+
+        bool registrada =
+            ContadorMoedas.Instance.RegistrarMoeda(idMoeda);
+
+        if (!registrada)
+            return;
+
         collected = true;
 
-        // Toca o som da moeda
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.TocarMoeda();
         }
 
-        // Esconde a moeda
         gameObject.SetActive(false);
 
-        Debug.Log("Moeda coletada!");
+        Debug.Log("Moeda coletada: " + idMoeda);
     }
 
     public void Respawn()
     {
-        // Volta para a posição original
+        if (ContadorMoedas.Instance != null &&
+            ContadorMoedas.Instance.MoedaFoiColetada(idMoeda))
+        {
+            collected = true;
+            gameObject.SetActive(false);
+            return;
+        }
+
         transform.position = initialPosition;
 
         collected = false;
 
-        // Faz a moeda aparecer novamente
         gameObject.SetActive(true);
     }
 }

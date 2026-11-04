@@ -34,7 +34,7 @@ public class Portal : MonoBehaviour
             return;
         }
 
-        // Fase 3: verificar se todos os artefatos foram coletados.
+        // FASE 3: verificar todos os artefatos.
         if (numeroDaFase == 3)
         {
             if (!GameManager.instance.TodosArtefatosColetados())
@@ -53,19 +53,29 @@ public class Portal : MonoBehaviour
                 return;
             }
 
+            if (TransicaoCenas.Instance == null)
+            {
+                Debug.LogError(
+                    "Portal: TransicaoCenas não foi encontrado!"
+                );
+                return;
+            }
+
             playerEntered = true;
 
             ProgressoJogo.ConcluirFase(numeroDaFase);
 
-            painelVitoria.SetActive(true);
-            Time.timeScale = 0f;
-
             Debug.Log("VITÓRIA! TODOS OS ARTEFATOS FORAM COLETADOS!");
+
+            // Escurece a tela antes de mostrar o painel.
+            TransicaoCenas.Instance.MostrarPainelComTransicao(
+                painelVitoria
+            );
 
             return;
         }
 
-        // Fases 1 e 2.
+        // FASES 1 E 2.
         playerEntered = true;
 
         ProgressoJogo.ConcluirFase(numeroDaFase);

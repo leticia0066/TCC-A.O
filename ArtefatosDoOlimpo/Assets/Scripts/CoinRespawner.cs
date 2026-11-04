@@ -7,7 +7,6 @@ public class CoinRespawner : MonoBehaviour
 
     private void Awake()
     {
-        // Procura todas as moedas da fase
         coins = FindObjectsOfType<Coin>(true);
     }
 
@@ -21,6 +20,6 @@ public class CoinRespawner : MonoBehaviour
             }
         }
 
-        Debug.Log("Todas as moedas voltaram!");
+        Debug.Log("Moedas não coletadas foram restauradas!");
     }
 }

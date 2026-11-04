@@ -129,7 +129,76 @@ public class TransicaoCenas : MonoBehaviour
         }
         finally
         {
-            // Libera novas transições mesmo se a rotina for interrompida.
+            alpha = 0f;
+            transicionando = false;
+        }
+    }
+
+    // NOVO: escurece a tela e mostra um painel.
+    public void MostrarPainelComTransicao(GameObject painel)
+    {
+        if (transicionando)
+        {
+            Debug.LogWarning("Já existe uma transição em andamento.");
+            return;
+        }
+
+        if (painel == null)
+        {
+            Debug.LogError(
+                "TransicaoCenas: o painel recebido está vazio!"
+            );
+            return;
+        }
+
+        StartCoroutine(FazerTransicaoParaPainel(painel));
+    }
+
+    private IEnumerator FazerTransicaoParaPainel(GameObject painel)
+    {
+        transicionando = true;
+        alpha = 0f;
+
+        try
+        {
+            // 1. ESCURECER A TELA.
+            while (alpha < 1f)
+            {
+                alpha = Mathf.MoveTowards(
+                    alpha,
+                    1f,
+                    velocidadeFade * Time.unscaledDeltaTime
+                );
+
+                yield return null;
+            }
+
+            // 2. MOSTRAR O PAINEL COM A TELA ESCURA.
+            painel.SetActive(true);
+
+            // 3. PAUSAR O JOGO.
+            Time.timeScale = 0f;
+
+            yield return null;
+
+            // 4. CLAREAR A TELA E REVELAR O PAINEL.
+            while (alpha > 0f)
+            {
+                alpha = Mathf.MoveTowards(
+                    alpha,
+                    0f,
+                    velocidadeFade * Time.unscaledDeltaTime
+                );
+
+                yield return null;
+            }
+
+            alpha = 0f;
+
+            Debug.Log("Painel exibido com transição!");
+        }
+        finally
+        {
             alpha = 0f;
             transicionando = false;
         }
