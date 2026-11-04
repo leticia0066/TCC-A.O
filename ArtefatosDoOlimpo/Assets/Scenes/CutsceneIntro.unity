@@ -779,8 +779,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 678, y: 486}
+  m_AnchoredPosition: {x: 0.000030518, y: 0}
+  m_SizeDelta: {x: 894, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1632911176
 MonoBehaviour:
@@ -943,9 +943,9 @@ MonoBehaviour:
   textoHistoria: {fileID: 317217142}
   textoTutorial: {fileID: 520086324}
   imagemDeus: {fileID: 1379942783}
-  imagemAres: {fileID: -7419363550109540756, guid: cb836c68cfcc6e048a4a5897b99ff3f4, type: 3}
-  imagemAtena: {fileID: 4777336612198853525, guid: 034ec4518e201324394f173a31923082, type: 3}
-  imagemZeus: {fileID: -9095803727545094535, guid: 593e19b23f4a2e04189b7ba859b1d620, type: 3}
+  imagemAres: {fileID: 7248492927488813742, guid: 1efebc1069a87564a828e06740a29865, type: 3}
+  imagemAtena: {fileID: 3286078047582240689, guid: 1dcae938c86a8054c8e2e6364c7981e8, type: 3}
+  imagemZeus: {fileID: -2789858266365618905, guid: 5c2307c4c1eb5914fbc316f89df4233a, type: 3}
   velocidadeDigitacao: 0.09
   audioSource: {fileID: 1714323693}
   somDigitacao: {fileID: 8300000, guid: c570cf2faf9643d4492f4376ba218121, type: 3}
