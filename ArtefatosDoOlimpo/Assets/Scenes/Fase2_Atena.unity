@@ -175955,8 +175955,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SistemaInteracao
   tagJogador: Player
-  nomeGuardiao: MINOTAURO
-  mensagem: "O guardi\xE3o da espada est\xE1 \xE0 frente. Tome cuidado!"
+  nomeGuardiao: MEDUSA
+  mensagem: "A guardi\xE3 do escudo est\xE1 \xE0 frente. Tome cuidado!"
   teclaInteragir: 101
   teclaFechar: 32
   duracaoAnimacao: 0.25

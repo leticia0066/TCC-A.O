@@ -30,10 +30,14 @@ public class CiclopeBoss : MonoBehaviour
     public string parametroAtaque = "Attack";
     public string parametroMorte = "Die";
 
-    [Header("Morte")]
+    [Header("Animacao de morte")]
     public float tempoAnimacaoMorte = 1.2f;
+
+    [Header("Efeito de morte")]
     public float duracaoPiscadas = 1.2f;
     public float intervaloPiscada = 0.08f;
+    public float intensidadeTremida = 0.04f;
+    public float velocidadeTremida = 25f;
 
     private int vidaAtual;
     private Transform jogador;
@@ -199,7 +203,8 @@ public class CiclopeBoss : MonoBehaviour
 
         yield return new WaitForSeconds(restante);
 
-        atacando = false;
+        if (!morto)
+            atacando = false;
     }
 
     private void AplicarDano()
@@ -236,7 +241,9 @@ public class CiclopeBoss : MonoBehaviour
         AtualizarCorBarra();
 
         if (vidaAtual <= 0)
+        {
             StartCoroutine(Morrer());
+        }
     }
 
     private void AtualizarCorBarra()
@@ -260,40 +267,76 @@ public class CiclopeBoss : MonoBehaviour
         bossAtivado = false;
         atacando = false;
 
-        StopAllCoroutines();
-
+        // Cancela o movimento e impede novos ataques.
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
             rb.simulated = false;
         }
 
+        // Desativa todos os colisores.
         foreach (Collider2D colisor in colisores)
         {
             if (colisor != null)
                 colisor.enabled = false;
         }
 
+        // Esconde a barra de vida.
         if (barraVida != null)
             barraVida.gameObject.SetActive(false);
 
-        if (anim != null)
-            anim.SetTrigger(parametroMorte);
+        // Dispara a animacao de morte.
+        bool temAnimacaoMorte = false;
 
-        yield return new WaitForSeconds(tempoAnimacaoMorte);
+        if (anim != null && anim.isActiveAndEnabled)
+        {
+            foreach (AnimatorControllerParameter parametro
+                     in anim.parameters)
+            {
+                if (parametro.name == parametroMorte &&
+                    parametro.type == AnimatorControllerParameterType.Trigger)
+                {
+                    temAnimacaoMorte = true;
+                    break;
+                }
+            }
 
+            if (temAnimacaoMorte)
+                anim.SetTrigger(parametroMorte);
+        }
+
+        // Espera a animacao de morte terminar.
+        if (tempoAnimacaoMorte > 0f)
+        {
+            yield return new WaitForSecondsRealtime(
+                tempoAnimacaoMorte
+            );
+        }
+
+        // Desativa o Animator antes do efeito de desaparecimento.
         if (anim != null)
             anim.enabled = false;
 
         Vector3 posicaoInicial = transform.position;
+
         float tempo = 0f;
         float tempoPiscada = 0f;
+
         bool visivel = true;
 
+        // Tremida, piscadas e diminuicao de tamanho.
         while (tempo < duracaoPiscadas)
         {
-            tempo += Time.deltaTime;
-            tempoPiscada += Time.deltaTime;
+            tempo += Time.unscaledDeltaTime;
+            tempoPiscada += Time.unscaledDeltaTime;
+
+            float tremorX =
+                Mathf.Sin(tempo * velocidadeTremida)
+                * intensidadeTremida;
+
+            transform.position = posicaoInicial +
+                new Vector3(tremorX, 0f, 0f);
 
             float escala = Mathf.Lerp(
                 1f,
@@ -302,12 +345,6 @@ public class CiclopeBoss : MonoBehaviour
             );
 
             transform.localScale = escalaInicial * escala;
-
-            float tremorX =
-                Mathf.Sin(tempo * 25f) * 0.04f;
-
-            transform.position =
-                posicaoInicial + new Vector3(tremorX, 0f, 0f);
 
             if (tempoPiscada >= intervaloPiscada)
             {
@@ -324,7 +361,13 @@ public class CiclopeBoss : MonoBehaviour
             yield return null;
         }
 
+        // Garante que o Ciclope desapareca.
         Destroy(gameObject);
+    }
+
+    public bool EstaMorto()
+    {
+        return morto;
     }
 
     private void OnDrawGizmosSelected()
@@ -333,6 +376,7 @@ public class CiclopeBoss : MonoBehaviour
             return;
 
         Gizmos.color = Color.red;
+
         Gizmos.DrawWireSphere(
             attackPoint.position,
             raioAtaque

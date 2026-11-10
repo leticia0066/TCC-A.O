@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CutsceneIntroManager : MonoBehaviour
 {
-    [Header("Painéis")]
+    [Header("Paineis")]
     public GameObject painelHistoria;
     public GameObject painelTutorial;
 
@@ -16,30 +16,39 @@ public class CutsceneIntroManager : MonoBehaviour
 
     [Header("Imagem dos deuses")]
     public Image imagemDeus;
-
     public Sprite imagemAres;
     public Sprite imagemAtena;
     public Sprite imagemZeus;
 
-    [Header("Configuração da digitação")]
-    [Min(0.001f)]
+    [Header("Digitacao")]
     public float velocidadeDigitacao = 0.09f;
 
-    [Header("Sons")]
-    public AudioSource audioSource;
+    [Header("Som da digitacao")]
+    public AudioSource audioDigitacao;
     public AudioClip somDigitacao;
-    public AudioClip somCliqueEspaco;
 
     [Range(0f, 1f)]
-    public float volumeDigitacao = 0.15f;
+    public float volumeDigitacao = 0.035f;
+
+    [Tooltip("Quantidade de letras entre cada som.")]
+    [Range(1, 10)]
+    public int letrasEntreSons = 3;
+
+    [Tooltip("Intervalo minimo entre os sons.")]
+    public float intervaloEntreSons = 0.22f;
+
+    [Header("Som do espaco")]
+    public AudioSource audioSource;
+    public AudioClip somCliqueEspaco;
 
     [Range(0f, 1f)]
     public float volumeClique = 0.8f;
 
-    [Range(1, 10)]
-    public int letrasEntreSons = 5;
+    [Header("Pausas")]
+    public float pausaVirgula = 0.12f;
+    public float pausaPonto = 0.25f;
 
-    [Header("Mensagens automáticas")]
+    [Header("Mensagens")]
     public string mensagemPular = "PRESSIONE ESPAÇO PARA PULAR";
     public string mensagemContinuar = "PRESSIONE ESPAÇO PARA CONTINUAR";
     public string mensagemComecar = "PRESSIONE ESPAÇO PARA COMEÇAR";
@@ -53,10 +62,25 @@ public class CutsceneIntroManager : MonoBehaviour
     private bool iniciandoFase;
 
     private int contadorLetras;
+    private float proximoSom;
 
     private void Start()
     {
         Time.timeScale = 1f;
+
+        // Carrega o som automaticamente da pasta Resources.
+        if (somDigitacao == null)
+        {
+            somDigitacao = Resources.Load<AudioClip>("SomDigitacao");
+        }
+
+        if (audioDigitacao == null)
+        {
+            audioDigitacao = gameObject.AddComponent<AudioSource>();
+        }
+
+        audioDigitacao.playOnAwake = false;
+        audioDigitacao.loop = false;
 
         if (!ReferenciasValidas())
         {
@@ -82,8 +106,6 @@ public class CutsceneIntroManager : MonoBehaviour
             "P — Abrir configurações\n\n" +
             mensagemComecar;
 
-        contadorLetras = 0;
-
         digitacaoCoroutine = StartCoroutine(DigitarHistoria());
     }
 
@@ -92,7 +114,6 @@ public class CutsceneIntroManager : MonoBehaviour
         switch (fase)
         {
             case "Fase1_Aress":
-
                 return
                     "CAPÍTULO I — A PROVAÇÃO DE ARES\n\n" +
                     "O equilíbrio do Olimpo foi ameaçado, e os antigos " +
@@ -103,7 +124,6 @@ public class CutsceneIntroManager : MonoBehaviour
                     "o primeiro artefato.";
 
             case "Fase2_Atena":
-
                 return
                     "CAPÍTULO II — O JULGAMENTO DE ATENA\n\n" +
                     "Com a Espada recuperada, sua jornada continua.\n\n" +
@@ -113,7 +133,6 @@ public class CutsceneIntroManager : MonoBehaviour
                     "inteligência para conquistar o segundo artefato.";
 
             case "Fase3_Zeus":
-
                 return
                     "CAPÍTULO III — A IRA DE ZEUS\n\n" +
                     "A Espada e o Escudo foram recuperados. " +
@@ -123,9 +142,7 @@ public class CutsceneIntroManager : MonoBehaviour
                     "capaz de restaurar o equilíbrio entre os deuses.";
 
             default:
-
                 Debug.LogError("História não encontrada para: " + fase);
-
                 return "Uma nova jornada começa no mundo dos deuses.";
         }
     }
@@ -152,13 +169,6 @@ public class CutsceneIntroManager : MonoBehaviour
         }
 
         imagemDeus.preserveAspect = true;
-
-        if (imagemDeus.sprite == null)
-        {
-            Debug.LogError(
-                "A imagem do deus não foi configurada para: " + fase
-            );
-        }
     }
 
     private void Update()
@@ -220,7 +230,9 @@ public class CutsceneIntroManager : MonoBehaviour
     {
         digitando = true;
         historiaTerminada = false;
+
         contadorLetras = 0;
+        proximoSom = 0f;
 
         string textoAtual = "";
 
@@ -231,7 +243,7 @@ public class CutsceneIntroManager : MonoBehaviour
             textoHistoria.text =
                 textoAtual + "\n\n" + mensagemPular;
 
-            if (!char.IsWhiteSpace(letra))
+            if (char.IsLetterOrDigit(letra))
             {
                 contadorLetras++;
 
@@ -245,6 +257,21 @@ public class CutsceneIntroManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(
                 velocidadeDigitacao
             );
+
+            if (letra == ',')
+            {
+                yield return new WaitForSecondsRealtime(
+                    pausaVirgula
+                );
+            }
+            else if (letra == '.' ||
+                     letra == '!' ||
+                     letra == '?')
+            {
+                yield return new WaitForSecondsRealtime(
+                    pausaPonto
+                );
+            }
         }
 
         digitando = false;
@@ -257,13 +284,24 @@ public class CutsceneIntroManager : MonoBehaviour
 
     private void TocarSomDigitacao()
     {
-        if (audioSource == null || somDigitacao == null)
+        if (somDigitacao == null || audioDigitacao == null)
             return;
 
-        audioSource.PlayOneShot(
-            somDigitacao,
-            volumeDigitacao
-        );
+        if (Time.unscaledTime < proximoSom)
+            return;
+
+        // Impede que os sons fiquem sobrepostos.
+        if (audioDigitacao.isPlaying)
+            return;
+
+        audioDigitacao.volume = volumeDigitacao;
+        audioDigitacao.pitch = 1f;
+
+        audioDigitacao.clip = somDigitacao;
+        audioDigitacao.Play();
+
+        proximoSom =
+            Time.unscaledTime + intervaloEntreSons;
     }
 
     private void TocarSomClique()
@@ -284,6 +322,9 @@ public class CutsceneIntroManager : MonoBehaviour
             StopCoroutine(digitacaoCoroutine);
             digitacaoCoroutine = null;
         }
+
+        if (audioDigitacao != null)
+            audioDigitacao.Stop();
 
         textoHistoria.text =
             historiaCompleta + "\n\n" + mensagemContinuar;
@@ -306,8 +347,6 @@ public class CutsceneIntroManager : MonoBehaviour
             mensagemComecar;
 
         tutorialAtivo = true;
-
-        Debug.Log("Tutorial exibido.");
     }
 
     private void ComecarFase()
@@ -321,10 +360,6 @@ public class CutsceneIntroManager : MonoBehaviour
 
         string faseEscolhida =
             SelecaoFases.NomeFaseSelecionada;
-
-        Debug.Log(
-            "Cutscene concluída. Indo para: " + faseEscolhida
-        );
 
         if (TransicaoCenas.Instance != null)
         {
@@ -344,5 +379,8 @@ public class CutsceneIntroManager : MonoBehaviour
             StopCoroutine(digitacaoCoroutine);
             digitacaoCoroutine = null;
         }
+
+        if (audioDigitacao != null)
+            audioDigitacao.Stop();
     }
 }

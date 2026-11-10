@@ -947,12 +947,16 @@ MonoBehaviour:
   imagemAtena: {fileID: 3286078047582240689, guid: 1dcae938c86a8054c8e2e6364c7981e8, type: 3}
   imagemZeus: {fileID: -2789858266365618905, guid: 5c2307c4c1eb5914fbc316f89df4233a, type: 3}
   velocidadeDigitacao: 0.09
-  audioSource: {fileID: 1714323693}
+  audioDigitacao: {fileID: 0}
   somDigitacao: {fileID: 8300000, guid: c570cf2faf9643d4492f4376ba218121, type: 3}
+  volumeDigitacao: 0.035
+  letrasEntreSons: 3
+  intervaloEntreSons: 0.22
+  audioSource: {fileID: 1714323693}
   somCliqueEspaco: {fileID: 8300000, guid: 9c8f9c5e5a0014c49bf96058cd852c09, type: 3}
-  volumeDigitacao: 0.15
   volumeClique: 0.8
-  letrasEntreSons: 4
+  pausaVirgula: 0.12
+  pausaPonto: 0.25
   mensagemPular: "PRESSIONE ESPA\xC7O PARA PULAR"
   mensagemContinuar: "PRESSIONE ESPA\xC7O PARA CONTINUAR"
   mensagemComecar: "PRESSIONE ESPA\xC7O PARA COME\xC7AR"
