@@ -196,6 +196,19 @@ public class PlayerController : MonoBehaviour
                 continue;
             }
 
+            CobraMiniboss cobra =
+                enemy.GetComponentInParent<CobraMiniboss>();
+
+            if (cobra != null)
+            {
+                cobra.TakeDamage(1);
+
+                Debug.Log("COBRA ATINGIDA! Vida restante: "
+                    + cobra.vidaAtual);
+
+                continue;
+            }
+
             enemy.SendMessageUpwards(
                 "TakeDamage",
                 1,
