@@ -180012,7 +180012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cb4b4c77393614e9bf92cbf0d5f31c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MedusaController
-  player: {fileID: 0}
+  player: {fileID: 1383130683}
   warningDistance: 9
   attackRange: 6
   attackCooldown: 2.5
@@ -180020,6 +180020,10 @@ MonoBehaviour:
   projectileDamage: 3
   projectilePrefab: {fileID: 1098440995871628789, guid: 1dcb42ca0e2ea8f429a26b5ab04e282b, type: 3}
   firePoint: {fileID: 0}
+  armature: {fileID: 0}
+  animacaoAndando: andando
+  animacaoAtaque: ataque
+  duracaoAnimacaoAtaque: 0.8
 --- !u!114 &1397604061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187873,7 +187877,7 @@ Transform:
   m_GameObject: {fileID: 1996959115}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.024, y: -0.111, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

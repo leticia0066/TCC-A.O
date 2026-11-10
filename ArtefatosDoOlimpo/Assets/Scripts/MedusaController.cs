@@ -1,10 +1,12 @@
 
+using System.Collections;
 using UnityEngine;
+using DragonBones;
 
 public class MedusaController : MonoBehaviour
 {
     [Header("Jogador")]
-    public Transform player;
+    public UnityEngine.Transform player;
 
     [Header("Alerta de perigo")]
     public float warningDistance = 9f;
@@ -17,17 +19,49 @@ public class MedusaController : MonoBehaviour
 
     [Header("Feitico")]
     public GameObject projectilePrefab;
-    public Transform firePoint;
+    public UnityEngine.Transform firePoint;
+
+    [Header("Animacoes DragonBones")]
+    public UnityArmatureComponent armature;
+
+    public string animacaoAndando = "andando";
+    public string animacaoAtaque = "ataque";
+
+    [Tooltip("Tempo que a animacao de ataque fica tocando.")]
+    public float duracaoAnimacaoAtaque = 0.8f;
 
     private bool warningPlayed;
     private float nextAttackTime;
+
+    private bool atacando;
+    private Coroutine rotinaAtaque;
 
     private void Start()
     {
         FindPlayer();
 
         if (projectilePrefab == null)
-            Debug.LogError("Medusa: arraste o Prefab do feitico para Projectile Prefab!");
+        {
+            Debug.LogError(
+                "Medusa: arraste o Prefab do feitico para Projectile Prefab!"
+            );
+        }
+
+        if (armature == null)
+        {
+            armature = GetComponentInChildren<UnityArmatureComponent>(true);
+        }
+
+        if (armature == null)
+        {
+            Debug.LogError(
+                "Medusa: UnityArmatureComponent nao encontrado!"
+            );
+        }
+        else
+        {
+            TocarAnimacaoAndando();
+        }
     }
 
     private void Update()
@@ -57,7 +91,9 @@ public class MedusaController : MonoBehaviour
             warningPlayed = false;
 
         if (distance <= attackRange && Time.time >= nextAttackTime)
+        {
             AttackPlayer();
+        }
     }
 
     private void FindPlayer()
@@ -71,7 +107,7 @@ public class MedusaController : MonoBehaviour
 
     private void AttackPlayer()
     {
-        if (projectilePrefab == null || player == null)
+        if (projectilePrefab == null || player == null || atacando)
             return;
 
         nextAttackTime = Time.time + attackCooldown;
@@ -80,13 +116,25 @@ public class MedusaController : MonoBehaviour
             ((Vector2)player.position -
             (Vector2)transform.position).normalized;
 
+        if (armature != null)
+        {
+            if (rotinaAtaque != null)
+                StopCoroutine(rotinaAtaque);
+
+            rotinaAtaque = StartCoroutine(ExecutarAnimacaoAtaque());
+        }
+
         Vector3 spawnPosition;
 
         if (firePoint != null)
+        {
             spawnPosition = firePoint.position;
+        }
         else
+        {
             spawnPosition = transform.position +
                 (Vector3)(direction * 1.2f);
+        }
 
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -114,10 +162,42 @@ public class MedusaController : MonoBehaviour
             transform
         );
 
-        // Novo: som de lancamento do feitico.
         if (AudioManager.Instance != null)
             AudioManager.Instance.TocarAtaqueMedusa();
 
         Debug.Log("Medusa lancou um feitico contra o jogador!");
+    }
+
+    private IEnumerator ExecutarAnimacaoAtaque()
+    {
+        atacando = true;
+
+        armature.animation.Play(animacaoAtaque, 1);
+
+        yield return new WaitForSeconds(duracaoAnimacaoAtaque);
+
+        TocarAnimacaoAndando();
+
+        atacando = false;
+        rotinaAtaque = null;
+    }
+
+    private void TocarAnimacaoAndando()
+    {
+        if (armature == null)
+            return;
+
+        armature.animation.Play(animacaoAndando, 0);
+    }
+
+    private void OnDisable()
+    {
+        if (rotinaAtaque != null)
+        {
+            StopCoroutine(rotinaAtaque);
+            rotinaAtaque = null;
+        }
+
+        atacando = false;
     }
 }
