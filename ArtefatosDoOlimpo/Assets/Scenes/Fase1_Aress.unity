@@ -56900,7 +56900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda42
 --- !u!58 &137308229
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -57263,7 +57263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda57
 --- !u!58 &151270882
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -57861,7 +57861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda49
 --- !u!58 &213899795
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -58418,7 +58418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda27
 --- !u!58 &263169517
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -58561,7 +58561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda27
+  idMoeda: F1_Moeda59
 --- !u!58 &276320488
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -58735,7 +58735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda47
 --- !u!58 &296149127
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -58878,7 +58878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda54
 --- !u!58 &334026598
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -59309,7 +59309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda29
 --- !u!58 &389210400
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -59483,7 +59483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda28
 --- !u!58 &437046887
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -343753,7 +343753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda51
 --- !u!58 &955083463
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -344039,7 +344039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda56
 --- !u!58 &970931295
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -344257,7 +344257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda53
 --- !u!58 &996887502
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -344829,7 +344829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda38
 --- !u!58 &1015061119
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -345252,7 +345252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda43
 --- !u!58 &1025361251
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -345395,7 +345395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda55
 --- !u!58 &1035976953
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -345538,7 +345538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda32
 --- !u!58 &1043164121
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -345834,7 +345834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda39
 --- !u!58 &1099618798
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -346130,7 +346130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda48
 --- !u!58 &1112408397
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -352435,7 +352435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda36
 --- !u!58 &1323676967
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -352721,7 +352721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda44
 --- !u!58 &1335450632
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -357941,7 +357941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda46
 --- !u!58 &1366068590
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -359045,7 +359045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda35
 --- !u!58 &1496793262
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -359559,7 +359559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda41
 --- !u!58 &1522746070
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -359974,7 +359974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda33
 --- !u!58 &1560457681
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -360117,7 +360117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda31
 --- !u!58 &1568439968
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -360800,7 +360800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda30
 --- !u!58 &1610002408
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -361005,7 +361005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda34
 --- !u!58 &1633450631
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -361818,7 +361818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda26
+  idMoeda: F1_Moeda58
 --- !u!58 &1715620807
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -362781,7 +362781,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda50
 --- !u!58 &1844169037
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -369061,7 +369061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda45
 --- !u!58 &1976888649
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -369349,7 +369349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda40
 --- !u!58 &2017051742
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -369492,7 +369492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda37
 --- !u!58 &2018022742
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -369961,7 +369961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbeed08264604c14aa0489a3810597d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
-  idMoeda: F1_Moeda25
+  idMoeda: F1_Moeda52
 --- !u!58 &2065081642
 CircleCollider2D:
   m_ObjectHideFlags: 0
