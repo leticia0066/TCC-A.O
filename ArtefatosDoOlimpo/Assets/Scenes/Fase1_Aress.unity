@@ -13024,7 +13024,7 @@ Transform:
   m_GameObject: {fileID: 557725402}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.73739, y: -2.83285, z: 0}
+  m_LocalPosition: {x: -43.58, y: -3.67, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -378582,17 +378582,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.034827724, y: 0.00000011920929}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.43, y: 3.22}
+    oldSize: {x: 0.85, y: 1.58}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.9303446, y: 1.5700507}
   m_EdgeRadius: 0
 --- !u!212 &1009209837
 SpriteRenderer:
@@ -378643,7 +378643,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 925493535011636721, guid: 3b633a5fcffa48741ac501d050b084fe, type: 3}
+  m_Sprite: {fileID: 4023343186106570384, guid: 5b011152d56ee664b8ce2767e150a06d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -378663,8 +378663,8 @@ Transform:
   m_GameObject: {fileID: 1009209834}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.2453, y: -3.9159, z: 0}
-  m_LocalScale: {x: 0.56547266, y: 0.6909641, z: 0.32820222}
+  m_LocalPosition: {x: 6.425, y: -4.074, z: 0}
+  m_LocalScale: {x: 0.9883897, y: 1.2077361, z: 0.57366467}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1875159491}
@@ -379000,99 +379000,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1023245384
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1023245386}
-  - component: {fileID: 1023245385}
-  - component: {fileID: 1023245387}
-  m_Layer: 0
-  m_Name: ZonaPerigo
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!61 &1023245385
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023245384}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -2.079927, y: 3.0426927}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 23.192059, y: 10.486524}
-  m_EdgeRadius: 0
---- !u!4 &1023245386
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023245384}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.7, y: -3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1023245387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023245384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93bf2dfcdd65a694baf0ea2061922521, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ZonaPerigo
-  textoPerigo: {fileID: 0}
-  minotauro: {fileID: 1744877490}
 --- !u!1 &1025361249
 GameObject:
   m_ObjectHideFlags: 0
@@ -395237,17 +395144,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.020504653, y: 0.008392096}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.43, y: 3.22}
+    oldSize: {x: 0.85, y: 1.58}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.9589907, y: 1.5874445}
   m_EdgeRadius: 0
 --- !u!212 &1650457708
 SpriteRenderer:
@@ -395298,7 +395205,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 925493535011636721, guid: 3b633a5fcffa48741ac501d050b084fe, type: 3}
+  m_Sprite: {fileID: 4023343186106570384, guid: 5b011152d56ee664b8ce2767e150a06d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -395318,8 +395225,8 @@ Transform:
   m_GameObject: {fileID: 1650457705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 131.58, y: -3.85, z: 0}
-  m_LocalScale: {x: 0.56547266, y: 0.6909641, z: 0.32820222}
+  m_LocalPosition: {x: 131.792, y: -4.051, z: 0}
+  m_LocalScale: {x: 1.00083, y: 1.2229373, z: 0.5808851}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1146849904}
@@ -402657,7 +402564,7 @@ Transform:
   m_GameObject: {fileID: 1951371698}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.31, y: -3.973, z: 0}
+  m_LocalPosition: {x: 45, y: -3.973, z: 0}
   m_LocalScale: {x: 0.080563, y: 0.080563, z: 0.080563}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -404714,7 +404621,6 @@ SceneRoots:
   - {fileID: 852531775}
   - {fileID: 912047731}
   - {fileID: 1216553505}
-  - {fileID: 1023245386}
   - {fileID: 2131312411}
   - {fileID: 1861103916}
   - {fileID: 762418232}
