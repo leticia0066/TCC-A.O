@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 
@@ -18,7 +19,16 @@ public class PlayerHealth : MonoBehaviour
     public float respawnDelay = 0.5f;
     public float gameOverDelay = 0.5f;
 
+    [Header("Efeito ao receber dano")]
+    public float duracaoPiscar = 0.45f;
+    public float intervaloPiscar = 0.07f;
+
     private Rigidbody2D rb;
+    private SpriteRenderer[] spriteRenderers;
+    private bool[] estadosOriginais;
+
+    private Coroutine efeitoDanoCoroutine;
+
     private bool isDead = false;
     private bool gameOverStarted = false;
 
@@ -29,6 +39,18 @@ public class PlayerHealth : MonoBehaviour
         if (heartUI == null)
         {
             heartUI = FindFirstObjectByType<HeartUI>();
+        }
+
+        // Encontra os sprites do personagem.
+        spriteRenderers =
+            GetComponentsInChildren<SpriteRenderer>(true);
+
+        // Guarda quais sprites estavam visíveis.
+        estadosOriginais = new bool[spriteRenderers.Length];
+
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            estadosOriginais[i] = spriteRenderers[i].enabled;
         }
     }
 
@@ -51,6 +73,9 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead || gameOverStarted || damage <= 0)
             return;
+
+        // Ativa o efeito visual sempre que receber dano.
+        IniciarEfeitoDano();
 
         int vidaAnterior = currentHealth;
 
@@ -89,13 +114,81 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    // EFEITO DE PISCAR AO RECEBER DANO
+    private void IniciarEfeitoDano()
+    {
+        if (spriteRenderers == null ||
+            spriteRenderers.Length == 0)
+        {
+            return;
+        }
+
+        // Evita que dois efeitos fiquem sobrepostos.
+        if (efeitoDanoCoroutine != null)
+        {
+            StopCoroutine(efeitoDanoCoroutine);
+            RestaurarSprites();
+        }
+
+        efeitoDanoCoroutine =
+            StartCoroutine(PiscarPersonagem());
+    }
+
+    private IEnumerator PiscarPersonagem()
+    {
+        float tempo = 0f;
+        bool mostrar = false;
+
+        intervaloPiscar = Mathf.Max(0.02f, intervaloPiscar);
+
+        while (tempo < duracaoPiscar)
+        {
+            mostrar = !mostrar;
+
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                if (spriteRenderers[i] != null)
+                {
+                    spriteRenderers[i].enabled =
+                        estadosOriginais[i] && mostrar;
+                }
+            }
+
+            yield return new WaitForSeconds(intervaloPiscar);
+
+            tempo += intervaloPiscar;
+        }
+
+        RestaurarSprites();
+
+        efeitoDanoCoroutine = null;
+    }
+
+    // RESTAURAR A APARÊNCIA ORIGINAL
+    private void RestaurarSprites()
+    {
+        if (spriteRenderers == null ||
+            estadosOriginais == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null)
+            {
+                spriteRenderers[i].enabled =
+                    estadosOriginais[i];
+            }
+        }
+    }
+
     // RECUPERAR VIDA AO COLETAR UM CORAÇÃO
     public void RecuperarVida(int quantidade)
     {
         if (isDead || gameOverStarted || quantidade <= 0)
             return;
 
-        // Não permite recuperar vida além do máximo.
         if (currentHealth >= maxHealth)
             return;
 
@@ -141,7 +234,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            transform.position = GameManager.instance.GetSpawnPosition();
+            transform.position =
+                GameManager.instance.GetSpawnPosition();
         }
         else
         {
@@ -150,7 +244,6 @@ public class PlayerHealth : MonoBehaviour
             );
         }
 
-        // Recupera a vida após retornar ao checkpoint.
         currentHealth = maxHealth;
         AtualizarInterface();
 
@@ -199,6 +292,9 @@ public class PlayerHealth : MonoBehaviour
     public void ResetarVidas()
     {
         StopAllCoroutines();
+
+        efeitoDanoCoroutine = null;
+        RestaurarSprites();
 
         Time.timeScale = 1f;
 
