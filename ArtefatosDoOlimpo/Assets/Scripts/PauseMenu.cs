@@ -11,6 +11,7 @@ public class PauseMenu : MonoBehaviour
     [Header("Painéis")]
     public GameObject pausePanel;
     public GameObject settingsPanel;
+    public GameObject creditsPanel;
 
     [Header("Transição")]
     public UITransition settingsTransition;
@@ -20,6 +21,8 @@ public class PauseMenu : MonoBehaviour
     public Button reiniciarButton;
     public Button sairButton;
     public Button botaoConfiguracao;
+    public Button botaoCreditos;
+    public Button botaoVoltarCreditos;
 
     [Header("Volume")]
     public Slider volumeSlider;
@@ -41,15 +44,12 @@ public class PauseMenu : MonoBehaviour
         pausado = false;
         fechandoPainel = false;
 
-        // Recupera o volume salvo.
         float volumeSalvo = PlayerPrefs.GetFloat(
-            CHAVE_VOLUME,
-            1f
+            CHAVE_VOLUME, 1f
         );
 
         AudioListener.volume = volumeSalvo;
 
-        // Configura o Slider.
         if (volumeSlider != null)
         {
             volumeSlider.minValue = 0f;
@@ -67,7 +67,6 @@ public class PauseMenu : MonoBehaviour
             );
         }
 
-        // Conecta os botões.
         if (continuarButton != null)
         {
             continuarButton.onClick.RemoveListener(Continuar);
@@ -92,20 +91,34 @@ public class PauseMenu : MonoBehaviour
             botaoConfiguracao.onClick.AddListener(TogglePause);
         }
 
-        // O painel externo começa fechado.
+        // Botão de créditos
+        if (botaoCreditos != null)
+        {
+            botaoCreditos.onClick.RemoveListener(AbrirCreditos);
+            botaoCreditos.onClick.AddListener(AbrirCreditos);
+        }
+
+        // Botão de voltar dos créditos
+        if (botaoVoltarCreditos != null)
+        {
+            botaoVoltarCreditos.onClick.RemoveListener(FecharCreditos);
+            botaoVoltarCreditos.onClick.AddListener(FecharCreditos);
+        }
+
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
-        // O painel interno começa fechado.
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
 
         AtualizarTextoVolume(volumeSalvo);
     }
 
     private void Update()
     {
-        // Abre e fecha usando a tecla P.
         if (Input.GetKeyDown(KeyCode.P))
         {
             TogglePause();
@@ -125,12 +138,11 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel == null)
         {
             Debug.LogError(
-                "PauseMenu: arraste PausePanel para o campo Pause Panel!"
+                "PauseMenu: arraste PausePanel!"
             );
             return;
         }
 
-        // Cancela um fechamento que ainda esteja acontecendo.
         if (fecharCoroutine != null)
         {
             StopCoroutine(fecharCoroutine);
@@ -140,8 +152,10 @@ public class PauseMenu : MonoBehaviour
         pausado = true;
         fechandoPainel = false;
 
-        // O painel externo precisa ficar ativo durante a animação.
         pausePanel.SetActive(true);
+
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
 
         if (settingsTransition != null)
         {
@@ -155,6 +169,33 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
     }
 
+    // ABRIR CRÉDITOS
+    public void AbrirCreditos()
+    {
+        if (creditsPanel == null)
+        {
+            Debug.LogError(
+                "PauseMenu: CreditsPanel não foi configurado!"
+            );
+            return;
+        }
+
+        creditsPanel.SetActive(true);
+
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+    }
+
+    // VOLTAR PARA AS CONFIGURAÇÕES
+    public void FecharCreditos()
+    {
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
+
+        if (settingsPanel != null)
+            settingsPanel.SetActive(true);
+    }
+
     public void Continuar()
     {
         if (!pausado || fechandoPainel)
@@ -163,8 +204,10 @@ public class PauseMenu : MonoBehaviour
         pausado = false;
         fechandoPainel = true;
 
-        // Retoma o jogo para que os outros sistemas funcionem.
         Time.timeScale = 1f;
+
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
 
         if (settingsTransition != null)
         {
@@ -188,7 +231,6 @@ public class PauseMenu : MonoBehaviour
 
     private IEnumerator FecharPainelDepoisDaAnimacao()
     {
-        // Espera a duração configurada na transição.
         float espera = 0.3f;
 
         if (settingsTransition != null)
@@ -198,6 +240,9 @@ public class PauseMenu : MonoBehaviour
 
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
 
         if (pausePanel != null)
             pausePanel.SetActive(false);
@@ -252,7 +297,6 @@ public class PauseMenu : MonoBehaviour
 
         int indiceCena = -1;
 
-        // Procura a cena pelo nome.
         for (
             int i = 0;
             i < SceneManager.sceneCountInBuildSettings;

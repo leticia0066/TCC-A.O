@@ -1,37 +1,135 @@
+
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [Header("Vida")]
     public int maxHealth = 8;
     private int currentHealth;
 
+    [Header("Porta do chefe")]
     public GameObject bossWall;
 
-    void Start()
+    [Header("Barra de vida")]
+    public Slider barraVida;
+    public Image fillImage;
+
+    [Header("Tremor ao receber dano")]
+    public float duracaoTremor = 0.15f;
+    public float intensidadeTremor = 0.07f;
+
+    private Coroutine rotinaTremor;
+    private Vector3 posicaoInicial;
+    private bool morto;
+
+    private void Awake()
+    {
+        posicaoInicial = transform.localPosition;
+    }
+
+    private void Start()
     {
         currentHealth = maxHealth;
+
+        AtualizarBarra();
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
+        if (morto || damage <= 0)
+            return;
 
-        Debug.Log("Medusa tomou dano!");
+        currentHealth = Mathf.Max(0, currentHealth - damage);
+
+        Debug.Log("Medusa tomou dano! Vida: " + currentHealth);
+
+        AtualizarBarra();
 
         if (currentHealth <= 0)
         {
             Die();
+            return;
+        }
+
+        Tremer();
+    }
+
+    private void AtualizarBarra()
+    {
+        if (barraVida != null)
+        {
+            barraVida.maxValue = maxHealth;
+            barraVida.minValue = 0;
+            barraVida.value = currentHealth;
+        }
+
+        if (fillImage != null && maxHealth > 0)
+        {
+            float porcentagem = (float)currentHealth / maxHealth;
+
+            if (porcentagem > 0.5f)
+                fillImage.color = Color.green;
+            else if (porcentagem > 0.25f)
+                fillImage.color = Color.yellow;
+            else
+                fillImage.color = Color.red;
         }
     }
 
-    void Die()
+    private void Tremer()
     {
+        if (rotinaTremor != null)
+        {
+            StopCoroutine(rotinaTremor);
+            transform.localPosition = posicaoInicial;
+        }
+
+        rotinaTremor = StartCoroutine(ExecutarTremor());
+    }
+
+    private IEnumerator ExecutarTremor()
+    {
+        float tempo = 0f;
+
+        while (tempo < duracaoTremor)
+        {
+            tempo += Time.deltaTime;
+
+            Vector2 deslocamento = Random.insideUnitCircle *
+                intensidadeTremor;
+
+            transform.localPosition = posicaoInicial +
+                new Vector3(deslocamento.x, deslocamento.y, 0f);
+
+            yield return null;
+        }
+
+        transform.localPosition = posicaoInicial;
+        rotinaTremor = null;
+    }
+
+    private void Die()
+    {
+        if (morto)
+            return;
+
+        morto = true;
+
         Debug.Log("Medusa morreu!");
 
-        if (bossWall != null)
+        if (rotinaTremor != null)
         {
-            bossWall.SetActive(false);
+            StopCoroutine(rotinaTremor);
+            transform.localPosition = posicaoInicial;
         }
+
+        if (barraVida != null)
+            barraVida.gameObject.SetActive(false);
+
+        if (bossWall != null)
+            bossWall.SetActive(false);
 
         Destroy(gameObject);
     }
