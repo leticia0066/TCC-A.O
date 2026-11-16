@@ -10025,7 +10025,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 49.349915, y: -72.00006}
+  m_AnchoredPosition: {x: 49.349976, y: -72.00006}
   m_SizeDelta: {x: 85.56299, y: 85.56299}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &132676657
@@ -396885,7 +396885,7 @@ MonoBehaviour:
   somMorte: {fileID: 0}
   vidaMaxima: 15
   barraVida: {fileID: 1715493959}
-  fillImage: {fileID: 0}
+  fillImage: {fileID: 758882948}
   parametroMorte: Die
   tempoAnimacaoMorte: 1.2
   duracaoPiscadas: 1.2

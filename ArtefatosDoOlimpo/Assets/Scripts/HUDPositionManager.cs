@@ -27,14 +27,15 @@ public class HUDPositionManager : MonoBehaviour
 
     private void Start()
     {
-        canvasRect = GetComponentInParent<Canvas>()
-            .GetComponent<RectTransform>();
+        Canvas canvas = GetComponentInParent<Canvas>();
 
-        if (canvasRect == null)
+        if (canvas == null)
         {
             Debug.LogError("Canvas não encontrado!");
             return;
         }
+
+        canvasRect = canvas.GetComponent<RectTransform>();
 
         PosicionarHUD();
     }
@@ -54,8 +55,6 @@ public class HUDPositionManager : MonoBehaviour
         PosicionarArtefatos();
     }
 
-    
-
     private void PosicionarCoracoes()
     {
         RectTransform[] coracoes =
@@ -64,18 +63,6 @@ public class HUDPositionManager : MonoBehaviour
             heart2,
             heart3
         };
-
-        float larguraTotal = 0f;
-
-        foreach (RectTransform coracao in coracoes)
-        {
-            if (coracao != null)
-            {
-                larguraTotal += coracao.rect.width;
-            }
-        }
-
-        larguraTotal += espacamentoCoracoes * 2f;
 
         float inicioX =
             -canvasRect.rect.width / 2f + margemEsquerda;
@@ -99,7 +86,6 @@ public class HUDPositionManager : MonoBehaviour
                 coracao.rect.width + espacamentoCoracoes;
         }
     }
-
 
     private void PosicionarMoedas()
     {
@@ -136,20 +122,15 @@ public class HUDPositionManager : MonoBehaviour
             );
     }
 
-    
-
     private void PosicionarArtefatos()
     {
         if (painelArtefatos == null)
             return;
 
-        float direita =
-            canvasRect.rect.width / 2f - margemDireita;
+        float centroX = 0f;
 
         float topo =
-            canvasRect.rect.height / 2f -
-            margemSuperior -
-            75f;
+            canvasRect.rect.height / 2f - margemSuperior;
 
         painelArtefatos.anchorMin =
             new Vector2(0.5f, 0.5f);
@@ -158,9 +139,9 @@ public class HUDPositionManager : MonoBehaviour
             new Vector2(0.5f, 0.5f);
 
         painelArtefatos.pivot =
-            new Vector2(1f, 1f);
+            new Vector2(0.5f, 1f);
 
         painelArtefatos.anchoredPosition =
-            new Vector2(direita, topo);
+            new Vector2(centroX, topo);
     }
 }
