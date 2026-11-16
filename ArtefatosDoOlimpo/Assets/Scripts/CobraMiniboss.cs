@@ -16,7 +16,7 @@ public class CobraMiniboss : MonoBehaviour
     public float distanciaParada = 0.8f;
     public string tagPlayer = "Player";
 
-    [Tooltip("Marque se a cobra olha para a direita na imagem original.")]
+    [Tooltip("Marque se a cobra olha para a direita originalmente.")]
     public bool spriteOlhaParaDireita = true;
 
     [Header("Dano no jogador")]
@@ -40,13 +40,14 @@ public class CobraMiniboss : MonoBehaviour
 
     private UnityEngine.Transform jogador;
     private Rigidbody2D rb;
+
     private Collider2D[] colisores;
     private Renderer[] renderizadores;
 
     private float proximoDano;
     private bool morta;
+
     private Vector2 movimento;
-    private Vector3 escalaInicial;
 
     private void Awake()
     {
@@ -55,7 +56,6 @@ public class CobraMiniboss : MonoBehaviour
         colisores = GetComponentsInChildren<Collider2D>();
         renderizadores = GetComponentsInChildren<Renderer>();
 
-        escalaInicial = transform.localScale;
         vidaAtual = vidaMaxima;
 
         if (audioSource == null)
@@ -63,6 +63,9 @@ public class CobraMiniboss : MonoBehaviour
 
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
+
+        if (armature == null)
+            armature = GetComponentInParent<UnityArmatureComponent>();
 
         if (armature == null)
             armature = GetComponentInChildren<UnityArmatureComponent>(true);
@@ -77,18 +80,18 @@ public class CobraMiniboss : MonoBehaviour
             jogador = objetoPlayer.transform;
 
         if (jogador == null)
+        {
             Debug.LogError("Cobra: jogador não encontrado! Confira a tag Player.");
+            return;
+        }
 
         if (armature == null)
         {
-            Debug.LogError(
-                "Cobra: UnityArmatureComponent não encontrado!"
-            );
+            Debug.LogError("Cobra: UnityArmatureComponent não encontrado!");
+            return;
         }
-        else
-        {
-            TocarAnimacaoAndando();
-        }
+
+        TocarAnimacaoAndando();
     }
 
     private void Update()
@@ -100,22 +103,22 @@ public class CobraMiniboss : MonoBehaviour
         }
 
         Vector2 direcao = jogador.position - transform.position;
+
         float distancia = direcao.magnitude;
 
         if (distancia > 0.05f)
         {
-            VirarParaJogador(direcao.x);
             direcao.Normalize();
+
+            VirarParaJogador(
+                jogador.position.x - transform.position.x
+            );
         }
 
-        if (distancia > distanciaParada)
-        {
-            movimento = direcao * velocidade;
-        }
-        else
-        {
-            movimento = Vector2.zero;
-        }
+        // Mesma lógica de perseguição do esqueleto.
+        movimento = distancia > distanciaParada
+            ? direcao * velocidade
+            : Vector2.zero;
     }
 
     private void FixedUpdate()
@@ -130,25 +133,19 @@ public class CobraMiniboss : MonoBehaviour
 
     private void VirarParaJogador(float direcaoX)
     {
+        if (armature == null || armature.armature == null)
+            return;
+
         if (Mathf.Abs(direcaoX) < 0.01f)
             return;
 
-        Vector3 escala = escalaInicial;
-
         bool olhandoParaDireita = direcaoX > 0;
 
-        if (spriteOlhaParaDireita)
-        {
-            escala.x = Mathf.Abs(escalaInicial.x) *
-                (olhandoParaDireita ? 1f : -1f);
-        }
-        else
-        {
-            escala.x = Mathf.Abs(escalaInicial.x) *
-                (olhandoParaDireita ? -1f : 1f);
-        }
-
-        transform.localScale = escala;
+        // Inverte somente a orientação do DragonBones,
+        // sem alterar a escala do objeto físico.
+        armature.armature.flipX = spriteOlhaParaDireita
+            ? !olhandoParaDireita
+            : olhandoParaDireita;
     }
 
     private void TocarAnimacaoAndando()
@@ -161,7 +158,14 @@ public class CobraMiniboss : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D colisao)
     {
-        if (morta || !colisao.gameObject.CompareTag(tagPlayer))
+        if (morta)
+            return;
+
+        bool encontrouPlayer =
+            colisao.gameObject.CompareTag(tagPlayer) ||
+            colisao.transform.root.CompareTag(tagPlayer);
+
+        if (!encontrouPlayer)
             return;
 
         if (Time.time < proximoDano)
@@ -174,6 +178,7 @@ public class CobraMiniboss : MonoBehaviour
             return;
 
         vidaPlayer.TakeDamage(dano);
+
         proximoDano = Time.time + intervaloEntreDanos;
 
         if (audioSource != null && somAtaque != null)
@@ -219,6 +224,7 @@ public class CobraMiniboss : MonoBehaviour
             armature.animation.Stop();
 
         Vector3 posicaoInicial = transform.position;
+        Vector3 escalaInicial = transform.localScale;
 
         float tempo = 0f;
         float tempoPiscada = 0f;
