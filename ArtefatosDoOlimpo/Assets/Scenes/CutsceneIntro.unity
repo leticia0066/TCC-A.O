@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &13869589
 RectTransform:
   m_ObjectHideFlags: 0
@@ -728,7 +728,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7248492927488813742, guid: 1efebc1069a87564a828e06740a29865, type: 3}
+  m_Sprite: {fileID: 4945677406368260323, guid: 171692a5c2447184ab7c3f0c3719b5d9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -878,7 +878,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3286078047582240689, guid: 1dcae938c86a8054c8e2e6364c7981e8, type: 3}
+  m_Sprite: {fileID: 7351319610706614398, guid: 4116d00f590b2e54d9c74251f723f605, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -913,7 +913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1632911175
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1171,8 +1171,8 @@ MonoBehaviour:
   textoHistoria: {fileID: 317217142}
   textoTutorial: {fileID: 520086324}
   imagemDeus: {fileID: 1379942783}
-  imagemAres: {fileID: 7248492927488813742, guid: 1efebc1069a87564a828e06740a29865, type: 3}
-  imagemAtena: {fileID: 3286078047582240689, guid: 1dcae938c86a8054c8e2e6364c7981e8, type: 3}
+  imagemAres: {fileID: 4945677406368260323, guid: 171692a5c2447184ab7c3f0c3719b5d9, type: 3}
+  imagemAtena: {fileID: 7351319610706614398, guid: 4116d00f590b2e54d9c74251f723f605, type: 3}
   imagemZeus: {fileID: -9110355914121011919, guid: 108e3fba8a2ba034e8f607b5497493a8, type: 3}
   arteBarraDialogo: {fileID: 4810188000189483967, guid: 9d521c944e55cad42890d2057022189f, type: 3}
   alturaBarra: 110

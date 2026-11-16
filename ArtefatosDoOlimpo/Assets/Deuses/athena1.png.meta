@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 1dcae938c86a8054c8e2e6364c7981e8
+guid: 4116d00f590b2e54d9c74251f723f605
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3286078047582240689
-    second: Atena_png-removebg-preview_0
+      213: 7351319610706614398
+    second: athena1_0
+  - first:
+      213: 2571443322527523337
+    second: athena1_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -178,13 +181,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Atena_png-removebg-preview_0
+      name: athena1_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 27
-        width: 256
-        height: 270
+        x: 0
+        y: 46
+        width: 460
+        height: 704
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,8 +196,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1bf395ae29e7a9d20800000000000000
-      internalID: 3286078047582240689
+      spriteID: e78d78aac32250660800000000000000
+      internalID: 7351319610706614398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: athena1_1
+      rect:
+        serializedVersion: 2
+        x: 473
+        y: 0
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 902ad47e31a9fa320800000000000000
+      internalID: 2571443322527523337
       vertices: []
       indices: 
       edges: []
@@ -213,7 +238,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Atena_png-removebg-preview_0: 3286078047582240689
+      athena1_0: 7351319610706614398
+      athena1_1: 2571443322527523337
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
