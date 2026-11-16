@@ -10025,7 +10025,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -830.2583, y: 531.9994}
+  m_AnchoredPosition: {x: -789, y: 547}
   m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &132676657
@@ -13564,6 +13564,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &596390503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -376852,6 +376857,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &775089266
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -377184,6 +377194,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &824958088
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -378641,7 +378656,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -820, y: 438}
+  m_AnchoredPosition: {x: -785.83, y: 457.8}
   m_SizeDelta: {x: 79.22, y: 79.22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &985122532
@@ -380016,6 +380031,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1081622295
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -380312,6 +380332,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1110728130
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -385906,7 +385931,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -660, y: 438}
+  m_AnchoredPosition: {x: -635.52, y: 457.8}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1193436069
@@ -386450,6 +386475,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1309179437
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -393562,6 +393592,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1520742173
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -393858,6 +393893,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1537582031
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -394924,6 +394964,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1603624689
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -395798,7 +395843,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -734, y: 532}
+  m_AnchoredPosition: {x: -692.74176, y: 547.0006}
   m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1636640537
@@ -396611,7 +396656,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -637.742, y: 531.9988}
+  m_AnchoredPosition: {x: -596.48376, y: 546.9994}
   m_SizeDelta: {x: 85.563, y: 85.563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1722482704
@@ -397051,6 +397096,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   damage: 1
+  altura: 2
+  velocidade: 4
+  tempoEscondido: 2
+  tempoLevantado: 1.5
+  iniciarEscondido: 1
 --- !u!61 &1763209476
 BoxCollider2D:
   m_ObjectHideFlags: 0
