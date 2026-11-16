@@ -1,5 +1,4 @@
 
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +9,7 @@ public class CutsceneIntroManager : MonoBehaviour
     public GameObject painelHistoria;
     public GameObject painelTutorial;
 
-    [Header("Textos")]
+    [Header("Textos antigos")]
     public TMP_Text textoHistoria;
     public TMP_Text textoTutorial;
 
@@ -20,22 +19,14 @@ public class CutsceneIntroManager : MonoBehaviour
     public Sprite imagemAtena;
     public Sprite imagemZeus;
 
-    [Header("Digitacao")]
-    public float velocidadeDigitacao = 0.09f;
+    [Header("Barra de dialogo")]
+    public Sprite arteBarraDialogo;
 
-    [Header("Som da digitacao")]
-    public AudioSource audioDigitacao;
-    public AudioClip somDigitacao;
+    [Range(60, 200)]
+    public int alturaBarra = 110;
 
-    [Range(0f, 1f)]
-    public float volumeDigitacao = 0.035f;
-
-    [Tooltip("Quantidade de letras entre cada som.")]
-    [Range(1, 10)]
-    public int letrasEntreSons = 3;
-
-    [Tooltip("Intervalo minimo entre os sons.")]
-    public float intervaloEntreSons = 0.22f;
+    [Range(12, 35)]
+    public int tamanhoTexto = 23;
 
     [Header("Som do espaco")]
     public AudioSource audioSource;
@@ -44,43 +35,25 @@ public class CutsceneIntroManager : MonoBehaviour
     [Range(0f, 1f)]
     public float volumeClique = 0.8f;
 
-    [Header("Pausas")]
-    public float pausaVirgula = 0.12f;
-    public float pausaPonto = 0.25f;
-
     [Header("Mensagens")]
-    public string mensagemPular = "PRESSIONE ESPAÇO PARA PULAR";
-    public string mensagemContinuar = "PRESSIONE ESPAÇO PARA CONTINUAR";
-    public string mensagemComecar = "PRESSIONE ESPAÇO PARA COMEÇAR";
+    public string mensagemContinuar =
+        "ESPAÇO — CONTINUAR";
 
-    private string historiaCompleta;
-    private Coroutine digitacaoCoroutine;
+    public string mensagemComecar =
+        "ESPAÇO — COMEÇAR";
 
-    private bool digitando;
-    private bool historiaTerminada;
+    private Canvas canvas;
+    private GameObject barraDialogo;
+
+    private TMP_Text textoBarra;
+    private TMP_Text textoAjuda;
+
     private bool tutorialAtivo;
     private bool iniciandoFase;
-
-    private int contadorLetras;
-    private float proximoSom;
 
     private void Start()
     {
         Time.timeScale = 1f;
-
-        // Carrega o som automaticamente da pasta Resources.
-        if (somDigitacao == null)
-        {
-            somDigitacao = Resources.Load<AudioClip>("SomDigitacao");
-        }
-
-        if (audioDigitacao == null)
-        {
-            audioDigitacao = gameObject.AddComponent<AudioSource>();
-        }
-
-        audioDigitacao.playOnAwake = false;
-        audioDigitacao.loop = false;
 
         if (!ReferenciasValidas())
         {
@@ -90,111 +63,23 @@ public class CutsceneIntroManager : MonoBehaviour
 
         string fase = SelecaoFases.NomeFaseSelecionada;
 
-        historiaCompleta = EscolherHistoria(fase);
         EscolherImagem(fase);
 
         painelHistoria.SetActive(true);
         painelTutorial.SetActive(false);
 
-        textoHistoria.text = "";
+        // Desativa os textos antigos.
+        textoHistoria.gameObject.SetActive(false);
+        textoTutorial.gameObject.SetActive(false);
 
-        textoTutorial.text =
-            "COMO JOGAR\n\n" +
-            "A / D — Mover para os lados\n" +
-            "ESPAÇO — Pular\n" +
-            "Z — Atirar\n" +
-            "P — Abrir configurações\n\n" +
-            mensagemComecar;
+        CriarBarraDialogo();
 
-        digitacaoCoroutine = StartCoroutine(DigitarHistoria());
+        MostrarHistoria(fase);
     }
 
-    private string EscolherHistoria(string fase)
-    {
-        switch (fase)
-        {
-            case "Fase1_Aress":
-                return
-                    "CAPÍTULO I — A PROVAÇÃO DE ARES\n\n" +
-                    "O equilíbrio do Olimpo foi ameaçado, e os antigos " +
-                    "artefatos foram espalhados pelo mundo.\n\n" +
-                    "Sua primeira missão é encontrar a Espada do Olimpo, " +
-                    "protegida no templo de Ares, o deus da guerra.\n\n" +
-                    "Enfrente os perigos e prove sua coragem para conquistar " +
-                    "o primeiro artefato.";
-
-            case "Fase2_Atena":
-                return
-                    "CAPÍTULO II — O JULGAMENTO DE ATENA\n\n" +
-                    "Com a Espada recuperada, sua jornada continua.\n\n" +
-                    "Agora você precisa encontrar o Escudo do Olimpo, " +
-                    "protegido por Atena, deusa da sabedoria.\n\n" +
-                    "Supere os desafios de seu templo e prove que possui " +
-                    "inteligência para conquistar o segundo artefato.";
-
-            case "Fase3_Zeus":
-                return
-                    "CAPÍTULO III — A IRA DE ZEUS\n\n" +
-                    "A Espada e o Escudo foram recuperados. " +
-                    "Resta apenas um artefato.\n\n" +
-                    "No alto do Olimpo, Zeus protege o poderoso Raio.\n\n" +
-                    "Enfrente a última provação e conquiste o artefato " +
-                    "capaz de restaurar o equilíbrio entre os deuses.";
-
-            default:
-                Debug.LogError("História não encontrada para: " + fase);
-                return "Uma nova jornada começa no mundo dos deuses.";
-        }
-    }
-
-    private void EscolherImagem(string fase)
-    {
-        switch (fase)
-        {
-            case "Fase1_Aress":
-                imagemDeus.sprite = imagemAres;
-                break;
-
-            case "Fase2_Atena":
-                imagemDeus.sprite = imagemAtena;
-                break;
-
-            case "Fase3_Zeus":
-                imagemDeus.sprite = imagemZeus;
-                break;
-
-            default:
-                Debug.LogError("Imagem não encontrada para: " + fase);
-                break;
-        }
-
-        imagemDeus.preserveAspect = true;
-    }
-
-    private void Update()
-    {
-        if (!Input.GetKeyDown(KeyCode.Space))
-            return;
-
-        TocarSomClique();
-
-        if (tutorialAtivo)
-        {
-            ComecarFase();
-            return;
-        }
-
-        if (digitando)
-        {
-            MostrarHistoriaCompleta();
-            return;
-        }
-
-        if (historiaTerminada)
-        {
-            MostrarTutorial();
-        }
-    }
+    // =====================================
+    // VALIDAR REFERENCIAS
+    // =====================================
 
     private bool ReferenciasValidas()
     {
@@ -205,7 +90,7 @@ public class CutsceneIntroManager : MonoBehaviour
             imagemDeus == null)
         {
             Debug.LogError(
-                "CutsceneIntroManager: confira os campos da interface no Inspector."
+                "CutsceneIntroManager: confira os campos no Inspector."
             );
 
             return false;
@@ -226,88 +111,274 @@ public class CutsceneIntroManager : MonoBehaviour
         return true;
     }
 
-    private IEnumerator DigitarHistoria()
+    // =====================================
+    // IMAGEM DOS DEUSES
+    // =====================================
+
+    private void EscolherImagem(string fase)
     {
-        digitando = true;
-        historiaTerminada = false;
-
-        contadorLetras = 0;
-        proximoSom = 0f;
-
-        string textoAtual = "";
-
-        foreach (char letra in historiaCompleta)
+        switch (fase)
         {
-            textoAtual += letra;
+            case "Fase1_Aress":
+                imagemDeus.sprite = imagemAres;
+                break;
 
-            textoHistoria.text =
-                textoAtual + "\n\n" + mensagemPular;
+            case "Fase2_Atena":
+                imagemDeus.sprite = imagemAtena;
+                break;
 
-            if (char.IsLetterOrDigit(letra))
-            {
-                contadorLetras++;
+            case "Fase3_Zeus":
+                imagemDeus.sprite = imagemZeus;
+                break;
 
-                if (contadorLetras >= letrasEntreSons)
-                {
-                    TocarSomDigitacao();
-                    contadorLetras = 0;
-                }
-            }
-
-            yield return new WaitForSecondsRealtime(
-                velocidadeDigitacao
-            );
-
-            if (letra == ',')
-            {
-                yield return new WaitForSecondsRealtime(
-                    pausaVirgula
+            default:
+                Debug.LogError(
+                    "Imagem não encontrada: " + fase
                 );
-            }
-            else if (letra == '.' ||
-                     letra == '!' ||
-                     letra == '?')
-            {
-                yield return new WaitForSecondsRealtime(
-                    pausaPonto
-                );
-            }
+                break;
         }
 
-        digitando = false;
-        historiaTerminada = true;
-        digitacaoCoroutine = null;
-
-        textoHistoria.text =
-            historiaCompleta + "\n\n" + mensagemContinuar;
+        imagemDeus.preserveAspect = true;
     }
 
-    private void TocarSomDigitacao()
+    // =====================================
+    // CRIAR BARRA AUTOMATICAMENTE
+    // =====================================
+
+    private void CriarBarraDialogo()
     {
-        if (somDigitacao == null || audioDigitacao == null)
+        canvas = GetComponentInParent<Canvas>();
+
+        if (canvas == null)
+        {
+            canvas = FindFirstObjectByType<Canvas>();
+        }
+
+        if (canvas == null)
+        {
+            Debug.LogError(
+                "Nenhum Canvas foi encontrado!"
+            );
+
             return;
+        }
 
-        if (Time.unscaledTime < proximoSom)
-            return;
+        // Cria o objeto da barra.
+        barraDialogo = new GameObject(
+            "BarraDialogo",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image)
+        );
 
-        // Impede que os sons fiquem sobrepostos.
-        if (audioDigitacao.isPlaying)
-            return;
+        barraDialogo.transform.SetParent(
+            canvas.transform,
+            false
+        );
 
-        audioDigitacao.volume = volumeDigitacao;
-        audioDigitacao.pitch = 1f;
+        RectTransform barraRect =
+            barraDialogo.GetComponent<RectTransform>();
 
-        audioDigitacao.clip = somDigitacao;
-        audioDigitacao.Play();
+        // Posicionamento na parte inferior.
+        barraRect.anchorMin = new Vector2(0.08f, 0f);
+        barraRect.anchorMax = new Vector2(0.92f, 0f);
 
-        proximoSom =
-            Time.unscaledTime + intervaloEntreSons;
+        barraRect.pivot = new Vector2(0.5f, 0f);
+
+        barraRect.sizeDelta = new Vector2(
+            0f,
+            alturaBarra
+        );
+
+        barraRect.anchoredPosition = new Vector2(
+            0f,
+            28f
+        );
+
+        // Aplica a arte da barra.
+        Image imagemBarra =
+            barraDialogo.GetComponent<Image>();
+
+        imagemBarra.sprite = arteBarraDialogo;
+        imagemBarra.type = Image.Type.Simple;
+        imagemBarra.preserveAspect = false;
+        imagemBarra.color = Color.white;
+
+        // Cria o texto principal.
+        textoBarra = CriarTexto(
+            "TextoHistoria",
+            barraDialogo.transform,
+            new Vector2(0.08f, 0.28f),
+            new Vector2(0.92f, 0.88f),
+            tamanhoTexto,
+            TextAlignmentOptions.Center
+        );
+
+        // Cria a instrução de espaço.
+        textoAjuda = CriarTexto(
+            "TextoContinuar",
+            barraDialogo.transform,
+            new Vector2(0.08f, 0.02f),
+            new Vector2(0.92f, 0.27f),
+            15,
+            TextAlignmentOptions.Center
+        );
+
+        textoAjuda.color = new Color(
+            1f,
+            0.85f,
+            0.55f,
+            1f
+        );
+
+        barraDialogo.transform.SetAsLastSibling();
     }
+
+    // =====================================
+    // CRIAR TEXTOS
+    // =====================================
+
+    private TMP_Text CriarTexto(
+        string nome,
+        Transform pai,
+        Vector2 anchorMin,
+        Vector2 anchorMax,
+        int fonte,
+        TextAlignmentOptions alinhamento)
+    {
+        GameObject objeto = new GameObject(
+            nome,
+            typeof(RectTransform)
+        );
+
+        objeto.transform.SetParent(
+            pai,
+            false
+        );
+
+        RectTransform rect =
+            objeto.GetComponent<RectTransform>();
+
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        TMP_Text texto =
+            objeto.AddComponent<TextMeshProUGUI>();
+
+        texto.fontSize = fonte;
+        texto.alignment = alinhamento;
+
+        texto.color = Color.black;
+
+        texto.enableAutoSizing = true;
+        texto.fontSizeMin = 13;
+        texto.fontSizeMax = fonte;
+
+        texto.textWrappingMode =
+            TextWrappingModes.Normal;
+
+        texto.margin = new Vector4(
+            5f,
+            2f,
+            5f,
+            2f
+        );
+
+        return texto;
+    }
+
+    // =====================================
+    // HISTORIA
+    // =====================================
+
+    private void MostrarHistoria(string fase)
+    {
+        string historia = "";
+
+        switch (fase)
+        {
+            case "Fase1_Aress":
+
+                historia =
+                    "O equilíbrio do Olimpo foi ameaçado! " +
+                    "Encontre a Espada do Olimpo, protegida por Ares, " +
+                    "e prove sua coragem.";
+
+                break;
+
+            case "Fase2_Atena":
+
+                historia =
+                    "A jornada continua! Recupere o Escudo do Olimpo, " +
+                    "protegido por Atena, e prove sua sabedoria.";
+
+                break;
+
+            case "Fase3_Zeus":
+
+                historia =
+                    "Resta apenas um artefato! Encontre o Raio de Zeus " +
+                    "e restaure o equilíbrio do Olimpo.";
+
+                break;
+        }
+
+        textoBarra.text = historia;
+        textoAjuda.text = mensagemContinuar;
+    }
+
+    // =====================================
+    // TUTORIAL
+    // =====================================
+
+    private void MostrarTutorial()
+    {
+        tutorialAtivo = true;
+
+        painelHistoria.SetActive(false);
+        painelTutorial.SetActive(true);
+
+        textoBarra.text =
+            "A / D — Mover     |     ESPAÇO — Pular\n" +
+            "Z — Atacar     |     P — Configurações";
+
+        textoAjuda.text = mensagemComecar;
+    }
+
+    // =====================================
+    // CONTROLES
+    // =====================================
+
+    private void Update()
+    {
+        if (!Input.GetKeyDown(KeyCode.Space))
+            return;
+
+        TocarSomClique();
+
+        if (tutorialAtivo)
+        {
+            ComecarFase();
+            return;
+        }
+
+        MostrarTutorial();
+    }
+
+    // =====================================
+    // SOM DO ESPACO
+    // =====================================
 
     private void TocarSomClique()
     {
-        if (audioSource == null || somCliqueEspaco == null)
+        if (audioSource == null ||
+            somCliqueEspaco == null)
+        {
             return;
+        }
 
         audioSource.PlayOneShot(
             somCliqueEspaco,
@@ -315,39 +386,9 @@ public class CutsceneIntroManager : MonoBehaviour
         );
     }
 
-    private void MostrarHistoriaCompleta()
-    {
-        if (digitacaoCoroutine != null)
-        {
-            StopCoroutine(digitacaoCoroutine);
-            digitacaoCoroutine = null;
-        }
-
-        if (audioDigitacao != null)
-            audioDigitacao.Stop();
-
-        textoHistoria.text =
-            historiaCompleta + "\n\n" + mensagemContinuar;
-
-        digitando = false;
-        historiaTerminada = true;
-    }
-
-    private void MostrarTutorial()
-    {
-        painelHistoria.SetActive(false);
-        painelTutorial.SetActive(true);
-
-        textoTutorial.text =
-            "COMO JOGAR\n\n" +
-            "A / D — Mover para os lados\n" +
-            "ESPAÇO — Pular\n" +
-            "Z — Atirar\n" +
-            "P — Abrir configurações\n\n" +
-            mensagemComecar;
-
-        tutorialAtivo = true;
-    }
+    // =====================================
+    // INICIAR FASE
+    // =====================================
 
     private void ComecarFase()
     {
@@ -363,24 +404,17 @@ public class CutsceneIntroManager : MonoBehaviour
 
         if (TransicaoCenas.Instance != null)
         {
-            TransicaoCenas.Instance.TrocarCena(faseEscolhida);
+            TransicaoCenas.Instance.TrocarCena(
+                faseEscolhida
+            );
         }
         else
         {
-            Debug.LogError("TransicaoCenas não encontrada!");
+            Debug.LogError(
+                "TransicaoCenas não encontrada!"
+            );
+
             iniciandoFase = false;
         }
-    }
-
-    private void OnDisable()
-    {
-        if (digitacaoCoroutine != null)
-        {
-            StopCoroutine(digitacaoCoroutine);
-            digitacaoCoroutine = null;
-        }
-
-        if (audioDigitacao != null)
-            audioDigitacao.Stop();
     }
 }
