@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Coin : MonoBehaviour
 {
@@ -9,20 +10,23 @@ public class Coin : MonoBehaviour
     private Vector3 initialPosition;
     private bool collected = false;
 
+    private string ObterIdCompleto()
+    {
+        return SceneManager.GetActiveScene().name + "::" + idMoeda;
+    }
+
     private void Start()
     {
         initialPosition = transform.position;
 
         if (ContadorMoedas.Instance == null)
         {
-            Debug.LogError(
-                "Coin: ContadorMoedas não encontrado na cena!"
-            );
+            Debug.LogError("Coin: ContadorMoedas não encontrado!");
             return;
         }
 
-        // Não mostra novamente uma moeda já coletada.
-        if (ContadorMoedas.Instance.MoedaFoiColetada(idMoeda))
+        if (ContadorMoedas.Instance.MoedaFoiColetada(
+            ObterIdCompleto()))
         {
             collected = true;
             gameObject.SetActive(false);
@@ -31,10 +35,7 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collected)
-            return;
-
-        if (!other.CompareTag("Player"))
+        if (collected || !other.CompareTag("Player"))
             return;
 
         Collect();
@@ -45,8 +46,9 @@ public class Coin : MonoBehaviour
         if (ContadorMoedas.Instance == null)
             return;
 
-        bool registrada =
-            ContadorMoedas.Instance.RegistrarMoeda(idMoeda);
+        bool registrada = ContadorMoedas.Instance.RegistrarMoeda(
+            ObterIdCompleto()
+        );
 
         if (!registrada)
             return;
@@ -66,7 +68,8 @@ public class Coin : MonoBehaviour
     public void Respawn()
     {
         if (ContadorMoedas.Instance != null &&
-            ContadorMoedas.Instance.MoedaFoiColetada(idMoeda))
+            ContadorMoedas.Instance.MoedaFoiColetada(
+                ObterIdCompleto()))
         {
             collected = true;
             gameObject.SetActive(false);
@@ -74,9 +77,7 @@ public class Coin : MonoBehaviour
         }
 
         transform.position = initialPosition;
-
         collected = false;
-
         gameObject.SetActive(true);
     }
 }

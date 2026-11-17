@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
@@ -12,18 +13,25 @@ public class Checkpoint : MonoBehaviour
         if (activated)
             return;
 
-        // Verifica se o GameManager existe.
         if (GameManager.instance == null)
         {
-            Debug.LogError(
-                "Checkpoint: GameManager.instance está vazio! " +
-                "Verifique se o GameManager foi criado na cena inicial."
-            );
-
+            Debug.LogError("Checkpoint: GameManager não encontrado!");
             return;
         }
 
-        GameManager.instance.SetCheckpoint(transform.position);
+        PlayerHealth jogador =
+            collision.GetComponentInParent<PlayerHealth>();
+
+        if (jogador == null)
+        {
+            Debug.LogError("Checkpoint: PlayerHealth não encontrado no jogador!");
+            return;
+        }
+
+        GameManager.instance.SetCheckpoint(
+            transform.position,
+            jogador
+        );
 
         activated = true;
 
@@ -32,6 +40,6 @@ public class Checkpoint : MonoBehaviour
             AudioManager.Instance.TocarCheckpoint();
         }
 
-        Debug.Log("CHECKPOINT ATIVADO!");
+        Debug.Log("CHECKPOINT ATIVADO E PROGRESSO SALVO!");
     }
 }

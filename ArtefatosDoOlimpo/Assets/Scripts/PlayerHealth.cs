@@ -41,11 +41,9 @@ public class PlayerHealth : MonoBehaviour
             heartUI = FindFirstObjectByType<HeartUI>();
         }
 
-        // Encontra os sprites do personagem.
         spriteRenderers =
             GetComponentsInChildren<SpriteRenderer>(true);
 
-        // Guarda quais sprites estavam visíveis.
         estadosOriginais = new bool[spriteRenderers.Length];
 
         for (int i = 0; i < spriteRenderers.Length; i++)
@@ -60,12 +58,26 @@ public class PlayerHealth : MonoBehaviour
         maxLives = Mathf.Max(1, maxLives);
 
         currentHealth = maxHealth;
-        lives = Mathf.Clamp(lives, 1, maxLives);
+
+        // Se veio de um salvamento, recupera as vidas do checkpoint.
+        if (GameManager.instance != null &&
+            GameManager.instance.TentarConsumirVidasSalvas(
+                out int vidasSalvas))
+        {
+            lives = Mathf.Clamp(vidasSalvas, 1, maxLives);
+
+            Debug.Log("Vidas restauradas do checkpoint: " + lives);
+        }
+        else
+        {
+            lives = Mathf.Clamp(lives, 1, maxLives);
+        }
 
         AtualizarInterface();
 
         Debug.Log("PlayerHealth iniciado. Vida: " +
-                  currentHealth + "/" + maxHealth);
+                  currentHealth + "/" + maxHealth +
+                  " | Vidas: " + lives);
     }
 
     // RECEBER DANO
@@ -74,7 +86,6 @@ public class PlayerHealth : MonoBehaviour
         if (isDead || gameOverStarted || damage <= 0)
             return;
 
-        // Ativa o efeito visual sempre que receber dano.
         IniciarEfeitoDano();
 
         int vidaAnterior = currentHealth;
@@ -114,7 +125,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // EFEITO DE PISCAR AO RECEBER DANO
+    // EFEITO DE PISCAR
     private void IniciarEfeitoDano()
     {
         if (spriteRenderers == null ||
@@ -123,7 +134,6 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        // Evita que dois efeitos fiquem sobrepostos.
         if (efeitoDanoCoroutine != null)
         {
             StopCoroutine(efeitoDanoCoroutine);
@@ -164,7 +174,7 @@ public class PlayerHealth : MonoBehaviour
         efeitoDanoCoroutine = null;
     }
 
-    // RESTAURAR A APARÊNCIA ORIGINAL
+    // RESTAURAR APARÊNCIA
     private void RestaurarSprites()
     {
         if (spriteRenderers == null ||
@@ -183,7 +193,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // RECUPERAR VIDA AO COLETAR UM CORAÇÃO
+    // RECUPERAR VIDA
     public void RecuperarVida(int quantidade)
     {
         if (isDead || gameOverStarted || quantidade <= 0)
@@ -209,7 +219,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // ATUALIZAR A INTERFACE DOS CORAÇÕES
+    // ATUALIZAR CORAÇÕES
     private void AtualizarInterface()
     {
         if (heartUI != null)
@@ -219,13 +229,12 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             Debug.LogWarning(
-                "PlayerHealth: HeartUI não foi encontrado. " +
-                "Confira o campo Heart UI no Inspector."
+                "PlayerHealth: HeartUI não foi encontrado."
             );
         }
     }
 
-    // RETORNAR AO CHECKPOINT APÓS MORRER
+    // VOLTAR AO CHECKPOINT
     private IEnumerator RespawnToCheckpoint()
     {
         PararMovimento();
@@ -239,9 +248,7 @@ public class PlayerHealth : MonoBehaviour
         }
         else
         {
-            Debug.LogError(
-                "PlayerHealth: GameManager.instance não foi encontrado!"
-            );
+            Debug.LogError("GameManager não encontrado!");
         }
 
         currentHealth = maxHealth;
@@ -254,7 +261,7 @@ public class PlayerHealth : MonoBehaviour
         isDead = false;
     }
 
-    // GAME OVER QUANDO TODAS AS VIDAS ACABAM
+    // GAME OVER
     private IEnumerator GameOver()
     {
         PararMovimento();
@@ -268,17 +275,14 @@ public class PlayerHealth : MonoBehaviour
         }
         else
         {
-            Debug.LogError(
-                "PlayerHealth: GameOverManager.Instance não foi encontrado! " +
-                "Confira o GameOverManager e a referência do painel."
-            );
+            Debug.LogError("GameOverManager não encontrado!");
 
             gameOverStarted = false;
             isDead = false;
         }
     }
 
-    // PARAR O MOVIMENTO DO JOGADOR
+    // PARAR MOVIMENTO
     private void PararMovimento()
     {
         if (rb != null)
@@ -288,7 +292,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // REINICIAR VIDA E QUANTIDADE DE VIDAS
+    // REINICIAR VIDAS
     public void ResetarVidas()
     {
         StopAllCoroutines();

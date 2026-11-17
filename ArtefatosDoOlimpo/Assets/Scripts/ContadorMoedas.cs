@@ -7,9 +7,6 @@ public class ContadorMoedas : MonoBehaviour
 {
     public static ContadorMoedas Instance;
 
-    private const string CHAVE_MOEDAS = "TotalMoedas";
-    private const string CHAVE_COLETADAS = "MoedasColetadas";
-
     private HashSet<string> moedasColetadas = new HashSet<string>();
 
     public int QuantidadeAtual { get; private set; }
@@ -27,34 +24,7 @@ public class ContadorMoedas : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        CarregarMoedas();
-    }
-
-    private void CarregarMoedas()
-    {
-        moedasColetadas.Clear();
-
-        string dados = PlayerPrefs.GetString(CHAVE_COLETADAS, "");
-
-        if (!string.IsNullOrEmpty(dados))
-        {
-            string[] ids = dados.Split('|');
-
-            foreach (string id in ids)
-            {
-                if (!string.IsNullOrEmpty(id))
-                    moedasColetadas.Add(id);
-            }
-        }
-
-        QuantidadeAtual = PlayerPrefs.GetInt(
-            CHAVE_MOEDAS,
-            moedasColetadas.Count
-        );
-
-        AoAtualizarMoedas?.Invoke(QuantidadeAtual);
-
-        Debug.Log("Moedas carregadas: " + QuantidadeAtual);
+        QuantidadeAtual = 0;
     }
 
     public bool RegistrarMoeda(string id)
@@ -74,8 +44,6 @@ public class ContadorMoedas : MonoBehaviour
         moedasColetadas.Add(id);
         QuantidadeAtual++;
 
-        SalvarMoedas();
-
         AoAtualizarMoedas?.Invoke(QuantidadeAtual);
 
         Debug.Log("Moeda coletada! Total: " + QuantidadeAtual);
@@ -89,26 +57,38 @@ public class ContadorMoedas : MonoBehaviour
                moedasColetadas.Contains(id);
     }
 
-    private void SalvarMoedas()
+    public List<string> ObterMoedasColetadas()
     {
-        PlayerPrefs.SetInt(CHAVE_MOEDAS, QuantidadeAtual);
+        return new List<string>(moedasColetadas);
+    }
 
-        PlayerPrefs.SetString(
-            CHAVE_COLETADAS,
-            string.Join("|", moedasColetadas)
-        );
+    public void RestaurarMoedas(List<string> lista)
+    {
+        moedasColetadas.Clear();
 
-        PlayerPrefs.Save();
+        if (lista != null)
+        {
+            foreach (string id in lista)
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    moedasColetadas.Add(id);
+                }
+            }
+        }
+
+        QuantidadeAtual = moedasColetadas.Count;
+
+        AoAtualizarMoedas?.Invoke(QuantidadeAtual);
+
+        Debug.Log("Moedas restauradas: " + QuantidadeAtual);
     }
 
     public void ResetarMoedas()
     {
         moedasColetadas.Clear();
-        QuantidadeAtual = 0;
 
-        PlayerPrefs.DeleteKey(CHAVE_MOEDAS);
-        PlayerPrefs.DeleteKey(CHAVE_COLETADAS);
-        PlayerPrefs.Save();
+        QuantidadeAtual = 0;
 
         AoAtualizarMoedas?.Invoke(QuantidadeAtual);
 

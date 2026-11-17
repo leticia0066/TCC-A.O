@@ -17,6 +17,8 @@ public class MainMenu : MonoBehaviour
     [Range(0f, 1f)]
     public float volumeClique = 1f;
 
+    private Button botaoContinuar;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -59,7 +61,7 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         AtualizarMusica(SceneManager.GetActiveScene().name);
-        ConectarBotaoJogar();
+        ConectarBotoes();
     }
 
     private void AoCarregarCena(Scene cena, LoadSceneMode modo)
@@ -68,32 +70,44 @@ public class MainMenu : MonoBehaviour
 
         if (cena.name == "TelaInicial")
         {
-            ConectarBotaoJogar();
+            ConectarBotoes();
         }
     }
 
-    private void ConectarBotaoJogar()
+    private void ConectarBotoes()
     {
-        GameObject objetoBotao = GameObject.Find("Jogar");
+        // Botão de novo jogo.
+        GameObject objetoJogar = GameObject.Find("Jogar");
 
-        if (objetoBotao == null)
+        if (objetoJogar != null)
         {
-            Debug.LogWarning("PlayButton não encontrado na TelaInicial!");
-            return;
+            Button botaoJogar = objetoJogar.GetComponent<Button>();
+
+            if (botaoJogar != null)
+            {
+                botaoJogar.onClick.RemoveListener(Jogar);
+                botaoJogar.onClick.AddListener(Jogar);
+            }
         }
 
-        Button botao = objetoBotao.GetComponent<Button>();
+        // Botão continuar.
+        GameObject objetoContinuar = GameObject.Find("Continuar");
 
-        if (botao == null)
+        if (objetoContinuar != null)
         {
-            Debug.LogWarning("O objeto PlayButton não possui componente Button!");
-            return;
+            botaoContinuar = objetoContinuar.GetComponent<Button>();
+
+            if (botaoContinuar != null)
+            {
+                botaoContinuar.onClick.RemoveListener(ContinuarJogo);
+                botaoContinuar.onClick.AddListener(ContinuarJogo);
+
+                botaoContinuar.interactable = SaveSystem.TemSave();
+
+                // Esconde o botão se ainda não existe salvamento.
+                objetoContinuar.SetActive(SaveSystem.TemSave());
+            }
         }
-
-        botao.onClick.RemoveListener(Jogar);
-        botao.onClick.AddListener(Jogar);
-
-        Debug.Log("Botão JOGAR conectado ao MainMenu!");
     }
 
     private void AtualizarMusica(string nomeCena)
@@ -110,19 +124,18 @@ public class MainMenu : MonoBehaviour
             if (audioSource.clip != null && !audioSource.isPlaying)
             {
                 audioSource.Play();
-                Debug.Log("Música do menu iniciada.");
             }
         }
         else
         {
             audioSource.Stop();
-            Debug.Log("Música do menu parada na cena: " + nomeCena);
         }
     }
 
+    // NOVO JOGO
     public void Jogar()
     {
-        Debug.Log("INICIANDO NOVA PARTIDA!");
+        Debug.Log("INICIANDO NOVO JOGO!");
 
         Time.timeScale = 1f;
 
@@ -130,20 +143,16 @@ public class MainMenu : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            GameManager.instance.ResetarArtefatos();
-            GameManager.instance.ResetToStart();
+            GameManager.instance.NovoJogo();
         }
         else
         {
-            PlayerPrefs.DeleteKey("Artefato_Espada");
-            PlayerPrefs.DeleteKey("Artefato_Escudo");
-            PlayerPrefs.DeleteKey("Artefato_Raio");
+            SaveSystem.ApagarSave();
         }
 
         PlayerPrefs.DeleteKey("Fase1Concluida");
         PlayerPrefs.DeleteKey("Fase2Concluida");
         PlayerPrefs.DeleteKey("Fase3Concluida");
-
         PlayerPrefs.Save();
 
         if (TransicaoCenas.Instance != null)
@@ -152,8 +161,30 @@ public class MainMenu : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("TransicaoCenas não encontrada!");
             SceneManager.LoadScene("SelecaoFases");
+        }
+    }
+
+    // CONTINUAR JOGO
+    public void ContinuarJogo()
+    {
+        if (!SaveSystem.TemSave())
+        {
+            Debug.LogWarning("Não existe jogo salvo para continuar.");
+            return;
+        }
+
+        TocarSomBotao();
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.ContinuarJogo();
+        }
+        else
+        {
+            Debug.LogError(
+                "GameManager não encontrado na TelaInicial!"
+            );
         }
     }
 
@@ -172,13 +203,13 @@ public class MainMenu : MonoBehaviour
             return;
 
         efeitosSource.PlayOneShot(cliqueSom, volumeClique);
-
-        Debug.Log("Som do botão reproduzido.");
     }
 
     private void OnDestroy()
     {
         if (Instance == this)
+        {
             Instance = null;
+        }
     }
 }

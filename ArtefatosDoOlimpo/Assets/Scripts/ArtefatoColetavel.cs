@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class ArtefatoColetavel : MonoBehaviour
@@ -24,11 +25,7 @@ public class ArtefatoColetavel : MonoBehaviour
     {
         if (GameManager.instance == null)
         {
-            Debug.LogError(
-                "ArtefatoColetavel: GameManager não encontrado. " +
-                "Confira se ele existe na primeira cena executada."
-            );
-
+            Debug.LogError("GameManager não encontrado!");
             return;
         }
 
@@ -65,13 +62,7 @@ public class ArtefatoColetavel : MonoBehaviour
             return;
 
         if (GameManager.instance == null)
-        {
-            Debug.LogError(
-                "Não foi possível coletar: GameManager não existe."
-            );
-
             return;
-        }
 
         coletado = true;
 
