@@ -24,6 +24,10 @@ public class MedusaController : MonoBehaviour
     public GameObject projectilePrefab;
     public UnityEngine.Transform firePoint;
 
+    [Header("Petrificacao")]
+    public float duracaoPetrificacao = 5f;
+    private bool petrificacaoAtivada;
+
     [Header("Animacoes DragonBones")]
     public UnityArmatureComponent armature;
 
@@ -129,6 +133,40 @@ public class MedusaController : MonoBehaviour
         jogadorNaZona = false;
 
         Debug.Log("Jogador saiu da zona de perigo da Medusa!");
+    }
+
+    // CHAMADA PELO EnemyHealth QUANDO A VIDA CHEGAR A 70%.
+    public void AtivarPetrificacao()
+    {
+        if (petrificacaoAtivada)
+            return;
+
+        if (player == null)
+            FindPlayer();
+
+        if (player == null)
+        {
+            Debug.LogWarning("Medusa: jogador nao encontrado para petrificar.");
+            return;
+        }
+
+        PlayerController controle =
+            player.GetComponent<PlayerController>();
+
+        if (controle == null)
+            controle = player.GetComponentInParent<PlayerController>();
+
+        if (controle == null)
+        {
+            Debug.LogError("Medusa: PlayerController nao encontrado no jogador!");
+            return;
+        }
+
+        petrificacaoAtivada = true;
+
+        controle.Petrificar(duracaoPetrificacao);
+
+        Debug.Log("MEDUSA ATIVOU A PETRIFICACAO!");
     }
 
     private void AttackPlayer()

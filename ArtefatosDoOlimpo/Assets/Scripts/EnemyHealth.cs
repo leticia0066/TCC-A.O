@@ -9,6 +9,12 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 8;
     private int currentHealth;
 
+    [Header("Petrificacao da Medusa")]
+    [Range(0f, 1f)]
+    public float porcentagemParaPetrificar = 0.70f;
+
+    public MedusaController medusaController;
+
     [Header("Porta do chefe")]
     public GameObject bossWall;
 
@@ -27,13 +33,26 @@ public class EnemyHealth : MonoBehaviour
     private void Awake()
     {
         posicaoInicial = transform.localPosition;
+
+        if (medusaController == null)
+            medusaController = GetComponent<MedusaController>();
+
+        if (medusaController == null)
+            medusaController = GetComponentInParent<MedusaController>();
+
+        if (medusaController == null)
+            medusaController = GetComponentInChildren<MedusaController>(true);
     }
 
     private void Start()
     {
+        maxHealth = Mathf.Max(1, maxHealth);
         currentHealth = maxHealth;
 
         AtualizarBarra();
+
+        if (medusaController == null)
+            Debug.LogError("EnemyHealth: MedusaController nao encontrado!");
     }
 
     public void TakeDamage(int damage)
@@ -51,6 +70,15 @@ public class EnemyHealth : MonoBehaviour
         {
             Die();
             return;
+        }
+
+        float porcentagemVida =
+            (float)currentHealth / maxHealth;
+
+        if (porcentagemVida <= porcentagemParaPetrificar &&
+            medusaController != null)
+        {
+            medusaController.AtivarPetrificacao();
         }
 
         Tremer();

@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -17,6 +18,9 @@ public class PlayerController : MonoBehaviour
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
 
+    [Header("Petrificacao")]
+    public bool petrificado;
+
     private Rigidbody2D rb;
     private Animator anim;
 
@@ -25,10 +29,23 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded;
     private bool hasCheckedGround;
 
+    private SpriteRenderer[] sprites;
+    private Color[] coresOriginais;
+    private RigidbodyConstraints2D restricoesOriginais;
+    private Coroutine rotinaPetrificacao;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
+        sprites = GetComponentsInChildren<SpriteRenderer>(true);
+        coresOriginais = new Color[sprites.Length];
+
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            coresOriginais[i] = sprites[i].color;
+        }
 
         if (rb == null)
             Debug.LogError("ERRO: O Player não possui Rigidbody2D!");
@@ -42,6 +59,22 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (petrificado)
+        {
+            moveInput = 0f;
+
+            if (anim != null)
+            {
+                anim.SetBool("IsWalking", false);
+                anim.SetBool("IsJumping", false);
+            }
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PararPassos();
+
+            return;
+        }
+
         moveInput = Input.GetAxisRaw("Horizontal");
 
         CheckGround();
@@ -74,6 +107,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (petrificado)
+        {
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+
+            return;
+        }
+
         Move();
     }
 
@@ -90,7 +131,7 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (rb == null)
+        if (rb == null || petrificado)
             return;
 
         rb.linearVelocity = new Vector2(
@@ -137,7 +178,7 @@ public class PlayerController : MonoBehaviour
 
     void Flip()
     {
-        if (moveInput == 0)
+        if (moveInput == 0 || petrificado)
             return;
 
         Vector3 scale = transform.localScale;
@@ -147,6 +188,9 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+        if (petrificado)
+            return;
+
         if (anim != null)
             anim.SetTrigger("Attack");
 
@@ -219,10 +263,107 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // ATIVAR PETRIFICACAO
+    public void Petrificar(float duracao)
+    {
+        if (petrificado)
+            return;
+
+        if (rotinaPetrificacao != null)
+            StopCoroutine(rotinaPetrificacao);
+
+        rotinaPetrificacao = StartCoroutine(
+            ExecutarPetrificacao(duracao)
+        );
+    }
+
+    private IEnumerator ExecutarPetrificacao(float duracao)
+    {
+        petrificado = true;
+
+        moveInput = 0f;
+
+        if (rb != null)
+        {
+            restricoesOriginais = rb.constraints;
+
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
+
+        // Deixa o personagem com aparencia de pedra.
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            if (sprites[i] != null)
+            {
+                Color cor = coresOriginais[i];
+
+                sprites[i].color = new Color(
+                    cor.r * 0.45f,
+                    cor.g * 0.50f,
+                    cor.b * 0.55f,
+                    cor.a
+                );
+            }
+        }
+
+        if (anim != null)
+        {
+            anim.SetBool("IsWalking", false);
+            anim.SetBool("IsJumping", false);
+        }
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PararPassos();
+
+        Debug.Log("JOGADOR PETRIFICADO!");
+
+        yield return new WaitForSecondsRealtime(duracao);
+
+        // Recupera a cor original.
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            if (sprites[i] != null)
+                sprites[i].color = coresOriginais[i];
+        }
+
+        if (rb != null)
+        {
+            rb.constraints = restricoesOriginais;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        petrificado = false;
+        rotinaPetrificacao = null;
+
+        Debug.Log("PETRIFICACAO TERMINOU! Jogador liberado.");
+    }
+
     void OnDisable()
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.PararPassos();
+
+        if (petrificado)
+        {
+            if (rotinaPetrificacao != null)
+                StopCoroutine(rotinaPetrificacao);
+
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                if (sprites[i] != null)
+                    sprites[i].color = coresOriginais[i];
+            }
+
+            if (rb != null)
+                rb.constraints = restricoesOriginais;
+
+            petrificado = false;
+            rotinaPetrificacao = null;
+        }
     }
 
     void OnDrawGizmosSelected()
