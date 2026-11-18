@@ -47,7 +47,7 @@ public class CobraMiniboss : MonoBehaviour
     private float proximoDano;
     private bool morta;
 
-    private Vector2 movimento;
+    private float movimentoHorizontal;
 
     private void Awake()
     {
@@ -92,33 +92,36 @@ public class CobraMiniboss : MonoBehaviour
         }
 
         TocarAnimacaoAndando();
+
+        VirarParaJogador(
+            jogador.position.x - transform.position.x
+        );
     }
 
     private void Update()
     {
         if (morta || jogador == null)
         {
-            movimento = Vector2.zero;
+            movimentoHorizontal = 0f;
             return;
         }
 
-        Vector2 direcao = jogador.position - transform.position;
+        // Calcula somente a distância horizontal.
+        float diferencaX =
+            jogador.position.x - transform.position.x;
 
-        float distancia = direcao.magnitude;
+        // Vira para o jogador.
+        VirarParaJogador(diferencaX);
 
-        if (distancia > 0.05f)
+        // Persegue somente na horizontal.
+        if (Mathf.Abs(diferencaX) > distanciaParada)
         {
-            direcao.Normalize();
-
-            VirarParaJogador(
-                jogador.position.x - transform.position.x
-            );
+            movimentoHorizontal = Mathf.Sign(diferencaX) * velocidade;
         }
-
-        // Mesma lógica de perseguição do esqueleto.
-        movimento = distancia > distanciaParada
-            ? direcao * velocidade
-            : Vector2.zero;
+        else
+        {
+            movimentoHorizontal = 0f;
+        }
     }
 
     private void FixedUpdate()
@@ -126,8 +129,11 @@ public class CobraMiniboss : MonoBehaviour
         if (morta || rb == null || !rb.simulated)
             return;
 
-        rb.MovePosition(
-            rb.position + movimento * Time.fixedDeltaTime
+        // Altera somente a velocidade horizontal.
+        // A gravidade continua controlando a altura da cobra.
+        rb.linearVelocity = new Vector2(
+            movimentoHorizontal,
+            rb.linearVelocity.y
         );
     }
 
@@ -139,13 +145,11 @@ public class CobraMiniboss : MonoBehaviour
         if (Mathf.Abs(direcaoX) < 0.01f)
             return;
 
-        bool olhandoParaDireita = direcaoX > 0;
+        bool jogadorEstaAEsquerda = direcaoX < 0;
 
-        // Inverte somente a orientação do DragonBones,
-        // sem alterar a escala do objeto físico.
         armature.armature.flipX = spriteOlhaParaDireita
-            ? !olhandoParaDireita
-            : olhandoParaDireita;
+            ? jogadorEstaAEsquerda
+            : !jogadorEstaAEsquerda;
     }
 
     private void TocarAnimacaoAndando()
@@ -203,7 +207,7 @@ public class CobraMiniboss : MonoBehaviour
     private IEnumerator Morrer()
     {
         morta = true;
-        movimento = Vector2.zero;
+        movimentoHorizontal = 0f;
 
         if (rb != null)
         {

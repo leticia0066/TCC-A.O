@@ -17679,6 +17679,7 @@ MonoBehaviour:
   enemyLayers:
     serializedVersion: 2
     m_Bits: 8
+  petrificado: 0
 --- !u!61 &551523087
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -403107,17 +403108,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46716ddd4cd171d4aa54637a3e1e9cab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
-  pausePanel: {fileID: 0}
-  settingsPanel: {fileID: 0}
-  creditsPanel: {fileID: 0}
-  settingsTransition: {fileID: 0}
-  continuarButton: {fileID: 0}
-  reiniciarButton: {fileID: 0}
-  sairButton: {fileID: 0}
+  pausePanel: {fileID: 1289831564}
+  settingsPanel: {fileID: 1808486834}
+  creditsPanel: {fileID: 1674277486}
+  settingsTransition: {fileID: 1808486836}
+  continuarButton: {fileID: 741507564}
+  reiniciarButton: {fileID: 1067648468}
+  sairButton: {fileID: 109736615}
   botaoConfiguracao: {fileID: 884509216}
-  botaoCreditos: {fileID: 0}
-  botaoVoltarCreditos: {fileID: 0}
-  volumeSlider: {fileID: 0}
+  botaoCreditos: {fileID: 1624906}
+  botaoVoltarCreditos: {fileID: 2005207981}
+  volumeSlider: {fileID: 1726729416}
   textoVolume: {fileID: 0}
   nomeMenuPrincipal: TelaInicial
 --- !u!4 &762418232
