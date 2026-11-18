@@ -7,13 +7,22 @@ public class Minotauro : MonoBehaviour
 {
     [Header("Movimento")]
     public float velocidade = 2f;
+    public float distanciaParada = 1f;
 
     [Header("Ataque")]
     public float distanciaAtaque = 5f;
     public float tempoEntreAtaques = 2f;
+    public float tempoParaLancarMachado = 0.35f;
 
+    [Header("Machado")]
     public Transform attackPoint;
     public GameObject machadoPrefab;
+    public bool spriteOlhaParaDireita = true;
+
+    [Header("Animacoes")]
+    public string estadoAndar = "Andar";
+    public string parametroAtaque = "Attack";
+    public string parametroMorte = "Die";
 
     [Header("Sons")]
     public AudioSource audioSource;
@@ -26,9 +35,6 @@ public class Minotauro : MonoBehaviour
     public Image fillImage;
 
     [Header("Animacao de morte")]
-    public string parametroMorte = "Die";
-
-    [Tooltip("Tempo para o Minotauro cair antes de comecar a piscar.")]
     public float tempoAnimacaoMorte = 1.2f;
 
     [Header("Efeito de morte")]
@@ -38,24 +44,45 @@ public class Minotauro : MonoBehaviour
     public float velocidadeTremida = 25f;
 
     private int vidaAtual;
+
     private Transform player;
     private Animator anim;
     private Rigidbody2D rb;
+
+    private SpriteRenderer spritePrincipal;
     private SpriteRenderer[] sprites;
     private Collider2D[] colisores;
 
     private bool bossAtivado;
     private bool morto;
+    private bool atacando;
+    private bool olhandoParaDireita;
+
     private float proximoAtaque;
+    private float movimentoHorizontal;
+
     private Vector3 escalaInicial;
+    private Vector3 posicaoOriginalAttackPoint;
+
+    private Coroutine rotinaAtaque;
 
     private void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        sprites = GetComponentsInChildren<SpriteRenderer>();
+
+        anim = GetComponentInChildren<Animator>();
+
+        sprites = GetComponentsInChildren<SpriteRenderer>(true);
         colisores = GetComponentsInChildren<Collider2D>();
+
+        spritePrincipal = GetComponentInChildren<SpriteRenderer>(true);
+
         escalaInicial = transform.localScale;
+
+        olhandoParaDireita = spriteOlhaParaDireita;
+
+        if (attackPoint != null)
+            posicaoOriginalAttackPoint = attackPoint.localPosition;
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
@@ -68,70 +95,246 @@ public class Minotauro : MonoBehaviour
     {
         vidaAtual = vidaMaxima;
 
+        if (rb == null)
+        {
+            Debug.LogError("MINOTAURO: Rigidbody2D não encontrado!");
+        }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.freezeRotation = true;
+        }
+
         if (barraVida != null)
         {
+            barraVida.minValue = 0;
             barraVida.maxValue = vidaMaxima;
-            barraVida.value = vidaMaxima;
+            barraVida.value = vidaAtual;
         }
 
         AtualizarCorBarra();
 
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
+        EncontrarPlayer();
 
-        if (p != null)
-            player = p.transform;
+        if (attackPoint == null)
+            Debug.LogError("MINOTAURO: AttackPoint não configurado!");
+
+        if (machadoPrefab == null)
+            Debug.LogError("MINOTAURO: Machado Prefab não configurado!");
+
+        if (anim == null)
+            Debug.LogError("MINOTAURO: Animator não encontrado!");
     }
 
     private void Update()
     {
-        if (morto || !bossAtivado || player == null)
+        if (morto)
             return;
 
-        SeguirPlayer();
+        if (player == null)
+            EncontrarPlayer();
+
+        if (!bossAtivado || player == null)
+        {
+            movimentoHorizontal = 0f;
+            AtualizarAnimacaoAndar(false);
+            return;
+        }
+
+        VerificarDistanciaEAtacar();
+    }
+
+    private void FixedUpdate()
+    {
+        if (rb == null || morto)
+            return;
+
+        if (atacando || !bossAtivado)
+        {
+            rb.linearVelocity = new Vector2(
+                0f,
+                rb.linearVelocity.y
+            );
+
+            return;
+        }
+
+        rb.linearVelocity = new Vector2(
+            movimentoHorizontal * velocidade,
+            rb.linearVelocity.y
+        );
+    }
+
+    private void EncontrarPlayer()
+    {
+        GameObject objetoPlayer =
+            GameObject.FindGameObjectWithTag("Player");
+
+        if (objetoPlayer != null)
+            player = objetoPlayer.transform;
     }
 
     public void AtivarBoss()
     {
-        if (!morto)
-            bossAtivado = true;
+        if (morto)
+            return;
+
+        bossAtivado = true;
+
+        Debug.Log("MINOTAURO ATIVADO!");
     }
 
-    private void SeguirPlayer()
+    private void VerificarDistanciaEAtacar()
     {
-        float distancia =
-            Vector2.Distance(transform.position, player.position);
+        float diferencaX =
+            player.position.x - transform.position.x;
 
-        Virar(player.position.x);
+        float distanciaHorizontal = Mathf.Abs(diferencaX);
 
-        if (distancia > 2f)
+        VirarParaJogador();
+
+        if (atacando)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                player.position,
-                velocidade * Time.deltaTime
+            movimentoHorizontal = 0f;
+            AtualizarAnimacaoAndar(false);
+            return;
+        }
+
+        if (distanciaHorizontal <= distanciaAtaque)
+        {
+            movimentoHorizontal = 0f;
+            AtualizarAnimacaoAndar(false);
+
+            if (Time.time >= proximoAtaque)
+            {
+                Debug.Log("MINOTAURO VAI ATACAR!");
+
+                rotinaAtaque = StartCoroutine(ExecutarAtaque());
+            }
+
+            return;
+        }
+
+        if (distanciaHorizontal > distanciaParada)
+        {
+            movimentoHorizontal = Mathf.Sign(diferencaX);
+            AtualizarAnimacaoAndar(true);
+        }
+        else
+        {
+            movimentoHorizontal = 0f;
+            AtualizarAnimacaoAndar(false);
+        }
+    }
+
+    private void VirarParaJogador()
+    {
+        if (player == null)
+            return;
+
+        float diferenca =
+            player.position.x - transform.position.x;
+
+        if (Mathf.Abs(diferenca) < 0.01f)
+            return;
+
+        olhandoParaDireita = diferenca > 0f;
+
+        if (spritePrincipal != null)
+        {
+            spritePrincipal.flipX =
+                olhandoParaDireita != spriteOlhaParaDireita;
+        }
+
+        if (attackPoint != null)
+        {
+            float direcao = olhandoParaDireita ? 1f : -1f;
+
+            attackPoint.localPosition = new Vector3(
+                Mathf.Abs(posicaoOriginalAttackPoint.x) * direcao,
+                posicaoOriginalAttackPoint.y,
+                posicaoOriginalAttackPoint.z
+            );
+        }
+    }
+
+    private IEnumerator ExecutarAtaque()
+    {
+        atacando = true;
+        movimentoHorizontal = 0f;
+
+        proximoAtaque = Time.time + tempoEntreAtaques;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector2(
+                0f,
+                rb.linearVelocity.y
             );
         }
 
-        if (distancia <= distanciaAtaque &&
-            Time.time >= proximoAtaque)
+        if (anim != null)
         {
-            proximoAtaque = Time.time + tempoEntreAtaques;
+            anim.speed = 1f;
+
+            if (PossuiParametro(
+                parametroAtaque,
+                AnimatorControllerParameterType.Trigger))
+            {
+                anim.SetTrigger(parametroAtaque);
+            }
+            else
+            {
+                Debug.LogError(
+                    "Animator sem Trigger: " + parametroAtaque
+                );
+            }
+        }
+
+        if (audioSource != null && somAtaque != null)
+            audioSource.PlayOneShot(somAtaque);
+
+        Debug.Log("MINOTAURO INICIOU O ATAQUE!");
+
+        yield return new WaitForSeconds(tempoParaLancarMachado);
+
+        if (!morto)
+            LancarMachado();
+
+        yield return new WaitForSeconds(
+            Mathf.Max(0f, tempoEntreAtaques - tempoParaLancarMachado)
+        );
+
+        if (!morto)
+        {
+            atacando = false;
 
             if (anim != null)
-                anim.SetTrigger("Attack");
+            {
+                anim.speed = 1f;
 
-            // Som do ataque.
-            if (audioSource != null && somAtaque != null)
-                audioSource.PlayOneShot(somAtaque);
+                if (anim.HasState(
+                    0,
+                    Animator.StringToHash(estadoAndar)))
+                {
+                    anim.Play(estadoAndar, 0, 0f);
+                }
+            }
 
-            Invoke(nameof(LancarMachado), 0.35f);
+            rotinaAtaque = null;
         }
     }
 
     private void LancarMachado()
     {
-        if (morto || machadoPrefab == null || attackPoint == null)
+        if (morto || player == null)
             return;
+
+        if (machadoPrefab == null || attackPoint == null)
+        {
+            Debug.LogError("Não foi possível lançar o machado!");
+            return;
+        }
 
         GameObject machado = Instantiate(
             machadoPrefab,
@@ -139,30 +342,67 @@ public class Minotauro : MonoBehaviour
             Quaternion.identity
         );
 
-        Vector2 direcao =
-            transform.localScale.x >= 0
-            ? Vector2.right
-            : Vector2.left;
+        Vector2 direcao = (
+            (Vector2)player.position -
+            (Vector2)attackPoint.position
+        ).normalized;
 
         Machado scriptMachado = machado.GetComponent<Machado>();
 
         if (scriptMachado != null)
+        {
             scriptMachado.SetDirection(direcao);
+
+            Debug.Log("MINOTAURO LANÇOU O MACHADO!");
+        }
+        else
+        {
+            Debug.LogError("O prefab não possui o script Machado!");
+            Destroy(machado);
+        }
     }
 
-    private void Virar(float alvoX)
+    private void AtualizarAnimacaoAndar(bool andando)
     {
-        float diferenca = alvoX - transform.position.x;
-
-        if (Mathf.Abs(diferenca) < 0.01f)
+        if (anim == null || morto || atacando)
             return;
 
-        Vector3 escala = transform.localScale;
+        if (andando)
+        {
+            anim.speed = 1f;
 
-        escala.x = Mathf.Abs(escala.x) *
-            Mathf.Sign(diferenca);
+            if (anim.HasState(
+                0,
+                Animator.StringToHash(estadoAndar)))
+            {
+                AnimatorStateInfo estado = anim.GetCurrentAnimatorStateInfo(0);
 
-        transform.localScale = escala;
+                if (!estado.IsName(estadoAndar))
+                    anim.Play(estadoAndar);
+            }
+        }
+        else
+        {
+            // Não existe animação Idle.
+            // Pausamos a animação de caminhada enquanto o Minotauro está parado.
+            anim.speed = 0f;
+        }
+    }
+
+    private bool PossuiParametro(
+        string nome,
+        AnimatorControllerParameterType tipo)
+    {
+        if (anim == null)
+            return false;
+
+        foreach (AnimatorControllerParameter parametro in anim.parameters)
+        {
+            if (parametro.name == nome && parametro.type == tipo)
+                return true;
+        }
+
+        return false;
     }
 
     public void TakeDamage(int dano)
@@ -204,32 +444,44 @@ public class Minotauro : MonoBehaviour
 
     private IEnumerator Recuo()
     {
-        Vector3 posOriginal = transform.position;
+        if (rb == null)
+            yield break;
 
-        Vector3 direcao =
+        float direcao =
             player != null && player.position.x > transform.position.x
-            ? Vector3.left
-            : Vector3.right;
+            ? -1f
+            : 1f;
 
-        transform.position += direcao * 0.15f;
+        rb.linearVelocity = new Vector2(
+            direcao * 3f,
+            rb.linearVelocity.y
+        );
 
         yield return new WaitForSeconds(0.05f);
 
-        if (!morto)
-            transform.position = posOriginal;
+        if (!morto && rb != null && !atacando)
+        {
+            rb.linearVelocity = new Vector2(
+                0f,
+                rb.linearVelocity.y
+            );
+        }
     }
 
     private IEnumerator Morrer()
     {
         morto = true;
         bossAtivado = false;
+        atacando = false;
+        movimentoHorizontal = 0f;
 
-        // Cancela qualquer ataque que ainda estivesse agendado.
-        CancelInvoke();
+        if (rotinaAtaque != null)
+            StopCoroutine(rotinaAtaque);
 
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
             rb.simulated = false;
         }
 
@@ -239,43 +491,36 @@ public class Minotauro : MonoBehaviour
                 colisor.enabled = false;
         }
 
-        // Esconde a barra de vida.
         if (barraVida != null)
             barraVida.gameObject.SetActive(false);
 
-        // Som de morte.
         if (audioSource != null && somMorte != null)
             audioSource.PlayOneShot(somMorte);
 
-        // Dispara a animacao de cair para tras.
-        bool temAnimacaoMorte = false;
-
-        if (anim != null && anim.isActiveAndEnabled)
+        if (anim != null)
         {
-            foreach (AnimatorControllerParameter parametro
-                     in anim.parameters)
-            {
-                if (parametro.name == parametroMorte &&
-                    parametro.type == AnimatorControllerParameterType.Trigger)
-                {
-                    temAnimacaoMorte = true;
-                    break;
-                }
-            }
+            anim.speed = 1f;
 
-            if (temAnimacaoMorte)
+            if (PossuiParametro(
+                parametroMorte,
+                AnimatorControllerParameterType.Trigger))
+            {
                 anim.SetTrigger(parametroMorte);
+            }
         }
 
-        // Espera a animacao de morte terminar.
         if (tempoAnimacaoMorte > 0f)
-            yield return new WaitForSecondsRealtime(tempoAnimacaoMorte);
+        {
+            yield return new WaitForSecondsRealtime(
+                tempoAnimacaoMorte
+            );
+        }
 
-        // So agora desativa a animacao e comeca a piscar.
         if (anim != null)
             anim.enabled = false;
 
         Vector3 posicaoInicial = transform.position;
+
         float tempo = 0f;
         float tempoPiscada = 0f;
         bool visivel = true;
@@ -292,8 +537,11 @@ public class Minotauro : MonoBehaviour
             transform.position = posicaoInicial +
                 new Vector3(tremorX, 0f, 0f);
 
-            float escala =
-                Mathf.Lerp(1f, 0f, tempo / duracaoPiscadas);
+            float escala = Mathf.Lerp(
+                1f,
+                0f,
+                tempo / duracaoPiscadas
+            );
 
             transform.localScale = escalaInicial * escala;
 
@@ -318,5 +566,15 @@ public class Minotauro : MonoBehaviour
     public bool EstaMorto()
     {
         return morto;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+
+        Gizmos.DrawWireSphere(
+            transform.position,
+            distanciaAtaque
+        );
     }
 }
