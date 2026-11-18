@@ -10671,7 +10671,7 @@ GameObject:
   - component: {fileID: 158402701}
   m_Layer: 0
   m_Name: PlataformaQueCai (3)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -405497,7 +405497,7 @@ GameObject:
   - component: {fileID: 734887948}
   m_Layer: 0
   m_Name: PlataformaQueCai (2)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -408002,7 +408002,7 @@ GameObject:
   - component: {fileID: 997126712}
   m_Layer: 0
   m_Name: PlataformaQueCai
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -409517,7 +409517,7 @@ GameObject:
   - component: {fileID: 1058774690}
   m_Layer: 0
   m_Name: PlataformaQueCai (5)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -416160,7 +416160,7 @@ GameObject:
   - component: {fileID: 1212214598}
   m_Layer: 0
   m_Name: PlataformaQueCai (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -422586,7 +422586,7 @@ GameObject:
   - component: {fileID: 1371820834}
   m_Layer: 0
   m_Name: PlataformaQueCai (4)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
