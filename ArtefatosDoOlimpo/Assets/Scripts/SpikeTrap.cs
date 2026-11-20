@@ -22,12 +22,28 @@ public class SpikeTrap : MonoBehaviour
     private Vector3 posicaoSuperior;
     private Vector3 posicaoInferior;
 
+    private Collider2D colisor;
+
+    private void Awake()
+    {
+        colisor = GetComponent<Collider2D>();
+
+        if (colisor == null)
+        {
+            Debug.LogError(
+                "SpikeTrap precisa de um Collider2D!"
+            );
+            return;
+        }
+
+        // Os espinhos detectam o jogador, mas não o empurram.
+        colisor.isTrigger = true;
+    }
+
     private void Start()
     {
-        // Guarda a posição onde os espinhos devem ficar levantados.
         posicaoSuperior = transform.position;
 
-        // Calcula a posição escondida embaixo do chão.
         posicaoInferior = posicaoSuperior -
             Vector3.up * altura;
 
@@ -41,18 +57,14 @@ public class SpikeTrap : MonoBehaviour
     {
         while (true)
         {
-            // Aguarda enquanto os espinhos estão escondidos.
             yield return new WaitForSeconds(tempoEscondido);
 
-            // Sobe.
             yield return StartCoroutine(
                 MoverEspinhos(posicaoSuperior)
             );
 
-            // Permanece levantado.
             yield return new WaitForSeconds(tempoLevantado);
 
-            // Desce.
             yield return StartCoroutine(
                 MoverEspinhos(posicaoInferior)
             );

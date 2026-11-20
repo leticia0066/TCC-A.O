@@ -14,9 +14,13 @@ public class EsqueletoMiniboss : MonoBehaviour
     public float velocidade = 4f;
     public float distanciaAtaque = 0.8f;
     public string tagPlayer = "Player";
-
-    [Tooltip("Marque se o sprite original olha para a direita.")]
     public bool spriteOlhaParaDireita = true;
+
+    [Header("Ataque com fogo")]
+    public GameObject prefabBolaFogo;
+    public Transform pontoDisparo;
+    public float distanciaDisparo = 5f;
+    public float intervaloDisparo = 2f;
 
     [Header("Dano no jogador")]
     public int dano = 1;
@@ -28,10 +32,7 @@ public class EsqueletoMiniboss : MonoBehaviour
     public AudioClip somMorte;
 
     [Header("Animacao de morte")]
-    [Tooltip("Nome do Trigger de morte no Animator.")]
     public string parametroMorte = "Die";
-
-    [Tooltip("Tempo para a animacao de morte antes das piscadas.")]
     public float tempoAnimacaoMorte = 0.5f;
 
     [Header("Efeito de morte")]
@@ -47,6 +48,8 @@ public class EsqueletoMiniboss : MonoBehaviour
     private Collider2D[] colisores;
 
     private float proximoDano;
+    private float proximoDisparo;
+
     private bool morto;
     private Vector2 movimento;
     private Vector3 escalaInicial;
@@ -82,6 +85,8 @@ public class EsqueletoMiniboss : MonoBehaviour
 
         if (jogador == null)
             Debug.LogError("Jogador nao encontrado! Confira a tag Player.");
+
+        proximoDisparo = Time.time + 1f;
     }
 
     private void Update()
@@ -97,8 +102,6 @@ public class EsqueletoMiniboss : MonoBehaviour
 
         if (distancia > 0.05f)
         {
-            direcao.Normalize();
-
             foreach (SpriteRenderer sr in sprites)
             {
                 if (sr == null)
@@ -110,9 +113,47 @@ public class EsqueletoMiniboss : MonoBehaviour
             }
         }
 
-        movimento = distancia > distanciaAtaque
-            ? direcao * velocidade
-            : Vector2.zero;
+        // Se o jogador estiver no alcance, dispara fogo.
+        if (prefabBolaFogo != null &&
+            pontoDisparo != null &&
+            distancia <= distanciaDisparo &&
+            distancia > distanciaAtaque)
+        {
+            movimento = Vector2.zero;
+
+            if (Time.time >= proximoDisparo)
+            {
+                AtirarBolaFogo(direcao);
+                proximoDisparo = Time.time + intervaloDisparo;
+            }
+        }
+        else
+        {
+            // Fora do alcance de disparo, persegue o jogador.
+            movimento = distancia > distanciaAtaque
+                ? direcao.normalized * velocidade
+                : Vector2.zero;
+        }
+    }
+
+    private void AtirarBolaFogo(Vector2 direcao)
+    {
+        GameObject bola = Instantiate(
+            prefabBolaFogo,
+            pontoDisparo.position,
+            Quaternion.identity
+        );
+
+        BolaFogoEsqueleto fogo =
+            bola.GetComponent<BolaFogoEsqueleto>();
+
+        if (fogo != null)
+            fogo.ConfigurarDirecao(direcao);
+
+        if (audioSource != null && somAtaque != null)
+            audioSource.PlayOneShot(somAtaque);
+
+        Debug.Log("ESQUELETO DISPAROU BOLA DE FOGO!");
     }
 
     private void FixedUpdate()
@@ -141,10 +182,6 @@ public class EsqueletoMiniboss : MonoBehaviour
 
         vidaPlayer.TakeDamage(dano);
         proximoDano = Time.time + intervaloEntreDanos;
-
-        // Som quando o esqueleto acerta o jogador.
-        if (audioSource != null && somAtaque != null)
-            audioSource.PlayOneShot(somAtaque);
     }
 
     public void TakeDamage(int quantidade)
@@ -163,7 +200,6 @@ public class EsqueletoMiniboss : MonoBehaviour
         morto = true;
         movimento = Vector2.zero;
 
-        // Para o movimento e impede novos danos.
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -176,11 +212,9 @@ public class EsqueletoMiniboss : MonoBehaviour
                 colisor.enabled = false;
         }
 
-        // Toca o som de morte.
         if (audioSource != null && somMorte != null)
             audioSource.PlayOneShot(somMorte);
 
-        // Mantem o Animator ativo durante a animacao de morte.
         bool temAnimacaoMorte = false;
 
         if (animator != null && animator.isActiveAndEnabled)
@@ -203,7 +237,6 @@ public class EsqueletoMiniboss : MonoBehaviour
         if (tempoAnimacaoMorte > 0f)
             yield return new WaitForSecondsRealtime(tempoAnimacaoMorte);
 
-        // A animacao acabou: agora comeca o efeito de desaparecer.
         if (animator != null)
             animator.enabled = false;
 

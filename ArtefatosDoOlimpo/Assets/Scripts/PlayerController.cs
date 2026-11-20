@@ -25,19 +25,22 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
 
     private float moveInput;
+
     private bool isGrounded;
     private bool wasGrounded;
     private bool hasCheckedGround;
+    private bool jumpRequested;
 
     private SpriteRenderer[] sprites;
     private Color[] coresOriginais;
+
     private RigidbodyConstraints2D restricoesOriginais;
     private Coroutine rotinaPetrificacao;
 
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
 
         sprites = GetComponentsInChildren<SpriteRenderer>(true);
         coresOriginais = new Color[sprites.Length];
@@ -48,7 +51,26 @@ public class PlayerController : MonoBehaviour
         }
 
         if (rb == null)
+        {
             Debug.LogError("ERRO: O Player não possui Rigidbody2D!");
+        }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.freezeRotation = true;
+            rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+            rb.WakeUp();
+        }
+
+        if (anim != null)
+        {
+            // A física controla o movimento, não a animação.
+            anim.applyRootMotion = false;
+        }
+        else
+        {
+            Debug.LogError("ERRO: Animator não encontrado!");
+        }
 
         if (groundCheck == null)
             Debug.LogError("ERRO: GroundCheck não foi colocado!");
@@ -57,17 +79,14 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("ERRO: AttackPoint não foi colocado!");
     }
 
-    void Update()
+    private void Update()
     {
         if (petrificado)
         {
             moveInput = 0f;
+            jumpRequested = false;
 
-            if (anim != null)
-            {
-                anim.SetBool("IsWalking", false);
-                anim.SetBool("IsJumping", false);
-            }
+            AtualizarAnimacoes(false, false);
 
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PararPassos();
@@ -75,16 +94,18 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // Captura o movimento.
         moveInput = Input.GetAxisRaw("Horizontal");
 
         CheckGround();
 
-        if (anim != null)
-        {
-            anim.SetBool("IsWalking", Mathf.Abs(moveInput) > 0.01f);
-            anim.SetBool("IsJumping", !isGrounded);
-        }
+        // Atualiza as animações.
+        AtualizarAnimacoes(
+            Mathf.Abs(moveInput) > 0.01f && isGrounded,
+            !isGrounded
+        );
 
+        // Som de aterrissagem.
         if (hasCheckedGround && !wasGrounded && isGrounded)
         {
             if (AudioManager.Instance != null)
@@ -94,8 +115,11 @@ public class PlayerController : MonoBehaviour
         wasGrounded = isGrounded;
         hasCheckedGround = true;
 
+        // Guarda o comando de pulo para aplicar na física.
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-            Jump();
+        {
+            jumpRequested = true;
+        }
 
         HandleFootsteps();
 
@@ -105,49 +129,60 @@ public class PlayerController : MonoBehaviour
         Flip();
     }
 
-    void FixedUpdate()
-    {
-        if (petrificado)
-        {
-            if (rb != null)
-                rb.linearVelocity = Vector2.zero;
-
-            return;
-        }
-
-        Move();
-    }
-
-    void Move()
+    private void FixedUpdate()
     {
         if (rb == null)
             return;
 
-        rb.linearVelocity = new Vector2(
-            moveInput * speed,
-            rb.linearVelocity.y
-        );
-    }
+        if (petrificado)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
 
-    void Jump()
-    {
-        if (rb == null || petrificado)
+        // Garante que o Rigidbody continue acordado.
+        if (!rb.simulated)
             return;
 
+        rb.WakeUp();
+
+        // Movimento horizontal independente da animação.
+        float velocidadeHorizontal = moveInput * speed;
+
         rb.linearVelocity = new Vector2(
-            rb.linearVelocity.x,
-            jumpForce
+            velocidadeHorizontal,
+            rb.linearVelocity.y
         );
 
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.TocarPulo();
+        // Executa o pulo na física.
+        if (jumpRequested)
+        {
+            jumpRequested = false;
+
+            rb.linearVelocity = new Vector2(
+                rb.linearVelocity.x,
+                jumpForce
+            );
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.TocarPulo();
+        }
     }
 
-    void HandleFootsteps()
+    private void AtualizarAnimacoes(bool andando, bool pulando)
+    {
+        if (anim == null)
+            return;
+
+        anim.SetBool("IsWalking", andando);
+        anim.SetBool("IsJumping", pulando);
+    }
+
+    private void HandleFootsteps()
     {
         bool moving = Mathf.Abs(moveInput) > 0.01f;
 
-        if (isGrounded && moving)
+        if (isGrounded && moving && !petrificado)
         {
             if (AudioManager.Instance != null)
                 AudioManager.Instance.IniciarPassos();
@@ -159,7 +194,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void CheckGround()
+    private void CheckGround()
     {
         if (groundCheck == null)
         {
@@ -176,17 +211,19 @@ public class PlayerController : MonoBehaviour
         isGrounded = ground != null;
     }
 
-    void Flip()
+    private void Flip()
     {
-        if (moveInput == 0 || petrificado)
+        if (Mathf.Abs(moveInput) < 0.01f || petrificado)
             return;
 
         Vector3 scale = transform.localScale;
+
         scale.x = Mathf.Abs(scale.x) * Mathf.Sign(moveInput);
+
         transform.localScale = scale;
     }
 
-    void Attack()
+    private void Attack()
     {
         if (petrificado)
             return;
@@ -209,8 +246,10 @@ public class PlayerController : MonoBehaviour
             enemyLayers
         );
 
-        Debug.Log("Ataque executado! Objetos encontrados: "
-            + hitEnemies.Length);
+        Debug.Log(
+            "Ataque executado! Objetos encontrados: "
+            + hitEnemies.Length
+        );
 
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -234,8 +273,10 @@ public class PlayerController : MonoBehaviour
             {
                 esqueleto.TakeDamage(1);
 
-                Debug.Log("Esqueleto atingido! Vida restante: "
-                    + esqueleto.vidaAtual);
+                Debug.Log(
+                    "Esqueleto atingido! Vida restante: "
+                    + esqueleto.vidaAtual
+                );
 
                 continue;
             }
@@ -247,8 +288,10 @@ public class PlayerController : MonoBehaviour
             {
                 cobra.TakeDamage(1);
 
-                Debug.Log("COBRA ATINGIDA! Vida restante: "
-                    + cobra.vidaAtual);
+                Debug.Log(
+                    "COBRA ATINGIDA! Vida restante: "
+                    + cobra.vidaAtual
+                );
 
                 continue;
             }
@@ -263,7 +306,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ATIVAR PETRIFICACAO
+    // PETRIFICACAO
     public void Petrificar(float duracao)
     {
         if (petrificado)
@@ -282,6 +325,7 @@ public class PlayerController : MonoBehaviour
         petrificado = true;
 
         moveInput = 0f;
+        jumpRequested = false;
 
         if (rb != null)
         {
@@ -293,7 +337,7 @@ public class PlayerController : MonoBehaviour
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
 
-        // Deixa o personagem com aparencia de pedra.
+        // Aparencia de pedra.
         for (int i = 0; i < sprites.Length; i++)
         {
             if (sprites[i] != null)
@@ -309,11 +353,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (anim != null)
-        {
-            anim.SetBool("IsWalking", false);
-            anim.SetBool("IsJumping", false);
-        }
+        AtualizarAnimacoes(false, false);
 
         if (AudioManager.Instance != null)
             AudioManager.Instance.PararPassos();
@@ -322,18 +362,15 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(duracao);
 
-        // Recupera a cor original.
-        for (int i = 0; i < sprites.Length; i++)
-        {
-            if (sprites[i] != null)
-                sprites[i].color = coresOriginais[i];
-        }
+        // Recupera as cores.
+        RestaurarCores();
 
         if (rb != null)
         {
             rb.constraints = restricoesOriginais;
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
+            rb.WakeUp();
         }
 
         petrificado = false;
@@ -342,7 +379,19 @@ public class PlayerController : MonoBehaviour
         Debug.Log("PETRIFICACAO TERMINOU! Jogador liberado.");
     }
 
-    void OnDisable()
+    private void RestaurarCores()
+    {
+        if (sprites == null || coresOriginais == null)
+            return;
+
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            if (sprites[i] != null)
+                sprites[i].color = coresOriginais[i];
+        }
+    }
+
+    private void OnDisable()
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.PararPassos();
@@ -352,25 +401,26 @@ public class PlayerController : MonoBehaviour
             if (rotinaPetrificacao != null)
                 StopCoroutine(rotinaPetrificacao);
 
-            for (int i = 0; i < sprites.Length; i++)
-            {
-                if (sprites[i] != null)
-                    sprites[i].color = coresOriginais[i];
-            }
+            RestaurarCores();
 
             if (rb != null)
+            {
                 rb.constraints = restricoesOriginais;
+                rb.linearVelocity = Vector2.zero;
+                rb.WakeUp();
+            }
 
             petrificado = false;
             rotinaPetrificacao = null;
         }
     }
 
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
         {
             Gizmos.color = Color.green;
+
             Gizmos.DrawWireSphere(
                 groundCheck.position,
                 groundCheckRadius
@@ -380,6 +430,7 @@ public class PlayerController : MonoBehaviour
         if (attackPoint != null)
         {
             Gizmos.color = Color.red;
+
             Gizmos.DrawWireSphere(
                 attackPoint.position,
                 attackRange

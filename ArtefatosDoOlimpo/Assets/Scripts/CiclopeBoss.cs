@@ -9,6 +9,9 @@ public class CiclopeBoss : MonoBehaviour
     public float velocidade = 2f;
     public float distanciaParada = 2f;
 
+    [Header("Ativacao automatica")]
+    public float distanciaAtivacao = 12f;
+
     [Header("Ataque com taco")]
     public int danoAtaque = 1;
     public float distanciaAtaque = 2.5f;
@@ -19,7 +22,6 @@ public class CiclopeBoss : MonoBehaviour
     [Header("Ponto de ataque")]
     public Transform attackPoint;
     public float raioAtaque = 0.8f;
-    public LayerMask camadaJogador;
 
     [Header("Vida")]
     public int vidaMaxima = 30;
@@ -40,9 +42,14 @@ public class CiclopeBoss : MonoBehaviour
     public float velocidadeTremida = 25f;
 
     private int vidaAtual;
+
     private Transform jogador;
     private Animator anim;
     private Rigidbody2D rb;
+
+    private Collider2D colisorBoss;
+    private Collider2D colisorJogador;
+
     private SpriteRenderer[] sprites;
     private Collider2D[] colisores;
     private SpriteRenderer spritePrincipal;
@@ -50,8 +57,10 @@ public class CiclopeBoss : MonoBehaviour
     private bool bossAtivado;
     private bool morto;
     private bool atacando;
+    private bool avisoParametroAtaque;
 
     private float proximoAtaque;
+
     private Vector3 escalaInicial;
     private Vector3 posicaoOriginalAttackPoint;
 
@@ -64,11 +73,14 @@ public class CiclopeBoss : MonoBehaviour
         colisores = GetComponentsInChildren<Collider2D>();
 
         spritePrincipal = GetComponentInChildren<SpriteRenderer>();
+        colisorBoss = GetComponentInChildren<Collider2D>();
 
         escalaInicial = transform.localScale;
 
         if (attackPoint != null)
+        {
             posicaoOriginalAttackPoint = attackPoint.localPosition;
+        }
     }
 
     private void Start()
@@ -79,7 +91,15 @@ public class CiclopeBoss : MonoBehaviour
             GameObject.FindGameObjectWithTag("Player");
 
         if (objetoJogador != null)
+        {
             jogador = objetoJogador.transform;
+            colisorJogador =
+                objetoJogador.GetComponentInChildren<Collider2D>();
+        }
+        else
+        {
+            Debug.LogWarning("CICLOPE: jogador com Tag Player nao encontrado!");
+        }
 
         if (barraVida != null)
         {
@@ -93,43 +113,80 @@ public class CiclopeBoss : MonoBehaviour
 
     private void Update()
     {
-        if (morto || !bossAtivado || jogador == null)
+        if (morto || jogador == null)
             return;
 
-        float distanciaHorizontal = Mathf.Abs(
-            jogador.position.x - transform.position.x
-        );
+        // Ativacao automatica quando o jogador se aproxima.
+        if (!bossAtivado)
+        {
+            float distanciaInicial = Mathf.Abs(
+                jogador.position.x - transform.position.x
+            );
+
+            if (distanciaInicial <= distanciaAtivacao)
+            {
+                AtivarBoss();
+            }
+            else
+            {
+                return;
+            }
+        }
 
         VirarParaJogador();
 
         if (atacando)
             return;
 
-        if (distanciaHorizontal <= distanciaAtaque)
+        // Calcula a distancia entre as bordas dos colisores.
+        float distanciaReal = CalcularDistanciaEntreBordas();
+
+        // Se estiver perto o suficiente, ataca.
+        if (distanciaReal <= distanciaAtaque)
         {
             PararMovimento();
 
             if (Time.time >= proximoAtaque)
+            {
                 StartCoroutine(ExecutarAtaque());
+            }
 
             return;
         }
 
+        // Se estiver longe, continua perseguindo.
         MoverParaJogador();
     }
 
     public void AtivarBoss()
     {
-        if (!morto)
+        if (!morto && !bossAtivado)
         {
             bossAtivado = true;
             Debug.Log("CICLOPE ATIVADO!");
         }
     }
 
+    private float CalcularDistanciaEntreBordas()
+    {
+        float distancia = Mathf.Abs(
+            jogador.position.x - transform.position.x
+        );
+
+        if (colisorBoss != null && colisorJogador != null)
+        {
+            float tamanhoBoss = colisorBoss.bounds.extents.x;
+            float tamanhoJogador = colisorJogador.bounds.extents.x;
+
+            distancia -= tamanhoBoss + tamanhoJogador;
+        }
+
+        return Mathf.Max(0f, distancia);
+    }
+
     private void MoverParaJogador()
     {
-        if (rb == null)
+        if (rb == null || !rb.simulated)
             return;
 
         float direcao = Mathf.Sign(
@@ -167,7 +224,9 @@ public class CiclopeBoss : MonoBehaviour
         bool olhandoParaEsquerda = diferenca < 0;
 
         if (spritePrincipal != null)
+        {
             spritePrincipal.flipX = olhandoParaEsquerda;
+        }
 
         if (attackPoint != null)
         {
@@ -184,17 +243,39 @@ public class CiclopeBoss : MonoBehaviour
     private IEnumerator ExecutarAtaque()
     {
         atacando = true;
+
         proximoAtaque = Time.time + tempoEntreAtaques;
 
         PararMovimento();
 
-        if (anim != null)
-            anim.SetTrigger(parametroAtaque);
+        // Verifica se existe o parametro Attack no Animator.
+        if (anim != null && anim.isActiveAndEnabled)
+        {
+            if (TemParametro(parametroAtaque,
+                AnimatorControllerParameterType.Trigger))
+            {
+                anim.ResetTrigger(parametroAtaque);
+                anim.SetTrigger(parametroAtaque);
+
+                Debug.Log("CICLOPE: animacao de ataque chamada!");
+            }
+            else if (!avisoParametroAtaque)
+            {
+                Debug.LogWarning(
+                    "CICLOPE: nao encontrei o Trigger '" +
+                    parametroAtaque + "' no Animator!"
+                );
+
+                avisoParametroAtaque = true;
+            }
+        }
 
         yield return new WaitForSeconds(tempoParaGolpe);
 
         if (!morto)
+        {
             AplicarDano();
+        }
 
         float restante = Mathf.Max(
             0f,
@@ -204,18 +285,41 @@ public class CiclopeBoss : MonoBehaviour
         yield return new WaitForSeconds(restante);
 
         if (!morto)
+        {
             atacando = false;
+        }
+    }
+
+    private bool TemParametro(
+        string nome,
+        AnimatorControllerParameterType tipo)
+    {
+        if (anim == null)
+            return false;
+
+        foreach (AnimatorControllerParameter parametro in anim.parameters)
+        {
+            if (parametro.name == nome && parametro.type == tipo)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void AplicarDano()
     {
         if (attackPoint == null)
+        {
+            Debug.LogWarning("CICLOPE: Attack Point nao foi configurado!");
             return;
+        }
 
+        // Procura todos os colisores dentro da area do golpe.
         Collider2D[] atingidos = Physics2D.OverlapCircleAll(
             attackPoint.position,
-            raioAtaque,
-            camadaJogador
+            raioAtaque
         );
 
         foreach (Collider2D alvo in atingidos)
@@ -224,7 +328,14 @@ public class CiclopeBoss : MonoBehaviour
                 alvo.GetComponentInParent<PlayerHealth>();
 
             if (vida != null)
+            {
                 vida.TakeDamage(danoAtaque);
+
+                Debug.Log("CICLOPE: jogador atingido!");
+
+                // Evita causar dano varias vezes no mesmo golpe.
+                break;
+            }
         }
     }
 
@@ -236,7 +347,9 @@ public class CiclopeBoss : MonoBehaviour
         vidaAtual = Mathf.Max(0, vidaAtual - dano);
 
         if (barraVida != null)
+        {
             barraVida.value = vidaAtual;
+        }
 
         AtualizarCorBarra();
 
@@ -267,7 +380,6 @@ public class CiclopeBoss : MonoBehaviour
         bossAtivado = false;
         atacando = false;
 
-        // Cancela o movimento e impede novos ataques.
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -275,38 +387,34 @@ public class CiclopeBoss : MonoBehaviour
             rb.simulated = false;
         }
 
-        // Desativa todos os colisores.
         foreach (Collider2D colisor in colisores)
         {
             if (colisor != null)
+            {
                 colisor.enabled = false;
+            }
         }
 
-        // Esconde a barra de vida.
         if (barraVida != null)
+        {
             barraVida.gameObject.SetActive(false);
+        }
 
-        // Dispara a animacao de morte.
         bool temAnimacaoMorte = false;
 
         if (anim != null && anim.isActiveAndEnabled)
         {
-            foreach (AnimatorControllerParameter parametro
-                     in anim.parameters)
-            {
-                if (parametro.name == parametroMorte &&
-                    parametro.type == AnimatorControllerParameterType.Trigger)
-                {
-                    temAnimacaoMorte = true;
-                    break;
-                }
-            }
+            temAnimacaoMorte = TemParametro(
+                parametroMorte,
+                AnimatorControllerParameterType.Trigger
+            );
 
             if (temAnimacaoMorte)
+            {
                 anim.SetTrigger(parametroMorte);
+            }
         }
 
-        // Espera a animacao de morte terminar.
         if (tempoAnimacaoMorte > 0f)
         {
             yield return new WaitForSecondsRealtime(
@@ -314,9 +422,10 @@ public class CiclopeBoss : MonoBehaviour
             );
         }
 
-        // Desativa o Animator antes do efeito de desaparecimento.
         if (anim != null)
+        {
             anim.enabled = false;
+        }
 
         Vector3 posicaoInicial = transform.position;
 
@@ -325,7 +434,6 @@ public class CiclopeBoss : MonoBehaviour
 
         bool visivel = true;
 
-        // Tremida, piscadas e diminuicao de tamanho.
         while (tempo < duracaoPiscadas)
         {
             tempo += Time.unscaledDeltaTime;
@@ -354,14 +462,15 @@ public class CiclopeBoss : MonoBehaviour
                 foreach (SpriteRenderer sr in sprites)
                 {
                     if (sr != null)
+                    {
                         sr.enabled = visivel;
+                    }
                 }
             }
 
             yield return null;
         }
 
-        // Garante que o Ciclope desapareca.
         Destroy(gameObject);
     }
 

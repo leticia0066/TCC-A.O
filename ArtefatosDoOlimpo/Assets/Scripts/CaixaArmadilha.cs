@@ -10,6 +10,7 @@ public class CaixaArmadilha : MonoBehaviour
     public bool destruirDepoisDeAtingirJogador = true;
 
     private Rigidbody2D rb;
+    private Collider2D[] colliders;
 
     private bool ativada = false;
     private bool atingiuJogador = false;
@@ -18,6 +19,7 @@ public class CaixaArmadilha : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        colliders = GetComponents<Collider2D>();
 
         if (rb == null)
         {
@@ -26,14 +28,13 @@ public class CaixaArmadilha : MonoBehaviour
             return;
         }
 
-        
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (ativada)
+        if (ativada || atingiuJogador)
             return;
 
         PlayerHealth jogador =
@@ -43,20 +44,16 @@ public class CaixaArmadilha : MonoBehaviour
             return;
 
         ativada = true;
-
-        
         rb.gravityScale = gravidadeQueda;
 
         Debug.Log("ARMADILHA ATIVADA! A CAIXA ESTÁ CAINDO!");
     }
 
-    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         PlayerHealth jogador =
             collision.collider.GetComponentInParent<PlayerHealth>();
 
-       
         if (jogador != null)
         {
             if (atingiuJogador)
@@ -65,29 +62,33 @@ public class CaixaArmadilha : MonoBehaviour
             atingiuJogador = true;
 
             rb.linearVelocity = Vector2.zero;
+            rb.gravityScale = 0f;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+
+            // Desativa as colisões da caixa para não interferir
+            // no jogador durante o respawn.
+            foreach (Collider2D col in colliders)
+            {
+                if (col != null)
+                    col.enabled = false;
+            }
 
             Debug.Log("JOGADOR ATINGIDO PELA CAIXA!");
 
-            
             jogador.TakeDamage(jogador.currentHealth);
 
             if (destruirDepoisDeAtingirJogador)
-            {
                 Destroy(gameObject, 0.15f);
-            }
 
             return;
         }
 
-        
         if (ativada && !atingiuChao)
         {
             atingiuChao = true;
 
             rb.linearVelocity = Vector2.zero;
             rb.gravityScale = 0f;
-
-            // Impede que continue se movimentando.
             rb.bodyType = RigidbodyType2D.Kinematic;
 
             Debug.Log("A CAIXA ATINGIU O CHÃO!");
