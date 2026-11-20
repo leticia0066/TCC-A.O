@@ -57,6 +57,7 @@ public class EsqueletoMiniboss : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
         sprites = GetComponentsInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
         colisores = GetComponentsInChildren<Collider2D>();
@@ -86,6 +87,12 @@ public class EsqueletoMiniboss : MonoBehaviour
         if (jogador == null)
             Debug.LogError("Jogador nao encontrado! Confira a tag Player.");
 
+        if (prefabBolaFogo == null)
+            Debug.LogError("Prefab da bola de fogo nao foi atribuido!");
+
+        if (pontoDisparo == null)
+            Debug.LogError("PontoDisparo nao foi atribuido!");
+
         proximoDisparo = Time.time + 1f;
     }
 
@@ -100,7 +107,8 @@ public class EsqueletoMiniboss : MonoBehaviour
         Vector2 direcao = jogador.position - transform.position;
         float distancia = direcao.magnitude;
 
-        if (distancia > 0.05f)
+        // Vira o esqueleto na direcao do jogador.
+        if (Mathf.Abs(direcao.x) > 0.05f)
         {
             foreach (SpriteRenderer sr in sprites)
             {
@@ -113,7 +121,7 @@ public class EsqueletoMiniboss : MonoBehaviour
             }
         }
 
-        // Se o jogador estiver no alcance, dispara fogo.
+        // Ataca com bola de fogo quando o jogador esta no alcance.
         if (prefabBolaFogo != null &&
             pontoDisparo != null &&
             distancia <= distanciaDisparo &&
@@ -129,7 +137,7 @@ public class EsqueletoMiniboss : MonoBehaviour
         }
         else
         {
-            // Fora do alcance de disparo, persegue o jogador.
+            // Persegue o jogador quando esta longe.
             movimento = distancia > distanciaAtaque
                 ? direcao.normalized * velocidade
                 : Vector2.zero;
@@ -138,6 +146,9 @@ public class EsqueletoMiniboss : MonoBehaviour
 
     private void AtirarBolaFogo(Vector2 direcao)
     {
+        if (prefabBolaFogo == null || pontoDisparo == null)
+            return;
+
         GameObject bola = Instantiate(
             prefabBolaFogo,
             pontoDisparo.position,
@@ -148,7 +159,16 @@ public class EsqueletoMiniboss : MonoBehaviour
             bola.GetComponent<BolaFogoEsqueleto>();
 
         if (fogo != null)
-            fogo.ConfigurarDirecao(direcao);
+        {
+            // Informa a direcao e o dono do disparo.
+            fogo.ConfigurarDirecao(direcao, transform);
+        }
+        else
+        {
+            Debug.LogError(
+                "O prefab precisa ter o script BolaFogoEsqueleto!"
+            );
+        }
 
         if (audioSource != null && somAtaque != null)
             audioSource.PlayOneShot(somAtaque);
@@ -241,6 +261,7 @@ public class EsqueletoMiniboss : MonoBehaviour
             animator.enabled = false;
 
         Vector3 posicaoInicial = transform.position;
+
         float tempo = 0f;
         float tempoPiscada = 0f;
         bool visivel = true;
@@ -251,7 +272,8 @@ public class EsqueletoMiniboss : MonoBehaviour
             tempoPiscada += Time.unscaledDeltaTime;
 
             float tremorX =
-                Mathf.Sin(tempo * velocidadeTremida) * intensidadeTremida;
+                Mathf.Sin(tempo * velocidadeTremida)
+                * intensidadeTremida;
 
             float tremorY =
                 Mathf.Cos(tempo * velocidadeTremida * 1.3f)
