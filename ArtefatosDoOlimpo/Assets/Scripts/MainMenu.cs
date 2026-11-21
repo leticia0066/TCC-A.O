@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
     [Range(0f, 1f)]
     public float volumeClique = 1f;
 
-    private Button botaoContinuar;
+    private bool inicializado = false;
 
     private void Awake()
     {
@@ -61,7 +61,8 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         AtualizarMusica(SceneManager.GetActiveScene().name);
-        ConectarBotoes();
+
+        Invoke(nameof(ConectarBotoes), 0.1f);
     }
 
     private void AoCarregarCena(Scene cena, LoadSceneMode modo)
@@ -70,14 +71,19 @@ public class MainMenu : MonoBehaviour
 
         if (cena.name == "TelaInicial")
         {
-            ConectarBotoes();
+            inicializado = false;
+
+            Invoke(nameof(ConectarBotoes), 0.1f);
         }
     }
 
     private void ConectarBotoes()
     {
-        // Botão de novo jogo.
-        GameObject objetoJogar = GameObject.Find("Jogar");
+        if (SceneManager.GetActiveScene().name != "TelaInicial")
+            return;
+
+        // NOVO JOGO
+        GameObject objetoJogar = GameObject.Find("NovoJogo");
 
         if (objetoJogar != null)
         {
@@ -89,25 +95,58 @@ public class MainMenu : MonoBehaviour
                 botaoJogar.onClick.AddListener(Jogar);
             }
         }
+        else
+        {
+            Debug.LogWarning("Botão NovoJogo não encontrado!");
+        }
 
-        // Botão continuar.
-        GameObject objetoContinuar = GameObject.Find("Continuar");
+        // CONTINUAR JOGO
+        GameObject objetoContinuar = GameObject.Find("ContinuarJogo");
 
         if (objetoContinuar != null)
         {
-            botaoContinuar = objetoContinuar.GetComponent<Button>();
+            Button botaoContinuar = objetoContinuar.GetComponent<Button>();
 
             if (botaoContinuar != null)
             {
                 botaoContinuar.onClick.RemoveListener(ContinuarJogo);
                 botaoContinuar.onClick.AddListener(ContinuarJogo);
 
-                botaoContinuar.interactable = SaveSystem.TemSave();
+                bool existeSave = SaveSystem.TemSave();
 
-                // Esconde o botão se ainda não existe salvamento.
-                objetoContinuar.SetActive(SaveSystem.TemSave());
+                // O botão continua visível.
+                objetoContinuar.SetActive(true);
+
+                // Ativa ou desativa conforme o salvamento.
+                botaoContinuar.interactable = existeSave;
             }
         }
+        else
+        {
+            Debug.LogWarning("Botão ContinuarJogo não encontrado!");
+        }
+
+        // SAIR
+        GameObject objetoSair = GameObject.Find("Sair");
+
+        if (objetoSair != null)
+        {
+            Button botaoSair = objetoSair.GetComponent<Button>();
+
+            if (botaoSair != null)
+            {
+                botaoSair.onClick.RemoveListener(Sair);
+                botaoSair.onClick.AddListener(Sair);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Botão Sair não encontrado!");
+        }
+
+        inicializado = true;
+
+        Debug.Log("Botões do menu conectados corretamente!");
     }
 
     private void AtualizarMusica(string nomeCena)
@@ -135,7 +174,12 @@ public class MainMenu : MonoBehaviour
     // NOVO JOGO
     public void Jogar()
     {
+        if (!inicializado)
+            return;
+
         Debug.Log("INICIANDO NOVO JOGO!");
+
+        inicializado = false;
 
         Time.timeScale = 1f;
 
@@ -168,11 +212,20 @@ public class MainMenu : MonoBehaviour
     // CONTINUAR JOGO
     public void ContinuarJogo()
     {
+        if (!inicializado)
+            return;
+
         if (!SaveSystem.TemSave())
         {
             Debug.LogWarning("Não existe jogo salvo para continuar.");
             return;
         }
+
+        Debug.Log("CONTINUANDO JOGO!");
+
+        inicializado = false;
+
+        Time.timeScale = 1f;
 
         TocarSomBotao();
 
@@ -182,14 +235,18 @@ public class MainMenu : MonoBehaviour
         }
         else
         {
-            Debug.LogError(
-                "GameManager não encontrado na TelaInicial!"
-            );
+            Debug.LogError("GameManager não encontrado na TelaInicial!");
+
+            inicializado = true;
         }
     }
 
+    // SAIR
     public void Sair()
     {
+        if (!inicializado)
+            return;
+
         TocarSomBotao();
 
         Debug.Log("Saindo do jogo.");
@@ -197,6 +254,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
+    // SOM DOS BOTÕES
     public void TocarSomBotao()
     {
         if (cliqueSom == null || efeitosSource == null)
@@ -207,6 +265,8 @@ public class MainMenu : MonoBehaviour
 
     private void OnDestroy()
     {
+        CancelInvoke();
+
         if (Instance == this)
         {
             Instance = null;
