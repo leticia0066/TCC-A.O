@@ -11322,7 +11322,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5e2f3541ac9217a4fa4be0e00c9be0aa, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -205010,6 +205010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CiclopeBoss
   velocidade: 2
   distanciaParada: 2
+  distanciaAtivacao: 12
   danoAtaque: 1
   distanciaAtaque: 2.5
   tempoEntreAtaques: 2
@@ -205017,9 +205018,6 @@ MonoBehaviour:
   duracaoAtaque: 0.5
   attackPoint: {fileID: 1326040613}
   raioAtaque: 0.8
-  camadaJogador:
-    serializedVersion: 2
-    m_Bits: 0
   vidaMaxima: 30
   barraVida: {fileID: 1145389100}
   fillImage: {fileID: 1361214164}

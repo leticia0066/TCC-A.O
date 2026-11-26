@@ -68,9 +68,12 @@ public class CutsceneIntroManager : MonoBehaviour
         painelHistoria.SetActive(true);
         painelTutorial.SetActive(false);
 
-        // Desativa os textos antigos.
-        textoHistoria.gameObject.SetActive(false);
-        textoTutorial.gameObject.SetActive(false);
+        // Desativa os textos antigos, se existirem.
+        if (textoHistoria != null)
+            textoHistoria.gameObject.SetActive(false);
+
+        if (textoTutorial != null)
+            textoTutorial.gameObject.SetActive(false);
 
         CriarBarraDialogo();
 
@@ -86,7 +89,6 @@ public class CutsceneIntroManager : MonoBehaviour
         if (painelHistoria == null ||
             painelTutorial == null ||
             textoHistoria == null ||
-            textoTutorial == null ||
             imagemDeus == null)
         {
             Debug.LogError(
@@ -95,6 +97,8 @@ public class CutsceneIntroManager : MonoBehaviour
 
             return false;
         }
+
+        // TextoTutorial agora é opcional.
 
         string fase = SelecaoFases.NomeFaseSelecionada;
 
@@ -163,7 +167,6 @@ public class CutsceneIntroManager : MonoBehaviour
             return;
         }
 
-        // Cria o objeto da barra.
         barraDialogo = new GameObject(
             "BarraDialogo",
             typeof(RectTransform),
@@ -179,7 +182,6 @@ public class CutsceneIntroManager : MonoBehaviour
         RectTransform barraRect =
             barraDialogo.GetComponent<RectTransform>();
 
-        // Posicionamento na parte inferior.
         barraRect.anchorMin = new Vector2(0.08f, 0f);
         barraRect.anchorMax = new Vector2(0.92f, 0f);
 
@@ -195,7 +197,6 @@ public class CutsceneIntroManager : MonoBehaviour
             28f
         );
 
-        // Aplica a arte da barra.
         Image imagemBarra =
             barraDialogo.GetComponent<Image>();
 
@@ -204,7 +205,7 @@ public class CutsceneIntroManager : MonoBehaviour
         imagemBarra.preserveAspect = false;
         imagemBarra.color = Color.white;
 
-        // Cria o texto principal.
+        // TEXTO PRINCIPAL
         textoBarra = CriarTexto(
             "TextoHistoria",
             barraDialogo.transform,
@@ -214,7 +215,7 @@ public class CutsceneIntroManager : MonoBehaviour
             TextAlignmentOptions.Center
         );
 
-        // Cria a instrução de espaço.
+        // INSTRUÇÃO DO ESPAÇO
         textoAjuda = CriarTexto(
             "TextoContinuar",
             barraDialogo.transform,
