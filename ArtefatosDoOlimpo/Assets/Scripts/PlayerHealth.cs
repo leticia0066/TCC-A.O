@@ -9,313 +9,199 @@ public class PlayerHealth : MonoBehaviour
     public int currentHealth;
 
     [Header("Vidas")]
-    public int maxLives = 3;
-    public int lives = 3;
+    public int maxLives = 2;
+    public int lives;
 
     [Header("Interface")]
     public HeartUI heartUI;
 
-    [Header("Tempo")]
+    [Header("Respawn")]
     public float respawnDelay = 0.5f;
     public float gameOverDelay = 0.5f;
 
-    [Header("Efeito ao receber dano")]
-    public float duracaoPiscar = 0.45f;
-    public float intervaloPiscar = 0.07f;
+    [Header("Invulnerabilidade")]
+    public float tempoInvulnerabilidade = 1f;
 
     private Rigidbody2D rb;
-    private SpriteRenderer[] spriteRenderers;
-    private bool[] estadosOriginais;
+    private PlayerController controle;
 
-    private Coroutine efeitoDanoCoroutine;
+    private bool estaMorrendo;
+    private bool invulneravel;
+    private bool gameOverAtivado;
 
-    private bool isDead = false;
-    private bool gameOverStarted = false;
+    private Coroutine rotinaInvulnerabilidade;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        if (heartUI == null)
-        {
-            heartUI = FindFirstObjectByType<HeartUI>();
-        }
-
-        spriteRenderers =
-            GetComponentsInChildren<SpriteRenderer>(true);
-
-        estadosOriginais = new bool[spriteRenderers.Length];
-
-        for (int i = 0; i < spriteRenderers.Length; i++)
-        {
-            estadosOriginais[i] = spriteRenderers[i].enabled;
-        }
+        controle = GetComponent<PlayerController>();
+        EncontrarHeartUI();
     }
 
     private void Start()
     {
-        maxHealth = Mathf.Max(1, maxHealth);
-        maxLives = Mathf.Max(1, maxLives);
-
         currentHealth = maxHealth;
 
-        // Se veio de um salvamento, recupera as vidas do checkpoint.
-        if (GameManager.instance != null &&
-            GameManager.instance.TentarConsumirVidasSalvas(
-                out int vidasSalvas))
-        {
-            lives = Mathf.Clamp(vidasSalvas, 1, maxLives);
-
-            Debug.Log("Vidas restauradas do checkpoint: " + lives);
-        }
-        else
-        {
-            lives = Mathf.Clamp(lives, 1, maxLives);
-        }
-
-        AtualizarInterface();
-
-        Debug.Log("PlayerHealth iniciado. Vida: " +
-                  currentHealth + "/" + maxHealth +
-                  " | Vidas: " + lives);
-    }
-
-    // RECEBER DANO
-    public void TakeDamage(int damage)
-    {
-        if (isDead || gameOverStarted || damage <= 0)
-            return;
-
-        IniciarEfeitoDano();
-
-        int vidaAnterior = currentHealth;
-
-        currentHealth = Mathf.Clamp(
-            currentHealth - damage,
-            0,
-            maxHealth
-        );
-
-        Debug.Log("DANO RECEBIDO! Vida: " +
-                  vidaAnterior + " -> " + currentHealth);
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.TocarDano();
-        }
-
-        AtualizarInterface();
-
-        if (currentHealth > 0)
-            return;
-
-        isDead = true;
-        lives = Mathf.Max(0, lives - 1);
-
-        Debug.Log("Jogador morreu! Vidas restantes: " + lives);
-
-        if (lives > 0)
-        {
-            StartCoroutine(RespawnToCheckpoint());
-        }
-        else
-        {
-            gameOverStarted = true;
-            StartCoroutine(GameOver());
-        }
-    }
-
-    // EFEITO DE PISCAR
-    private void IniciarEfeitoDano()
-    {
-        if (spriteRenderers == null ||
-            spriteRenderers.Length == 0)
-        {
-            return;
-        }
-
-        if (efeitoDanoCoroutine != null)
-        {
-            StopCoroutine(efeitoDanoCoroutine);
-            RestaurarSprites();
-        }
-
-        efeitoDanoCoroutine =
-            StartCoroutine(PiscarPersonagem());
-    }
-
-    private IEnumerator PiscarPersonagem()
-    {
-        float tempo = 0f;
-        bool mostrar = false;
-
-        intervaloPiscar = Mathf.Max(0.02f, intervaloPiscar);
-
-        while (tempo < duracaoPiscar)
-        {
-            mostrar = !mostrar;
-
-            for (int i = 0; i < spriteRenderers.Length; i++)
-            {
-                if (spriteRenderers[i] != null)
-                {
-                    spriteRenderers[i].enabled =
-                        estadosOriginais[i] && mostrar;
-                }
-            }
-
-            yield return new WaitForSeconds(intervaloPiscar);
-
-            tempo += intervaloPiscar;
-        }
-
-        RestaurarSprites();
-
-        efeitoDanoCoroutine = null;
-    }
-
-    // RESTAURAR APARÊNCIA
-    private void RestaurarSprites()
-    {
-        if (spriteRenderers == null ||
-            estadosOriginais == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < spriteRenderers.Length; i++)
-        {
-            if (spriteRenderers[i] != null)
-            {
-                spriteRenderers[i].enabled =
-                    estadosOriginais[i];
-            }
-        }
-    }
-
-    // RECUPERAR VIDA
-    public void RecuperarVida(int quantidade)
-    {
-        if (isDead || gameOverStarted || quantidade <= 0)
-            return;
-
-        if (currentHealth >= maxHealth)
-            return;
-
-        int vidaAnterior = currentHealth;
-
-        currentHealth = Mathf.Clamp(
-            currentHealth + quantidade,
-            0,
-            maxHealth
-        );
-
-        if (currentHealth > vidaAnterior)
-        {
-            AtualizarInterface();
-
-            Debug.Log("VIDA RECUPERADA! Vida: " +
-                      vidaAnterior + " -> " + currentHealth);
-        }
-    }
-
-    // ATUALIZAR CORAÇÕES
-    private void AtualizarInterface()
-    {
-        if (heartUI != null)
-        {
-            heartUI.UpdateHearts(currentHealth);
-        }
-        else
-        {
-            Debug.LogWarning(
-                "PlayerHealth: HeartUI não foi encontrado."
-            );
-        }
-    }
-
-    // VOLTAR AO CHECKPOINT
-    private IEnumerator RespawnToCheckpoint()
-    {
-        PararMovimento();
-
-        yield return new WaitForSeconds(respawnDelay);
+        if (lives <= 0)
+            lives = maxLives;
 
         if (GameManager.instance != null)
         {
-            transform.position =
-                GameManager.instance.GetSpawnPosition();
-        }
-        else
-        {
-            Debug.LogError("GameManager não encontrado!");
+            if (GameManager.instance.TentarConsumirVidasSalvas(out int vidasSalvas))
+                lives = Mathf.Clamp(vidasSalvas, 0, maxLives);
         }
 
-        currentHealth = maxHealth;
         AtualizarInterface();
 
-        PararMovimento();
-
-        yield return new WaitForSeconds(0.2f);
-
-        isDead = false;
+        Debug.Log("JOGADOR INICIADO!");
+        Debug.Log("VIDAS: " + lives);
+        Debug.Log("VIDA: " + currentHealth);
     }
 
-    // GAME OVER
-    private IEnumerator GameOver()
+    private void EncontrarHeartUI()
     {
-        PararMovimento();
+        if (heartUI == null)
+            heartUI = FindFirstObjectByType<HeartUI>(FindObjectsInactive.Include);
+    }
 
-        yield return new WaitForSeconds(gameOverDelay);
+    public void TakeDamage(int damage)
+    {
+        if (estaMorrendo || invulneravel || gameOverAtivado)
+            return;
 
-        if (GameOverManager.Instance != null)
+        if (damage <= 0)
+            return;
+
+        Debug.Log("DANO RECEBIDO: " + damage);
+
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        Debug.Log("VIDA ATUAL: " + currentHealth);
+        Debug.Log("VIDAS RESTANTES: " + lives);
+
+        if (controle != null)
+            controle.TremerAoReceberDano();
+
+        AtualizarInterface();
+
+        if (currentHealth <= 0)
         {
-            GameOverManager.Instance.ShowGameOver();
-            Time.timeScale = 0f;
+            StartCoroutine(Morrer());
         }
         else
         {
-            Debug.LogError("GameOverManager não encontrado!");
-
-            gameOverStarted = false;
-            isDead = false;
+            AtivarInvulnerabilidade();
         }
     }
 
-    // PARAR MOVIMENTO
-    private void PararMovimento()
+    private void AtivarInvulnerabilidade()
     {
+        invulneravel = true;
+
+        if (rotinaInvulnerabilidade != null)
+            StopCoroutine(rotinaInvulnerabilidade);
+
+        rotinaInvulnerabilidade = StartCoroutine(TempoDeInvulnerabilidade());
+    }
+
+    private IEnumerator Morrer()
+    {
+        if (estaMorrendo || gameOverAtivado)
+            yield break;
+
+        estaMorrendo = true;
+
+        lives--;
+        lives = Mathf.Clamp(lives, 0, maxLives);
+
+        Debug.Log("MORTE!");
+        Debug.Log("VIDAS RESTANTES: " + lives);
+
+        if (lives > 0)
+        {
+            yield return new WaitForSeconds(respawnDelay);
+            Respawnar();
+        }
+        else
+        {
+            gameOverAtivado = true;
+
+            yield return new WaitForSeconds(gameOverDelay);
+
+            GameOver();
+        }
+    }
+
+    private void Respawnar()
+    {
+        Debug.LogError("RESPAWNAR FOI CHAMADO!");
+
+        if (GameManager.instance != null)
+            transform.position = GameManager.instance.GetSpawnPosition();
+        else
+            Debug.LogError("GameManager não encontrado!");
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
         }
-    }
-
-    // REINICIAR VIDAS
-    public void ResetarVidas()
-    {
-        StopAllCoroutines();
-
-        efeitoDanoCoroutine = null;
-        RestaurarSprites();
-
-        Time.timeScale = 1f;
-
-        maxHealth = Mathf.Max(1, maxHealth);
-        maxLives = Mathf.Max(1, maxLives);
 
         currentHealth = maxHealth;
-        lives = maxLives;
 
-        isDead = false;
-        gameOverStarted = false;
-
-        PararMovimento();
         AtualizarInterface();
 
-        Debug.Log("Vidas reiniciadas. Vida: " +
-                  currentHealth + "/" + maxHealth +
-                  " | Vidas restantes: " + lives);
+        estaMorrendo = false;
+
+        AtivarInvulnerabilidade();
+
+        Debug.Log("Jogador voltou ao checkpoint!");
+    }
+
+    private IEnumerator TempoDeInvulnerabilidade()
+    {
+        yield return new WaitForSeconds(tempoInvulnerabilidade);
+
+        invulneravel = false;
+        rotinaInvulnerabilidade = null;
+
+        Debug.Log("INVULNERABILIDADE TERMINOU!");
+    }
+
+    private void GameOver()
+    {
+        Debug.Log("GAME OVER!");
+
+        if (GameOverManager.Instance != null)
+            GameOverManager.Instance.GameOver();
+        else
+            Debug.LogError("GameOverManager não encontrado!");
+    }
+
+    private void AtualizarInterface()
+    {
+        EncontrarHeartUI();
+
+        if (heartUI != null)
+            heartUI.UpdateHearts(currentHealth);
+        else
+            Debug.LogError("PlayerHealth: HeartUI não encontrado!");
+    }
+
+    public void RecuperarVida(int quantidade)
+    {
+        if (estaMorrendo || gameOverAtivado)
+            return;
+
+        currentHealth += quantidade;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        AtualizarInterface();
+    }
+
+    public void Curar(int quantidade)
+    {
+        RecuperarVida(quantidade);
     }
 }

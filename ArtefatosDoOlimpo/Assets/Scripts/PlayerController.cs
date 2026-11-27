@@ -21,6 +21,10 @@ public class PlayerController : MonoBehaviour
     [Header("Petrificacao")]
     public bool petrificado;
 
+    [Header("Efeito de dano")]
+    public float intensidadeTremida = 0.08f;
+    public float duracaoTremida = 0.2f;
+
     private Rigidbody2D rb;
     private Animator anim;
 
@@ -33,9 +37,12 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer[] sprites;
     private Color[] coresOriginais;
+    private Vector3[] posicoesOriginaisSprites;
 
     private RigidbodyConstraints2D restricoesOriginais;
+
     private Coroutine rotinaPetrificacao;
+    private Coroutine rotinaTremida;
 
     private void Awake()
     {
@@ -43,11 +50,14 @@ public class PlayerController : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
 
         sprites = GetComponentsInChildren<SpriteRenderer>(true);
+
         coresOriginais = new Color[sprites.Length];
+        posicoesOriginaisSprites = new Vector3[sprites.Length];
 
         for (int i = 0; i < sprites.Length; i++)
         {
             coresOriginais[i] = sprites[i].color;
+            posicoesOriginaisSprites[i] = sprites[i].transform.localPosition;
         }
 
         if (rb == null)
@@ -64,7 +74,6 @@ public class PlayerController : MonoBehaviour
 
         if (anim != null)
         {
-            // A física controla o movimento, não a animação.
             anim.applyRootMotion = false;
         }
         else
@@ -94,18 +103,15 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Captura o movimento.
         moveInput = Input.GetAxisRaw("Horizontal");
 
         CheckGround();
 
-        // Atualiza as animações.
         AtualizarAnimacoes(
             Mathf.Abs(moveInput) > 0.01f && isGrounded,
             !isGrounded
         );
 
-        // Som de aterrissagem.
         if (hasCheckedGround && !wasGrounded && isGrounded)
         {
             if (AudioManager.Instance != null)
@@ -115,7 +121,6 @@ public class PlayerController : MonoBehaviour
         wasGrounded = isGrounded;
         hasCheckedGround = true;
 
-        // Guarda o comando de pulo para aplicar na física.
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             jumpRequested = true;
@@ -140,13 +145,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Garante que o Rigidbody continue acordado.
         if (!rb.simulated)
             return;
 
         rb.WakeUp();
 
-        // Movimento horizontal independente da animação.
         float velocidadeHorizontal = moveInput * speed;
 
         rb.linearVelocity = new Vector2(
@@ -154,7 +157,6 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity.y
         );
 
-        // Executa o pulo na física.
         if (jumpRequested)
         {
             jumpRequested = false;
@@ -306,6 +308,68 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // EFEITO DE DANO
+    public void TremerAoReceberDano()
+    {
+        if (rotinaTremida != null)
+        {
+            StopCoroutine(rotinaTremida);
+        }
+
+        rotinaTremida = StartCoroutine(ExecutarTremida());
+    }
+
+    private IEnumerator ExecutarTremida()
+    {
+        float tempo = 0f;
+
+        while (tempo < duracaoTremida)
+        {
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                if (sprites[i] == null)
+                    continue;
+
+                float deslocamentoX = Random.Range(
+                    -intensidadeTremida,
+                    intensidadeTremida
+                );
+
+                float deslocamentoY = Random.Range(
+                    -intensidadeTremida,
+                    intensidadeTremida
+                );
+
+                sprites[i].transform.localPosition =
+                    posicoesOriginaisSprites[i] +
+                    new Vector3(deslocamentoX, deslocamentoY, 0f);
+            }
+
+            tempo += Time.deltaTime;
+
+            yield return null;
+        }
+
+        RestaurarPosicoesSprites();
+
+        rotinaTremida = null;
+    }
+
+    private void RestaurarPosicoesSprites()
+    {
+        if (sprites == null || posicoesOriginaisSprites == null)
+            return;
+
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            if (sprites[i] != null)
+            {
+                sprites[i].transform.localPosition =
+                    posicoesOriginaisSprites[i];
+            }
+        }
+    }
+
     // PETRIFICACAO
     public void Petrificar(float duracao)
     {
@@ -337,7 +401,6 @@ public class PlayerController : MonoBehaviour
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
 
-        // Aparencia de pedra.
         for (int i = 0; i < sprites.Length; i++)
         {
             if (sprites[i] != null)
@@ -362,7 +425,6 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(duracao);
 
-        // Recupera as cores.
         RestaurarCores();
 
         if (rb != null)
@@ -395,6 +457,13 @@ public class PlayerController : MonoBehaviour
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.PararPassos();
+
+        if (rotinaTremida != null)
+        {
+            StopCoroutine(rotinaTremida);
+            rotinaTremida = null;
+            RestaurarPosicoesSprites();
+        }
 
         if (petrificado)
         {

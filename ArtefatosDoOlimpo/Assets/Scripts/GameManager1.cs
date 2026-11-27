@@ -1,7 +1,7 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Transform startPoint;
 
     private Vector3 currentSpawnPosition;
-    private bool checkpointDefinido = false;
+    private bool checkpointDefinido;
 
     [Header("Artefatos do Olimpo")]
     public bool espadaColetada;
@@ -19,7 +19,13 @@ public class GameManager : MonoBehaviour
     public bool raioColetado;
 
     private SaveData dadosCarregados;
-    private bool continuacaoPendente = false;
+    private bool continuacaoPendente;
+    private bool vidasSalvasConsumidas;
+
+    public bool TemJogoSalvo
+    {
+        get { return SaveSystem.TemSave(); }
+    }
 
     private void Awake()
     {
@@ -32,23 +38,27 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        Debug.Log("GameManager iniciado!");
-    }
-
-    private void OnEnable()
-    {
         SceneManager.sceneLoaded += AoCarregarCena;
     }
 
-    private void OnDisable()
+    private void Start()
     {
-        SceneManager.sceneLoaded -= AoCarregarCena;
+        EncontrarSpawnInicial();
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            SceneManager.sceneLoaded -= AoCarregarCena;
+            instance = null;
+        }
     }
 
     private void AoCarregarCena(Scene cena, LoadSceneMode modo)
     {
-        // Se estamos continuando uma partida salva.
-        if (dadosCarregados != null &&
+        if (continuacaoPendente &&
+            dadosCarregados != null &&
             cena.name == dadosCarregados.cenaCheckpoint)
         {
             currentSpawnPosition = new Vector3(
@@ -58,24 +68,6 @@ public class GameManager : MonoBehaviour
             );
 
             checkpointDefinido = true;
-            GameObject jogadorObjeto = GameObject.FindGameObjectWithTag("Player");
-
-if (jogadorObjeto != null)
-{
-    jogadorObjeto.transform.position = currentSpawnPosition;
-
-    Rigidbody2D rbJogador = jogadorObjeto.GetComponent<Rigidbody2D>();
-
-    if (rbJogador != null)
-    {
-        rbJogador.linearVelocity = Vector2.zero;
-        rbJogador.angularVelocity = 0f;
-    }
-}
-else
-{
-    Debug.LogError("Não foi encontrado um jogador com a Tag Player!");
-}
 
             espadaColetada = dadosCarregados.espadaColetada;
             escudoColetado = dadosCarregados.escudoColetado;
@@ -88,32 +80,58 @@ else
                 );
             }
 
-            continuacaoPendente = true;
+            PosicionarJogador(currentSpawnPosition);
 
-            Debug.Log("Progresso restaurado na cena: " + cena.name);
+            Debug.Log("PROGRESSO CARREGADO: " + cena.name);
             return;
         }
 
-        // Em uma fase normal, procura o ponto inicial daquela cena.
-        GameObject objetoStart = GameObject.Find("Start Point");
+        EncontrarSpawnInicial();
+    }
 
-        if (objetoStart != null)
+    private void EncontrarSpawnInicial()
+    {
+        GameObject objetoSpawn = GameObject.Find("Start Point");
+
+        if (objetoSpawn != null)
         {
-            currentSpawnPosition = objetoStart.transform.position;
+            startPoint = objetoSpawn.transform;
+            currentSpawnPosition = startPoint.position;
             checkpointDefinido = true;
 
-            Debug.Log("Start Point encontrado na cena: " + cena.name);
+            Debug.Log("Spawn inicial encontrado: " + currentSpawnPosition);
         }
         else
         {
             Debug.LogWarning(
-                "Não foi encontrado um objeto chamado Start Point na cena " +
-                cena.name
+                "Não encontrei um objeto chamado Start Point nesta cena."
             );
         }
     }
 
-    // CHECKPOINT
+    private void PosicionarJogador(Vector3 posicao)
+    {
+        PlayerHealth jogador =
+            FindFirstObjectByType<PlayerHealth>();
+
+        if (jogador == null)
+        {
+            Debug.LogError("Não encontrei o PlayerHealth na cena.");
+            return;
+        }
+
+        Rigidbody2D rb = jogador.GetComponent<Rigidbody2D>();
+
+        if (rb != null)
+        {
+            rb.position = new Vector2(posicao.x, posicao.y);
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        jogador.transform.position = posicao;
+    }
+
     public void SetCheckpoint(Vector3 posicao, PlayerHealth jogador)
     {
         currentSpawnPosition = posicao;
@@ -127,7 +145,7 @@ else
         dados.posicaoY = posicao.y;
         dados.posicaoZ = posicao.z;
 
-        dados.vidas = jogador != null ? jogador.lives : 3;
+        dados.vidas = jogador != null ? jogador.lives : 2;
 
         dados.espadaColetada = espadaColetada;
         dados.escudoColetado = escudoColetado;
@@ -139,24 +157,20 @@ else
                 ContadorMoedas.Instance.ObterMoedasColetadas();
         }
 
+        dadosCarregados = dados;
+        continuacaoPendente = false;
+        vidasSalvasConsumidas = false;
+
         SaveSystem.Salvar(dados);
 
-        Debug.Log("CHECKPOINT SALVO!");
-        Debug.Log("Cena: " + dados.cenaCheckpoint);
-        Debug.Log("Vidas salvas: " + dados.vidas);
+        Debug.Log("CHECKPOINT SALVO: " + dados.cenaCheckpoint);
     }
 
     public Vector3 GetSpawnPosition()
     {
         if (!checkpointDefinido)
         {
-            GameObject objetoStart = GameObject.Find("Start Point");
-
-            if (objetoStart != null)
-            {
-                currentSpawnPosition = objetoStart.transform.position;
-                checkpointDefinido = true;
-            }
+            EncontrarSpawnInicial();
         }
 
         return currentSpawnPosition;
@@ -166,106 +180,124 @@ else
     {
         vidasSalvas = 0;
 
-        if (!continuacaoPendente || dadosCarregados == null)
+        if (!continuacaoPendente ||
+            dadosCarregados == null ||
+            vidasSalvasConsumidas)
+        {
             return false;
+        }
 
         vidasSalvas = dadosCarregados.vidas;
-
-        continuacaoPendente = false;
-        dadosCarregados = null;
+        vidasSalvasConsumidas = true;
 
         return true;
     }
 
-    // CONTINUAR JOGO
     public void ContinuarJogo()
     {
         SaveData dados = SaveSystem.Carregar();
 
         if (dados == null)
         {
-            Debug.LogWarning("Não existe uma partida para continuar.");
+            Debug.LogWarning("Não existe um jogo salvo para continuar.");
             return;
         }
 
-        Time.timeScale = 1f;
-
         dadosCarregados = dados;
+        continuacaoPendente = true;
+        vidasSalvasConsumidas = false;
 
-        if (TransicaoCenas.Instance != null)
-        {
-            TransicaoCenas.Instance.TrocarCena(dados.cenaCheckpoint);
-        }
-        else
-        {
-            SceneManager.LoadScene(dados.cenaCheckpoint);
-        }
+        Debug.Log("Continuando jogo na cena: " + dados.cenaCheckpoint);
+
+        SceneManager.LoadScene(dados.cenaCheckpoint);
     }
 
-    // NOVO JOGO
     public void NovoJogo()
     {
         SaveSystem.ApagarSave();
 
+        dadosCarregados = null;
+        continuacaoPendente = false;
+        vidasSalvasConsumidas = false;
+
+        checkpointDefinido = false;
+
         espadaColetada = false;
         escudoColetado = false;
         raioColetado = false;
-
-        dadosCarregados = null;
-        continuacaoPendente = false;
-
-        checkpointDefinido = false;
 
         if (ContadorMoedas.Instance != null)
         {
             ContadorMoedas.Instance.ResetarMoedas();
         }
 
-        // Apaga dados antigos dos sistemas anteriores.
-        PlayerPrefs.DeleteKey("Artefato_Espada");
-        PlayerPrefs.DeleteKey("Artefato_Escudo");
-        PlayerPrefs.DeleteKey("Artefato_Raio");
-        PlayerPrefs.DeleteKey("TotalMoedas");
-        PlayerPrefs.DeleteKey("MoedasColetadas");
-
-        PlayerPrefs.Save();
+        EncontrarSpawnInicial();
 
         Debug.Log("NOVO JOGO INICIADO!");
     }
 
-    // ARTEFATOS
+    // COLETA DOS ARTEFATOS
+
     public void ColetarEspada()
     {
         espadaColetada = true;
-        Debug.Log("ESPADA DO OLIMPO COLETADA!");
+        SalvarProgressoAtual();
+
+        Debug.Log("ESPADA COLETADA!");
     }
 
     public void ColetarEscudo()
     {
         escudoColetado = true;
-        Debug.Log("ESCUDO DO OLIMPO COLETADO!");
+        SalvarProgressoAtual();
+
+        Debug.Log("ESCUDO COLETADO!");
     }
 
     public void ColetarRaio()
     {
         raioColetado = true;
-        Debug.Log("RAIO DO OLIMPO COLETADO!");
+        SalvarProgressoAtual();
+
+        Debug.Log("RAIO COLETADO!");
     }
 
     public bool TodosArtefatosColetados()
     {
-        return espadaColetada && escudoColetado && raioColetado;
+        return espadaColetada &&
+               escudoColetado &&
+               raioColetado;
     }
 
-    public void ResetarArtefatos()
+    private void SalvarProgressoAtual()
     {
-        espadaColetada = false;
-        escudoColetado = false;
-        raioColetado = false;
+        if (!checkpointDefinido)
+            return;
 
-        PlayerPrefs.DeleteKey("Artefato_Espada");
-        PlayerPrefs.DeleteKey("Artefato_Escudo");
-        PlayerPrefs.DeleteKey("Artefato_Raio");
-        PlayerPrefs.Save();
+        SaveData dados = new SaveData();
+
+        dados.cenaCheckpoint = SceneManager.GetActiveScene().name;
+
+        dados.posicaoX = currentSpawnPosition.x;
+        dados.posicaoY = currentSpawnPosition.y;
+        dados.posicaoZ = currentSpawnPosition.z;
+
+        dados.vidas = dadosCarregados != null
+            ? dadosCarregados.vidas
+            : 2;
+
+        dados.espadaColetada = espadaColetada;
+        dados.escudoColetado = escudoColetado;
+        dados.raioColetado = raioColetado;
+
+        if (ContadorMoedas.Instance != null)
+        {
+            dados.moedasColetadas =
+                ContadorMoedas.Instance.ObterMoedasColetadas();
+        }
+
+        dadosCarregados = dados;
+
+        SaveSystem.Salvar(dados);
     }
 }
