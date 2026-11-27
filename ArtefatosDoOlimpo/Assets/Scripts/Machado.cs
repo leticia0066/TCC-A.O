@@ -7,7 +7,6 @@ public class Machado : MonoBehaviour
     public float speed = 8f;
 
     [Header("Rotacao")]
-    [Tooltip("Graus de giro por segundo. 500 significa mais de uma volta completa por segundo.")]
     public float rotationSpeed = 500f;
 
     [Header("Tempo de vida")]
@@ -35,7 +34,6 @@ public class Machado : MonoBehaviour
         transform.position +=
             (Vector3)(direction * speed * Time.deltaTime);
 
-        // Gira continuamente durante o voo.
         transform.Rotate(
             0f,
             0f,
@@ -48,21 +46,23 @@ public class Machado : MonoBehaviour
         if (!lancado)
             return;
 
-        if (collision.CompareTag("Player"))
-        {
-            PlayerHealth vida =
-                collision.GetComponentInParent<PlayerHealth>();
+        // Ignora o próprio Minotauro.
+        if (collision.GetComponentInParent<Minotauro>() != null)
+            return;
 
-            if (vida != null)
-                vida.TakeDamage(1);
+        // Procura o PlayerHealth no objeto atingido ou nos pais.
+        PlayerHealth vida =
+            collision.GetComponentInParent<PlayerHealth>();
+
+        if (vida != null)
+        {
+            Debug.Log("MACHADO ATINGIU O JOGADOR!");
+
+            vida.TakeDamage(1);
 
             Destroy(gameObject);
             return;
         }
-
-        // Ignora o próprio Minotauro.
-        if (collision.GetComponentInParent<Minotauro>() != null)
-            return;
 
         // Desaparece ao atingir o cenário ou outro obstáculo.
         Destroy(gameObject);
