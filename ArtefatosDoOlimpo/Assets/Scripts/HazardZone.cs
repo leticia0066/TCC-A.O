@@ -1,104 +1,59 @@
 
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerHazard : MonoBehaviour
+public class HazardZone : MonoBehaviour
 {
-    [Header("Checkpoint")]
-    [Tooltip("Posição inicial usada caso o GameManager não esteja disponível.")]
-    public Vector3 respawnPoint;
+    [Header("Dano")]
+    public int dano = 1;
 
-    [Header("Configuração do Perigo")]
-    [Tooltip("Tempo mínimo para impedir respawns repetidos.")]
-    public float respawnCooldown = 0.2f;
+    [Header("Intervalo entre danos")]
+    public float intervaloEntreDanos = 1f;
 
-    private Rigidbody2D rb;
-    private bool respawning;
+    private PlayerHealth playerHealth;
+    private float proximoDano;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-    }
+        playerHealth = GetComponent<PlayerHealth>();
 
-    private void Start()
-    {
-        // Guarda a posição inicial como alternativa.
-        respawnPoint = transform.position;
+        if (playerHealth == null)
+        {
+            Debug.LogError(
+                "PlayerHazard: PlayerHealth não encontrado no Player!"
+            );
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        VerificarPerigo(collision);
+        AplicarDano(collision);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        VerificarPerigo(collision);
+        AplicarDano(collision);
     }
 
-    private void VerificarPerigo(Collider2D collision)
+    private void AplicarDano(Collider2D collision)
     {
         if (!collision.CompareTag("Hazard"))
             return;
 
-        Respawn();
-    }
-
-    public void Respawn()
-    {
-        if (respawning)
+        if (playerHealth == null)
             return;
 
-        respawning = true;
+        if (playerHealth.EstaMorrendo)
+            return;
 
-        Vector3 destino;
+        if (playerHealth.EstaInvulneravel)
+            return;
 
-        // Busca a posição do último checkpoint no GameManager.
-        if (GameManager.instance != null)
-        {
-            destino = GameManager.instance.GetSpawnPosition();
+        if (Time.time < proximoDano)
+            return;
 
-            Debug.Log("Retornando ao checkpoint do GameManager: " + destino);
-        }
-        else
-        {
-            // Alternativa caso o GameManager não exista.
-            destino = respawnPoint;
+        proximoDano = Time.time + intervaloEntreDanos;
 
-            Debug.LogWarning(
-                "GameManager não encontrado! Retornando à posição inicial."
-            );
-        }
-
-        // Teletransporta o jogador.
-        transform.position = destino;
-
-        // Interrompe o movimento físico.
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-        }
-
-        Debug.Log("Jogador retornou ao checkpoint após tocar no perigo.");
-
-        StartCoroutine(LiberarRespawn());
-    }
-
-    private IEnumerator LiberarRespawn()
-    {
-        yield return new WaitForSecondsRealtime(
-            Mathf.Max(0.05f, respawnCooldown)
-        );
-
-        respawning = false;
-    }
-
-    public void SetNewCheckpoint(Vector3 newPosition)
-    {
-        respawnPoint = newPosition;
-
-        Debug.Log("Posição alternativa atualizada: " + newPosition);
+        playerHealth.TakeDamage(dano);
     }
 }
