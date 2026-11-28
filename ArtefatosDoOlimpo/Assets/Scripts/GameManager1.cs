@@ -22,6 +22,11 @@ public class GameManager : MonoBehaviour
     private bool continuacaoPendente;
     private bool vidasSalvasConsumidas;
 
+    // Estado temporário do jogador entre as fases.
+    private int vidaJogadorSalva;
+    private int tentativasJogadorSalvas;
+    private bool estadoJogadorDisponivel;
+
     public bool TemJogoSalvo
     {
         get { return SaveSystem.TemSave(); }
@@ -112,8 +117,7 @@ public class GameManager : MonoBehaviour
     private void PosicionarJogador(Vector3 posicao)
     {
         Debug.LogWarning(
-            "ATENÇÃO: GAMEMANAGER ESTÁ POSICIONANDO O PLAYER! Posição: "
-            + posicao
+            "GAMEMANAGER POSICIONANDO O PLAYER: " + posicao
         );
 
         PlayerHealth jogador =
@@ -125,16 +129,53 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        Rigidbody2D rb = jogador.GetComponent<Rigidbody2D>();
+        BloquearTeleportePlayer bloqueador =
+            jogador.GetComponent<BloquearTeleportePlayer>();
 
-        if (rb != null)
+        if (bloqueador != null)
         {
-            rb.position = new Vector2(posicao.x, posicao.y);
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
+            bloqueador.AutorizarTeleporte(posicao);
+        }
+        else
+        {
+            Rigidbody2D rb = jogador.GetComponent<Rigidbody2D>();
+
+            if (rb != null)
+            {
+                rb.position = new Vector2(posicao.x, posicao.y);
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
+
+            jogador.transform.position = posicao;
         }
 
-        jogador.transform.position = posicao;
+        Physics2D.SyncTransforms();
+    }
+
+    // Guarda vida e tentativas enquanto o jogador troca de fase.
+    public void SalvarEstadoJogador(int vida, int tentativas)
+    {
+        vidaJogadorSalva = vida;
+        tentativasJogadorSalvas = tentativas;
+        estadoJogadorDisponivel = true;
+    }
+
+    // Recupera vida e tentativas na próxima fase.
+    public bool TentarCarregarEstadoJogador(
+        out int vida,
+        out int tentativas)
+    {
+        vida = 0;
+        tentativas = 0;
+
+        if (!estadoJogadorDisponivel)
+            return false;
+
+        vida = vidaJogadorSalva;
+        tentativas = tentativasJogadorSalvas;
+
+        return true;
     }
 
     public void SetCheckpoint(Vector3 posicao, PlayerHealth jogador)
@@ -212,6 +253,9 @@ public class GameManager : MonoBehaviour
         continuacaoPendente = true;
         vidasSalvasConsumidas = false;
 
+        // O progresso carregado será inicializado pelo PlayerHealth.
+        estadoJogadorDisponivel = false;
+
         Debug.Log("Continuando jogo na cena: " + dados.cenaCheckpoint);
 
         SceneManager.LoadScene(dados.cenaCheckpoint);
@@ -226,6 +270,11 @@ public class GameManager : MonoBehaviour
         vidasSalvasConsumidas = false;
 
         checkpointDefinido = false;
+
+        // Limpa o estado temporário do jogador.
+        estadoJogadorDisponivel = false;
+        vidaJogadorSalva = 0;
+        tentativasJogadorSalvas = 0;
 
         espadaColetada = false;
         escudoColetado = false;

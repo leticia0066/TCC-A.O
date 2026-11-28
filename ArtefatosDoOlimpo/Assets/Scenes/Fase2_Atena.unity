@@ -1765,6 +1765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CaixaArmadilha
   gravidadeQueda: 3
+  dano: 1
   destruirDepoisDeAtingirJogador: 1
 --- !u!61 &169675449
 BoxCollider2D:
@@ -4426,6 +4427,7 @@ GameObject:
   - component: {fileID: 576908447}
   - component: {fileID: 576908446}
   - component: {fileID: 576908445}
+  - component: {fileID: 576908450}
   m_Layer: 0
   m_Name: "\xC1gua"
   m_TagString: Hazard
@@ -4608,7 +4610,7 @@ TilemapRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_ChunkCullingBounds: {x: 0.04090911, y: 0.04090911, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -13398,6 +13400,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &576908450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576908443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cda8eb067318d843b0f5f0b278666b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HazardZone
+  dano: 6
+  intervaloEntreDanos: 1
 --- !u!1 &585828199
 GameObject:
   m_ObjectHideFlags: 0
@@ -14585,7 +14601,7 @@ TilemapRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_ChunkCullingBounds: {x: 0.04090911, y: 0.04090911, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -297400,8 +297416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6b92339d7f9f494188d707f3bfde6ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoedasHUD
-  iconeMoeda: {fileID: 0}
-  textoQuantidade: {fileID: 0}
+  iconeMoeda: {fileID: 737497786}
+  textoQuantidade: {fileID: 1034925193}
 --- !u!1 &1161066485
 GameObject:
   m_ObjectHideFlags: 0
@@ -299333,6 +299349,7 @@ GameObject:
   - component: {fileID: 1383130676}
   - component: {fileID: 1383130675}
   - component: {fileID: 1383130684}
+  - component: {fileID: 1383130685}
   m_Layer: 0
   m_Name: 'Player '
   m_TagString: Player
@@ -299352,8 +299369,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cda8eb067318d843b0f5f0b278666b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HazardZone
-  respawnPoint: {x: 0, y: 0, z: 0}
-  respawnCooldown: 0.2
+  dano: 1
+  intervaloEntreDanos: 1
 --- !u!95 &1383130676
 Animator:
   serializedVersion: 7
@@ -299408,8 +299425,7 @@ MonoBehaviour:
   heartUI: {fileID: 0}
   respawnDelay: 0.5
   gameOverDelay: 0.5
-  duracaoPiscar: 0.45
-  intervaloPiscar: 0.07
+  tempoInvulnerabilidade: 1.5
 --- !u!114 &1383130679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299435,6 +299451,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   petrificado: 0
+  intensidadeTremida: 0.08
+  duracaoTremida: 0.2
 --- !u!61 &1383130680
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -299592,11 +299610,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383130674}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e14fd7f11870de7439e54b754ea36fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatformPassenger
+--- !u!114 &1383130685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383130674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ac25b7fbed3594badd7a19ed7e69fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BloquearTeleportePlayer
+  distanciaMaximaPorFrame: 0.75
 --- !u!1 &1396013074
 GameObject:
   m_ObjectHideFlags: 0
@@ -307223,9 +307254,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
   hearts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1166866736}
+  - {fileID: 88571535}
+  - {fileID: 1041939063}
   fullHeart: {fileID: -4642235133731878116, guid: 88660f339d67bd04aabd5c75247ea2f5, type: 3}
   halfHeart: {fileID: 3725405004627043663, guid: 9fb29429fba954041b7b54e7d052e0f8, type: 3}
   emptyHeart: {fileID: 3869177361480245116, guid: 23c3d0d8fafba854284fe5a231bd2064, type: 3}

@@ -32,7 +32,6 @@ public class BloquearTeleportePlayer : MonoBehaviour
         if (!inicializado || rb == null || vida == null)
             return;
 
-        // Não interfere no respawn verdadeiro após a morte.
         if (vida.currentHealth <= 0 || vida.EstaMorrendo)
         {
             ultimaPosicao = rb.position;
@@ -46,12 +45,11 @@ public class BloquearTeleportePlayer : MonoBehaviour
             posicaoAtual
         );
 
-        // Bloqueia deslocamentos bruscos enquanto o jogador está vivo.
         if (distancia > distanciaMaximaPorFrame)
         {
             Debug.LogWarning(
-                "TELEPORTE INDEVIDO BLOQUEADO! "
-                + "Distância detectada: " + distancia
+                "TELEPORTE INDEVIDO BLOQUEADO! Distância: "
+                + distancia
             );
 
             rb.position = ultimaPosicao;
@@ -68,5 +66,24 @@ public class BloquearTeleportePlayer : MonoBehaviour
         }
 
         ultimaPosicao = posicaoAtual;
+    }
+
+    // Permite teletransportes legítimos, como checkpoints e saves.
+    public void AutorizarTeleporte(Vector3 destino)
+    {
+        Vector2 destino2D = new Vector2(
+            destino.x,
+            destino.y
+        );
+
+        rb.position = destino2D;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+
+        transform.position = destino;
+
+        ultimaPosicao = destino2D;
+
+        Debug.Log("TELEPORTE AUTORIZADO: " + destino);
     }
 }

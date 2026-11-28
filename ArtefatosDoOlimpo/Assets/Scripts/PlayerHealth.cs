@@ -24,6 +24,7 @@ public class PlayerHealth : MonoBehaviour
 
     private Rigidbody2D rb;
     private PlayerController controle;
+    private BloquearTeleportePlayer bloqueador;
 
     private bool estaMorrendo;
     private bool invulneravel;
@@ -38,31 +39,63 @@ public class PlayerHealth : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         controle = GetComponent<PlayerController>();
+        bloqueador = GetComponent<BloquearTeleportePlayer>();
 
         EncontrarHeartUI();
     }
 
     private void Start()
     {
-        currentHealth = maxHealth;
-
-        if (lives <= 0)
-            lives = maxLives;
+        bool estadoRestaurado = false;
 
         if (GameManager.instance != null)
         {
-            if (GameManager.instance.TentarConsumirVidasSalvas(
-                out int vidasSalvas))
+            estadoRestaurado =
+                GameManager.instance.TentarCarregarEstadoJogador(
+                    out int vidaSalva,
+                    out int tentativasSalvas
+                );
+
+            if (estadoRestaurado)
             {
-                lives = Mathf.Clamp(vidasSalvas, 0, maxLives);
+                currentHealth = Mathf.Clamp(
+                    vidaSalva, 0, maxHealth
+                );
+
+                lives = Mathf.Clamp(
+                    tentativasSalvas, 0, maxLives
+                );
+            }
+        }
+
+        if (!estadoRestaurado)
+        {
+            currentHealth = maxHealth;
+
+            if (lives <= 0)
+                lives = maxLives;
+
+            if (GameManager.instance != null)
+            {
+                if (GameManager.instance.TentarConsumirVidasSalvas(
+                    out int vidasSalvas))
+                {
+                    lives = Mathf.Clamp(vidasSalvas, 0, maxLives);
+                }
             }
         }
 
         AtualizarInterface();
+        SalvarEstadoAtual();
 
         Debug.Log("PLAYER INICIADO");
         Debug.Log("VIDA: " + currentHealth + "/" + maxHealth);
         Debug.Log("TENTATIVAS: " + lives + "/" + maxLives);
+    }
+
+    private void OnDestroy()
+    {
+        SalvarEstadoAtual();
     }
 
     private void EncontrarHeartUI()
@@ -71,6 +104,17 @@ public class PlayerHealth : MonoBehaviour
         {
             heartUI = FindFirstObjectByType<HeartUI>(
                 FindObjectsInactive.Include
+            );
+        }
+    }
+
+    private void SalvarEstadoAtual()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.SalvarEstadoJogador(
+                currentHealth,
+                lives
             );
         }
     }
@@ -90,6 +134,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("VIDA ATUAL: " + currentHealth);
 
         AtualizarInterface();
+        SalvarEstadoAtual();
 
         if (controle != null)
             controle.TremerAoReceberDano();
@@ -118,6 +163,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("JOGADOR MORREU!");
         Debug.Log("TENTATIVAS RESTANTES: " + lives);
 
+        SalvarEstadoAtual();
         PararMovimento();
 
         if (lives > 0)
@@ -138,7 +184,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawnar()
     {
-        // PROTEÇÃO: não permite respawn com vida restante.
         if (currentHealth > 0)
         {
             Debug.LogWarning(
@@ -162,14 +207,21 @@ public class PlayerHealth : MonoBehaviour
 
         PararMovimento();
 
-        transform.position = destino;
-
-        if (rb != null)
+        if (bloqueador != null)
         {
-            rb.position = new Vector2(destino.x, destino.y);
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
+            bloqueador.AutorizarTeleporte(destino);
         }
+        else
+        {
+            transform.position = destino;
+
+            if (rb != null)
+            {
+                rb.position = new Vector2(destino.x, destino.y);
+            }
+        }
+
+        Physics2D.SyncTransforms();
 
         currentHealth = maxHealth;
 
@@ -177,6 +229,7 @@ public class PlayerHealth : MonoBehaviour
 
         estaMorrendo = false;
 
+        SalvarEstadoAtual();
         AtivarInvulnerabilidade();
 
         Debug.Log("RESPAWN CONCLUÍDO!");
@@ -254,6 +307,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         AtualizarInterface();
+        SalvarEstadoAtual();
     }
 
     public void Curar(int quantidade)

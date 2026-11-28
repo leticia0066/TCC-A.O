@@ -17,14 +17,36 @@ public class ContadorMoedas : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning(
+                "CONTADOR DUPLICADO! Destruindo a cópia: " +
+                gameObject.name
+            );
+
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
+
         DontDestroyOnLoad(gameObject);
 
         QuantidadeAtual = 0;
+
+        Debug.Log(
+            "CONTADOR CRIADO! Objeto: " + gameObject.name
+        );
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log(
+            "CONTADOR DESTRUÍDO! Objeto: " + gameObject.name
+        );
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     public bool RegistrarMoeda(string id)

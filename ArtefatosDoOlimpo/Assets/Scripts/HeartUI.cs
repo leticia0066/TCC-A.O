@@ -22,14 +22,6 @@ public class HeartUI : MonoBehaviour
         maxHealth = Mathf.Max(1, maxHealth);
     }
 
-    private void Start()
-    {
-        if (!ReferenciasValidas())
-            return;
-
-        UpdateHearts(maxHealth);
-    }
-
     private bool ReferenciasValidas()
     {
         if (hearts == null || hearts.Length != 3)
@@ -42,7 +34,9 @@ public class HeartUI : MonoBehaviour
         {
             if (hearts[i] == null)
             {
-                Debug.LogError("HeartUI: falta configurar o coração " + (i + 1));
+                Debug.LogError(
+                    "HeartUI: falta configurar o coração " + (i + 1)
+                );
                 return false;
             }
         }

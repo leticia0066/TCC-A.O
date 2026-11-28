@@ -4511,6 +4511,7 @@ GameObject:
   - component: {fileID: 796469981}
   - component: {fileID: 796469980}
   - component: {fileID: 796469979}
+  - component: {fileID: 796469984}
   m_Layer: 0
   m_Name: Agua
   m_TagString: Hazard
@@ -7737,6 +7738,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &796469984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796469977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cda8eb067318d843b0f5f0b278666b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HazardZone
+  dano: 6
+  intervaloEntreDanos: 1
 --- !u!1 &801980026
 GameObject:
   m_ObjectHideFlags: 0
@@ -11198,6 +11213,7 @@ GameObject:
   - component: {fileID: 1354914496}
   - component: {fileID: 1354914495}
   - component: {fileID: 1354914494}
+  - component: {fileID: 1354914504}
   m_Layer: 7
   m_Name: 'Player '
   m_TagString: Player
@@ -11212,7 +11228,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354914493}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e14fd7f11870de7439e54b754ea36fee, type: 3}
   m_Name: 
@@ -11229,8 +11245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cda8eb067318d843b0f5f0b278666b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HazardZone
-  respawnPoint: {x: 0, y: 0, z: 0}
-  respawnCooldown: 0.2
+  dano: 1
+  intervaloEntreDanos: 1
 --- !u!95 &1354914496
 Animator:
   serializedVersion: 7
@@ -11285,8 +11301,7 @@ MonoBehaviour:
   heartUI: {fileID: 0}
   respawnDelay: 0.5
   gameOverDelay: 0.5
-  duracaoPiscar: 0.45
-  intervaloPiscar: 0.07
+  tempoInvulnerabilidade: 1.5
 --- !u!114 &1354914499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11312,6 +11327,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   petrificado: 0
+  intensidadeTremida: 0.08
+  duracaoTremida: 0.2
 --- !u!61 &1354914500
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11462,6 +11479,19 @@ Transform:
   - {fileID: 495758415}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1354914504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354914493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ac25b7fbed3594badd7a19ed7e69fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BloquearTeleportePlayer
+  distanciaMaximaPorFrame: 0.75
 --- !u!1 &1355860219
 GameObject:
   m_ObjectHideFlags: 0
@@ -205135,9 +205165,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
   hearts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2038987654}
+  - {fileID: 1196144932}
+  - {fileID: 1570704176}
   fullHeart: {fileID: -4642235133731878116, guid: 88660f339d67bd04aabd5c75247ea2f5, type: 3}
   halfHeart: {fileID: 3725405004627043663, guid: 9fb29429fba954041b7b54e7d052e0f8, type: 3}
   emptyHeart: {fileID: 3869177361480245116, guid: 23c3d0d8fafba854284fe5a231bd2064, type: 3}
@@ -212543,8 +212573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6b92339d7f9f494188d707f3bfde6ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoedasHUD
-  iconeMoeda: {fileID: 0}
-  textoQuantidade: {fileID: 0}
+  iconeMoeda: {fileID: 905289105}
+  textoQuantidade: {fileID: 767719418}
 --- !u!4 &2019750828
 Transform:
   m_ObjectHideFlags: 0
