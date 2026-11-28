@@ -22,10 +22,6 @@ public class EsqueletoMiniboss : MonoBehaviour
     public float distanciaDisparo = 5f;
     public float intervaloDisparo = 2f;
 
-    [Header("Dano no jogador")]
-    public int dano = 1;
-    public float intervaloEntreDanos = 1f;
-
     [Header("Sons")]
     public AudioSource audioSource;
     public AudioClip somAtaque;
@@ -47,7 +43,6 @@ public class EsqueletoMiniboss : MonoBehaviour
     private Animator animator;
     private Collider2D[] colisores;
 
-    private float proximoDano;
     private float proximoDisparo;
 
     private bool morto;
@@ -121,7 +116,7 @@ public class EsqueletoMiniboss : MonoBehaviour
             }
         }
 
-        // Ataca com bola de fogo quando o jogador esta no alcance.
+        // Dispara fogo quando o jogador esta no alcance.
         if (prefabBolaFogo != null &&
             pontoDisparo != null &&
             distancia <= distanciaDisparo &&
@@ -160,7 +155,6 @@ public class EsqueletoMiniboss : MonoBehaviour
 
         if (fogo != null)
         {
-            // Informa a direcao e o dono do disparo.
             fogo.ConfigurarDirecao(direcao, transform);
         }
         else
@@ -186,23 +180,9 @@ public class EsqueletoMiniboss : MonoBehaviour
         );
     }
 
-    private void OnCollisionStay2D(Collision2D colisao)
-    {
-        if (morto || !colisao.gameObject.CompareTag(tagPlayer))
-            return;
-
-        if (Time.time < proximoDano)
-            return;
-
-        PlayerHealth vidaPlayer =
-            colisao.gameObject.GetComponentInParent<PlayerHealth>();
-
-        if (vidaPlayer == null)
-            return;
-
-        vidaPlayer.TakeDamage(dano);
-        proximoDano = Time.time + intervaloEntreDanos;
-    }
+    // IMPORTANTE:
+    // O contato fisico com o esqueleto nao causa mais dano.
+    // Somente a bola de fogo pode machucar o jogador.
 
     public void TakeDamage(int quantidade)
     {
@@ -210,6 +190,9 @@ public class EsqueletoMiniboss : MonoBehaviour
             return;
 
         vidaAtual = Mathf.Max(0, vidaAtual - quantidade);
+
+        Debug.Log("ESQUELETO RECEBEU DANO: " + quantidade);
+        Debug.Log("VIDA DO ESQUELETO: " + vidaAtual);
 
         if (vidaAtual <= 0)
             StartCoroutine(Morrer());

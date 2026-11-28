@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Transform startPoint;
 
     private Vector3 currentSpawnPosition;
-    private bool checkpointDefinido;
+    private bool checkpointDefinido = false;
 
     [Header("Artefatos do Olimpo")]
     public bool espadaColetada;
@@ -111,6 +111,11 @@ public class GameManager : MonoBehaviour
 
     private void PosicionarJogador(Vector3 posicao)
     {
+        Debug.LogWarning(
+            "ATENÇÃO: GAMEMANAGER ESTÁ POSICIONANDO O PLAYER! Posição: "
+            + posicao
+        );
+
         PlayerHealth jogador =
             FindFirstObjectByType<PlayerHealth>();
 
@@ -145,7 +150,7 @@ public class GameManager : MonoBehaviour
         dados.posicaoY = posicao.y;
         dados.posicaoZ = posicao.z;
 
-        dados.vidas = jogador != null ? jogador.lives : 2;
+        dados.vidas = jogador != null ? jogador.lives : 3;
 
         dados.espadaColetada = espadaColetada;
         dados.escudoColetado = escudoColetado;
@@ -236,8 +241,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("NOVO JOGO INICIADO!");
     }
 
-    // COLETA DOS ARTEFATOS
-
     public void ColetarEspada()
     {
         espadaColetada = true;
@@ -284,7 +287,7 @@ public class GameManager : MonoBehaviour
 
         dados.vidas = dadosCarregados != null
             ? dadosCarregados.vidas
-            : 2;
+            : 3;
 
         dados.espadaColetada = espadaColetada;
         dados.escudoColetado = escudoColetado;

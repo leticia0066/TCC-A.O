@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public int currentHealth;
 
     [Header("Tentativas")]
-    public int maxLives = 2;
+    public int maxLives = 3;
     public int lives;
 
     [Header("Interface")]
@@ -94,8 +94,9 @@ public class PlayerHealth : MonoBehaviour
         if (controle != null)
             controle.TremerAoReceberDano();
 
-        if (currentHealth == 0)
+        if (currentHealth <= 0)
         {
+            currentHealth = 0;
             StartCoroutine(Morrer());
         }
         else
@@ -137,7 +138,18 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawnar()
     {
-        Debug.Log("RESPAWN NO CHECKPOINT");
+        // PROTEÇÃO: não permite respawn com vida restante.
+        if (currentHealth > 0)
+        {
+            Debug.LogWarning(
+                "RESPAWN BLOQUEADO! VIDA ATUAL: " + currentHealth
+            );
+
+            estaMorrendo = false;
+            return;
+        }
+
+        Debug.Log("RESPAWN AUTORIZADO: jogador morreu.");
 
         if (GameManager.instance == null)
         {
@@ -148,7 +160,6 @@ public class PlayerHealth : MonoBehaviour
 
         Vector3 destino = GameManager.instance.GetSpawnPosition();
 
-        // Interrompe a física antes de reposicionar.
         PararMovimento();
 
         transform.position = destino;

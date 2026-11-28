@@ -57,7 +57,8 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < sprites.Length; i++)
         {
             coresOriginais[i] = sprites[i].color;
-            posicoesOriginaisSprites[i] = sprites[i].transform.localPosition;
+            posicoesOriginaisSprites[i] =
+                sprites[i].transform.localPosition;
         }
 
         if (rb == null)
@@ -314,6 +315,7 @@ public class PlayerController : MonoBehaviour
         if (rotinaTremida != null)
         {
             StopCoroutine(rotinaTremida);
+            RestaurarPosicoesSprites();
         }
 
         rotinaTremida = StartCoroutine(ExecutarTremida());
@@ -328,6 +330,10 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < sprites.Length; i++)
             {
                 if (sprites[i] == null)
+                    continue;
+
+                // Não altera a posição do objeto principal Player.
+                if (sprites[i].transform == transform)
                     continue;
 
                 float deslocamentoX = Random.Range(

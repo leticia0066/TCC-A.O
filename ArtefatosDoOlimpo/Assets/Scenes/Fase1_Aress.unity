@@ -17665,7 +17665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 6
   currentHealth: 6
-  maxLives: 2
+  maxLives: 3
   lives: 2
   heartUI: {fileID: 1861103915}
   respawnDelay: 0.5
@@ -418982,8 +418982,6 @@ MonoBehaviour:
   pontoDisparo: {fileID: 1479507854}
   distanciaDisparo: 5
   intervaloDisparo: 2
-  dano: 1
-  intervaloEntreDanos: 1
   audioSource: {fileID: 0}
   somAtaque: {fileID: 0}
   somMorte: {fileID: 0}
@@ -422521,8 +422519,6 @@ MonoBehaviour:
   pontoDisparo: {fileID: 1146299419}
   distanciaDisparo: 5
   intervaloDisparo: 2
-  dano: 1
-  intervaloEntreDanos: 1
   audioSource: {fileID: 0}
   somAtaque: {fileID: 0}
   somMorte: {fileID: 0}
@@ -430228,8 +430224,6 @@ MonoBehaviour:
   pontoDisparo: {fileID: 84011204}
   distanciaDisparo: 5
   intervaloDisparo: 2
-  dano: 1
-  intervaloEntreDanos: 1
   audioSource: {fileID: 0}
   somAtaque: {fileID: 0}
   somMorte: {fileID: 0}
@@ -430905,8 +430899,6 @@ MonoBehaviour:
   pontoDisparo: {fileID: 655001131}
   distanciaDisparo: 5
   intervaloDisparo: 2
-  dano: 1
-  intervaloEntreDanos: 1
   audioSource: {fileID: 0}
   somAtaque: {fileID: 0}
   somMorte: {fileID: 0}
@@ -432646,8 +432638,6 @@ MonoBehaviour:
   pontoDisparo: {fileID: 1301124180}
   distanciaDisparo: 5
   intervaloDisparo: 2
-  dano: 1
-  intervaloEntreDanos: 1
   audioSource: {fileID: 0}
   somAtaque: {fileID: 0}
   somMorte: {fileID: 0}
